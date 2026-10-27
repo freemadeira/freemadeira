@@ -1,0 +1,115 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import Container from "@/components/container.astro";
+import NewsletterForm from "@/components/newsletter-form";
+import SocialLink from "@/components/social-link.astro";
+import Wordmark from "@/components/wordmark.astro";
+import { links, organisation } from "@/data/organisation";
+import { freeMadeiraSocials } from "@/data/socials";
+import { routes } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const year = new Date().toLocaleString("pt-PT", {
+  timeZone: "Atlantic/Madeira",
+  year: "numeric",
+});
+const link = "w-fit decoration-1 underline-offset-7 hover:underline";
+---
+
+<footer class="bg-primary-400 fill-dark text-dark">
+  <Container class="gap-12 py-16">
+    <div class="flex flex-col items-start gap-12 sm:flex-row md:gap-14">
+      <div class="flex w-full flex-col gap-4 sm:w-auto">
+        <p class="text-lg">{m.footer_newsletter_title({}, t)}</p>
+        <NewsletterForm
+          client:visible
+          labels={{
+            email: m.newsletter_email({}, t),
+            error: m.newsletter_error({}, t),
+            submit: m.newsletter_sign_up({}, t),
+            success: m.newsletter_success({}, t),
+          }}
+          locale={locale}
+          variant="footer"
+        />
+      </div>
+
+      <div
+        class="grid grow grid-cols-2 gap-8 text-sm leading-[200%] sm:grid-cols-4"
+      >
+        <ul class="flex flex-col">
+          <li>
+            <a class:list={[link, "font-bold"]} href={routes.about[locale]}>
+              {m.nav_about({}, t)}
+            </a>
+          </li>
+          <li>
+            <a class={link} href={routes.team[locale]}>{m.nav_team({}, t)}</a>
+          </li>
+          <li>
+            <a class={link} href={routes.partnerships[locale]}>
+              {m.nav_partnerships({}, t)}
+            </a>
+          </li>
+          <li>
+            <a class={link} href={routes.madeira[locale]}>
+              {m.nav_madeira({}, t)}
+            </a>
+          </li>
+        </ul>
+        <ul class="flex flex-col">
+          <li>
+            <a
+              class:list={[link, "font-bold"]}
+              href={links.shop}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {m.nav_shop({}, t)}
+            </a>
+          </li>
+        </ul>
+        <ul class="flex flex-col">
+          <li>
+            <a
+              class={link}
+              href={links.whitepaper}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {m.footer_whitepaper({}, t)}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="grid shrink-0 grid-cols-4 gap-4">
+        {
+          freeMadeiraSocials.map(([social, username]) => (
+            <SocialLink social={social} username={username} />
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-8">
+      <Wordmark />
+      <div class="flex flex-col gap-4 text-sm">
+        <p class="text-pretty">
+          {organisation.registeredName} · NIPC {organisation.nipc} ·{" "}
+          {organisation.address} ·{" "}
+          <a
+            class="underline decoration-1 underline-offset-7"
+            href={`mailto:${organisation.email}`}
+          >
+            {organisation.email}
+          </a>
+        </p>
+        <p class="sm:text-right">{m.footer_rights({ year }, t)}</p>
+      </div>
+    </div>
+  </Container>
+</footer>

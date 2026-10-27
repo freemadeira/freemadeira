@@ -1,0 +1,108 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import riseBanner from "@/assets/banner-rise-of-atlantis.jpg";
+import riseOfAtlantisLogo from "@/assets/logos/events/rise-of-atlantis.svg";
+import layer4TalentLogo from "@/assets/logos/partners/layer4-talent.png";
+import BackgroundBanner from "@/components/background-banner.astro";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import EventHero from "@/components/event-hero.astro";
+import TeamGrid from "@/components/team-grid.astro";
+import { riseOfAtlantisTeam } from "@/data/rise-of-atlantis-team";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const reasons = [
+  m.rise_reason_1({}, { locale }),
+  m.rise_reason_2({}, { locale }),
+  m.rise_reason_3({}, { locale }),
+  m.rise_reason_4({}, { locale }),
+];
+---
+
+<Layout
+  description={m.rise_description({}, { locale })}
+  route="riseOfAtlantis"
+  title={m.rise_meta_title({}, { locale })}
+>
+  <BackgroundEffect gradient="from-[#6996f9] to-[#2a457f]">
+    <EventHero
+      logo={{
+        alt: "Rise of Atlantis",
+        hiddenFrom: "lg",
+        src: riseOfAtlantisLogo,
+      }}
+      paragraphs={[m.rise_hero_1({}, { locale }), m.rise_hero_2({}, { locale })]}
+      stats={[
+        [m.stat_date({}, { locale }), m.rise_date({}, { locale })],
+        [m.stat_time({}, { locale }), m.rise_time({}, { locale })],
+        [
+          m.stat_location({}, { locale }),
+          "Centro Cultural e de Investigação do Funchal",
+        ],
+      ]}
+      title={m.rise_hero_title({}, { locale })}
+    />
+    <BackgroundBanner
+      image={riseBanner}
+      class="relative my-20 flex h-[200px] items-end justify-end overflow-hidden bg-center sm:h-[500px]"
+    >
+      <Image
+        src={riseOfAtlantisLogo}
+        class="relative right-10 bottom-10 z-30 h-2/5 w-auto md:h-1/3"
+        alt="Rise of Atlantis"
+      />
+    </BackgroundBanner>
+    <Container class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+      <div class="mt-20 space-y-10">
+        <div>
+          <h3 class="text-xl font-bold">
+            {m.rise_dont_miss({}, { locale })}
+          </h3>
+          <ul class="mt-4 list-inside list-disc space-y-2">
+            {reasons.map((reason) => <li>{reason}</li>)}
+          </ul>
+        </div>
+
+        <hr class="border-basalt-light" />
+
+        <h4 class="text-lg font-bold">{m.rise_reserve_title({}, { locale })}</h4>
+        <p>{m.rise_reserve_text({}, { locale })}</p>
+
+        <hr class="border-basalt-light" />
+
+        <section id="team">
+          <h2 class="text-center font-display text-3xl font-medium">
+            {m.rise_host({}, { locale })}
+          </h2>
+          <TeamGrid people={riseOfAtlantisTeam.host} />
+          <h2 class="text-center font-display text-3xl font-medium">
+            {m.rise_jury({}, { locale })}
+          </h2>
+          <TeamGrid people={riseOfAtlantisTeam.jury} />
+        </section>
+
+        <h3 class="pt-10 text-center text-xl font-medium">
+          {m.rise_ride_the_wave({}, { locale })}
+        </h3>
+
+        <h4 class="text-center text-lg font-bold">
+          {m.rise_sponsored_by({}, { locale })}
+        </h4>
+        <div class="flex justify-center">
+          <a href="https://www.layer4talent.com/" target="_blank" rel="noreferrer">
+            <Image
+              src={layer4TalentLogo}
+              alt="Layer4Talent"
+              width={250}
+              densities={[1, 2]}
+            />
+          </a>
+        </div>
+      </div>
+    </Container>
+  </BackgroundEffect>
+</Layout>

@@ -1,0 +1,54 @@
+---
+import { socialNetworks } from "@/data/socials";
+import type { SocialNetwork } from "@/data/socials";
+
+type Props = Partial<Record<SocialNetwork, string>> & {
+  color?: string;
+  height?: number;
+  hoverColor?: string;
+};
+
+const {
+  color = "#c7c7d1",
+  height = 18,
+  hoverColor = "#292929",
+  ...profiles
+} = Astro.props;
+
+const order: SocialNetwork[] = [
+  "nostr",
+  "twitter",
+  "instagram",
+  "youtube",
+  "linkedin",
+];
+const links = order.flatMap((network) => {
+  const username = profiles[network];
+  return username ? [{ network: socialNetworks[network], username }] : [];
+});
+---
+
+<div
+  class="mt-2 flex items-end space-x-4"
+  style={`--icon: ${color}; --icon-hover: ${hoverColor}`}
+>
+  {
+    links.map(({ network, username }) => (
+      <a
+        href={network.href + username}
+        target="_blank"
+        rel="noreferrer"
+        class="fill-(--icon) hover:fill-(--icon-hover)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox={network.viewBox}
+          height={height}
+          role="img"
+          aria-label={network.name}
+          set:html={network.icon}
+        />
+      </a>
+    ))
+  }
+</div>

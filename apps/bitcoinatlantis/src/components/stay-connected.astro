@@ -1,0 +1,58 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import backgroundImage from "@/assets/bg-newsletter.jpg";
+import { socialProfiles } from "@/data/socials";
+import { m } from "@/paraglide/messages.js";
+
+import Container from "./container.astro";
+import SocialLinks from "./social-links.astro";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<section
+  id="stay-connected"
+  aria-label={m.stay_connected_title({}, { locale })}
+  class="sm:mb-20"
+>
+  <Container>
+    <div
+      class="relative -mx-4 mb-10 overflow-hidden bg-basalt-lighter px-4 py-20 shadow-lg sm:-mx-6 sm:px-6 md:mx-0 md:rounded-5xl md:px-16 xl:px-24 xl:py-36"
+    >
+      <Image
+        class="absolute top-0 left-1/2 max-w-none translate-x-[-10%] translate-y-[-36%] lg:translate-x-[-32%]"
+        src={backgroundImage}
+        alt=""
+        width={919}
+        height={1351}
+      />
+      <div
+        class="relative mx-auto grid max-w-2xl grid-cols-1 gap-x-32 gap-y-14 xl:max-w-none xl:grid-cols-2"
+      >
+        <div>
+          <p
+            class="font-display text-4xl font-medium tracking-tighter text-basalt sm:text-5xl"
+          >
+            {m.stay_connected_title({}, { locale })}
+          </p>
+          <p class="mt-4 text-lg tracking-tight text-basalt">
+            {m.stay_connected_text({}, { locale })}
+          </p>
+        </div>
+        <div class="flex items-center justify-center">
+          <SocialLinks
+            twitter={socialProfiles.twitter}
+            nostr={socialProfiles.nostr}
+            instagram={socialProfiles.instagram}
+            linkedin={socialProfiles.linkedin}
+            height={64}
+            color="#1a1400"
+            hoverColor="#4d3c00"
+          />
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

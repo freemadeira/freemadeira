@@ -1,0 +1,92 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { getImage, Image } from "astro:assets";
+
+import FemaleAvatar from "@/assets/illustrations/female-avatar.svg";
+import MaleAvatar from "@/assets/illustrations/male-avatar.svg";
+import PersonBio from "@/components/person-bio";
+import SocialLink from "@/components/social-link.astro";
+import type { AdvisoryBoardMember } from "@/data/advisory-board";
+import type { Social } from "@/data/socials";
+import type { TeamMember } from "@/data/team";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  person: TeamMember | AdvisoryBoardMember;
+}
+
+const { person } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const name = [person.firstName, person.lastName].filter(Boolean).join(" ");
+const socials = Object.entries(person.socials ?? {}) as [Social, string][];
+const role = "role" in person ? person.role : undefined;
+const category = "category" in person ? person.category : undefined;
+const portrait = person.picture
+  ? await getImage({ src: person.picture, width: 960, widths: [480, 960] })
+  : undefined;
+const possessive = `${person.firstName}${person.firstName.toLowerCase().endsWith("s") ? "’" : "’s"}`;
+---
+
+<div class="flex w-full flex-1 flex-col gap-3 sm:w-auto">
+  <div class="relative isolate aspect-square w-full">
+    {
+      person.picture ? (
+        <Image
+          alt=""
+          class="absolute inset-0 -z-10 size-full object-cover"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          src={person.picture}
+          width={960}
+          widths={[480, 960]}
+        />
+      ) : person.sex === "male" ? (
+        <MaleAvatar aria-hidden="true" class="size-full" />
+      ) : (
+        <FemaleAvatar aria-hidden="true" class="size-full" />
+      )
+    }
+    {
+      socials.length > 0 && (
+        <div class="absolute top-4 right-4 grid grid-cols-1 gap-2">
+          {socials.map(([social, username]) => (
+            <SocialLink social={social} username={username} variant="filled" />
+          ))}
+        </div>
+      )
+    }
+  </div>
+  <div class="space-y-3.5">
+    <h3 class={heading.h4}>{name}</h3>
+    {role && <p class="text-lg">{role[locale]}</p>}
+    {
+      category && (
+        <span class="bg-primary-400 px-2.5 py-2 text-center text-sm leading-2.5 font-medium text-dark">
+          {category[locale]}
+        </span>
+      )
+    }
+    {
+      person.bio && (
+        <PersonBio
+          bio={person.bio}
+          client:visible
+          closeLabel={m.close({}, { locale })}
+          name={name}
+          picture={
+            portrait && { src: portrait.src, srcset: portrait.srcSet.attribute }
+          }
+          triggerLabel={m.person_read_bio({ name, possessive }, { locale })}
+        >
+          {socials.length > 0 && (
+            <div class="flex gap-2" slot="socials">
+              {socials.map(([social, username]) => (
+                <SocialLink social={social} username={username} />
+              ))}
+            </div>
+          )}
+        </PersonBio>
+      )
+    }
+  </div>
+</div>

@@ -1,0 +1,89 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import bannerImage from "@/assets/bem-vindo-ao-bitcoin-banner.jpg";
+import BackgroundBanner from "@/components/background-banner.astro";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import EventHero from "@/components/event-hero.astro";
+import TeamGrid from "@/components/team-grid.astro";
+import { bemVindoAoBitcoinTeam } from "@/data/bem-vindo-ao-bitcoin-team";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const morning = [
+  m.bem_vindo_morning_1({}, { locale }),
+  m.bem_vindo_morning_2({}, { locale }),
+  m.bem_vindo_morning_3({}, { locale }),
+  m.bem_vindo_morning_4({}, { locale }),
+];
+const afternoon = [
+  m.bem_vindo_afternoon_1({}, { locale }),
+  m.bem_vindo_afternoon_2({}, { locale }),
+  "On-chain & lightning",
+  "Cold storage",
+  m.bem_vindo_afternoon_5({}, { locale }),
+  m.bem_vindo_afternoon_6({}, { locale }),
+];
+---
+
+<Layout
+  description={m.bem_vindo_description({}, { locale })}
+  route="bemVindoAoBitcoin"
+  title={m.bem_vindo_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <EventHero
+      paragraphs={[
+        m.bem_vindo_hero_1({}, { locale }),
+        m.bem_vindo_hero_2({}, { locale }),
+      ]}
+      stats={[
+        [m.stat_date({}, { locale }), m.bem_vindo_date({}, { locale })],
+        [m.stat_schedule({}, { locale }), m.bem_vindo_time({}, { locale })],
+        [
+          m.stat_location({}, { locale }),
+          "Centro Cultural e de Investigação do Funchal",
+        ],
+        [m.stat_price({}, { locale }), m.free({}, { locale })],
+      ]}
+      title="Bem-vindo ao Bitcoin"
+    />
+    <BackgroundBanner
+      image={bannerImage}
+      class="relative mt-10 mb-20 flex h-[200px] items-end justify-end overflow-hidden bg-center sm:h-[500px]"
+    />
+    <Container class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+      <div class="mt-20 space-y-10">
+        <p>{m.bem_vindo_info_1({}, { locale })}</p>
+        <p class="pb-6">{m.bem_vindo_info_2({}, { locale })}</p>
+        <div>
+          <h3
+            class="font-display text-xl font-bold tracking-tighter sm:text-3xl"
+          >
+            {m.bem_vindo_agenda({}, { locale })}
+          </h3>
+          <p class="mt-10 text-lg font-bold">
+            {m.bem_vindo_morning({}, { locale })}
+          </p>
+          <ul class="mt-4 list-inside list-disc space-y-2">
+            {morning.map((item) => <li>{item}</li>)}
+          </ul>
+
+          <p class="mt-10 text-lg font-bold">
+            {m.bem_vindo_afternoon({}, { locale })}
+          </p>
+          <ul class="mt-4 list-inside list-disc space-y-2">
+            {afternoon.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+
+        <h2 class="pt-10 pb-6 text-center font-display text-3xl font-medium">
+          {m.bem_vindo_team({}, { locale })}
+        </h2>
+        <TeamGrid people={bemVindoAoBitcoinTeam} showSocials />
+      </div>
+    </Container>
+  </BackgroundEffect>
+</Layout>

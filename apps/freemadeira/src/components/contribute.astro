@@ -1,0 +1,25 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import FingerTouch from "@/assets/illustrations/finger-touch.svg";
+import Container from "@/components/container.astro";
+import ContributeButtons from "@/components/contribute-buttons.astro";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<section class="bg-bridal-50">
+  <Container
+    class="items-center justify-between gap-16 pt-12 md:max-w-2xl md:flex-row md:pt-0 lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl"
+  >
+    <div class="flex w-full flex-col items-start gap-8 md:w-3/7 md:gap-14">
+      <h2 class={heading.h4}>{m.contribute_title({}, { locale })}</h2>
+      <ContributeButtons />
+    </div>
+    <div class="flex grow justify-center md:pt-10">
+      <FingerTouch aria-hidden="true" class="mx-8 h-auto w-full md:h-[357px]" />
+    </div>
+  </Container>
+</section>

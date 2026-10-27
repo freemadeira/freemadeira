@@ -1,0 +1,50 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { FaqTopics } from "@/components/faq-topics";
+import SectionPills from "@/components/section-pills.astro";
+import { faqs } from "@/data/faqs";
+import Layout from "@/layouts/base-layout.astro";
+import { slugify } from "@/lib/slugify";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const topics = faqs.map(({ questions, topic }) => ({
+  id: slugify(topic[locale]),
+  questions: questions.map(({ answer, question }) => ({
+    answer: Array.isArray(answer)
+      ? answer
+          .map(
+            ({ body, title }) =>
+              `<p class="mt-2"><span class="font-semibold">${title[locale]}</span><br>${body[locale]}</p>`
+          )
+          .join("")
+      : answer[locale],
+    question: question[locale],
+  })),
+  topic: topic[locale],
+}));
+---
+
+<Layout
+  description={m.faq_description({}, { locale })}
+  route="faq"
+  title={m.faq_meta_title({}, { locale })}
+>
+  <main class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-4xl">
+      <div class="mt-20">
+        <h1
+          class="mx-auto max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-yellow-900 sm:text-5xl"
+        >
+          {m.faq_title({}, { locale })}
+        </h1>
+        <SectionPills topics={topics.map(({ topic }) => topic)} />
+        <FaqTopics client:visible topics={topics} />
+      </div>
+      <div class="mt-32 mb-12 text-center font-medium text-basalt-medium">
+        {m.faq_contact({}, { locale })}
+      </div>
+    </div>
+  </main>
+</Layout>

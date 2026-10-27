@@ -1,0 +1,58 @@
+---
+import "@/styles/global.css";
+
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { Image } from "astro:assets";
+
+import logo from "@/assets/logos/logo.svg";
+import BackgroundEffect from "@/components/background-effect.astro";
+import { routes } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
+
+// One page for both languages: there is no telling which one a broken link
+// was meant for.
+const copy = (["pt", "en"] as const).map((locale) => ({
+  home: routes.home[locale],
+  lang: locale === "pt" ? "pt-PT" : "en",
+  link: m.not_found_home({}, { locale }),
+  text: m.not_found_text({}, { locale }),
+  title: m.not_found_title({}, { locale }),
+}));
+---
+
+<!doctype html>
+<html lang="pt-PT" class="bg-white antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{copy.map(({ title }) => title).join(" · ")} – Bitcoin Atlantis</title>
+  </head>
+  <body>
+    <BackgroundEffect>
+      <div
+        class="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center gap-16 px-6 py-16 text-center"
+      >
+        <a href={routes.home.pt}>
+          <Image src={logo} alt="Bitcoin Atlantis" class="w-72" />
+        </a>
+        <div class="grid gap-12 sm:grid-cols-2">
+          {
+            copy.map(({ home, lang, link, text, title }) => (
+              <div lang={lang} class="flex flex-col items-center gap-4">
+                <h1 class="font-display text-4xl font-bold tracking-tight text-basalt">
+                  {title}
+                </h1>
+                <p class="text-lg text-gray-600">{text}</p>
+                <a href={home} class={buttonVariants({ variant: "atlantis" })}>
+                  {link}
+                </a>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </BackgroundEffect>
+  </body>
+</html>

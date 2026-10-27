@@ -1,0 +1,15 @@
+---
+interface Props {
+  sentences: string[];
+}
+
+const { sentences } = Astro.props;
+---
+
+<ul class="flex flex-col divide-y divide-mountain-mist-200">
+  {
+    sentences.map((sentence) => (
+      <li class="py-3.5 first:pt-0 last:pb-0">{sentence}</li>
+    ))
+  }
+</ul>

@@ -1,0 +1,38 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import type { TravelPartner } from "@/data/travel-partners";
+
+interface Props {
+  class?: string;
+  partners: TravelPartner[];
+}
+
+const { class: className = "mt-10 max-w-max", partners } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+---
+
+<div
+  class:list={[
+    "mx-auto flex flex-wrap place-content-center gap-x-32 gap-y-16 md:gap-x-16 lg:gap-x-32",
+    className,
+  ]}
+>
+  {
+    partners.map((partner) => (
+      <div class="relative flex flex-col items-center justify-center">
+        <a href={partner.url} target="_blank" rel="noreferrer">
+          <Image
+            src={partner.logo}
+            alt={partner.name}
+            width={Math.round(180 * (partner.sizeMultiplier ?? 1))}
+          />
+        </a>
+        <div class="absolute top-[calc(80%+20px)] w-full text-left text-xs text-basalt-medium">
+          {partner.note?.[locale]}
+        </div>
+      </div>
+    ))
+  }
+</div>

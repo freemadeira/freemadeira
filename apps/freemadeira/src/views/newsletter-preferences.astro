@@ -1,0 +1,102 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import Container from "@/components/container.astro";
+import NewsletterPreferences from "@/components/newsletter-preferences";
+import { newsletterPreferencesPaths } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import {
+  findSubscriber,
+  groupsFromLanguages,
+  languagesFromGroups,
+  updateGroups,
+  withoutLanguageGroups,
+} from "@/lib/mailerlite";
+import { newsletterSession } from "@/lib/newsletter-session";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+// Rendered per request: the email and token in the path come from a
+// newsletter's preferences link.
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+// Redirects can encode the path a second time, so undo up to two layers.
+const decode = (value = "") => {
+  let decoded = value;
+  for (let pass = 0; pass < 2 && decoded.includes("%"); pass += 1) {
+    try {
+      decoded = decodeURIComponent(decoded);
+    } catch {
+      break;
+    }
+  }
+  return decoded;
+};
+const email = decode(Astro.params.email);
+const token = decode(Astro.params.token);
+
+Astro.response.headers.set("Cache-Control", "private, no-store");
+
+const subscriber = await findSubscriber(email);
+const valid = Boolean(token) && subscriber?.fields.token === token;
+let languages = valid && subscriber ? languagesFromGroups(subscriber.groups.map((group) => group.id)) : [];
+
+if (valid && subscriber) {
+  const groupIds = subscriber.groups.map((group) => group.id);
+  // Subscribers from before the language groups get English.
+  if (languages.length === 0) {
+    await updateGroups(subscriber.id, [...groupIds, ...groupsFromLanguages(["english"])]);
+    languages = ["english"];
+  }
+  const session = await newsletterSession(Astro.request, Astro.response.headers);
+  session.subscriberId = subscriber.id;
+  session.groups = withoutLanguageGroups(groupIds);
+  await session.save();
+} else {
+  Astro.response.status = 404;
+}
+
+const both = languages.includes("english") && languages.includes("portuguese");
+const initial = both ? "all" : (languages[0] ?? "english");
+---
+
+<Layout
+  description={m.preferences_title({}, t)}
+  noindex
+  paths={newsletterPreferencesPaths(email, token)}
+  title={m.preferences_title({}, t)}
+>
+  <Container class="my-12 gap-8 md:mx-32">
+    <h1 class={heading.h5}>{m.preferences_title({}, t)}</h1>
+    {
+      valid ? (
+        <NewsletterPreferences
+          client:load
+          initial={initial}
+          labels={{
+            error: m.preferences_save_error({}, t),
+            group: m.preferences_language({}, t),
+            options: {
+              all: {
+                description: m.preferences_both_description({}, t),
+                name: m.preferences_both({}, t),
+              },
+              english: {
+                description: m.preferences_english_description({}, t),
+                name: m.preferences_english({}, t),
+              },
+              portuguese: {
+                description: m.preferences_portuguese_description({}, t),
+                name: m.preferences_portuguese({}, t),
+              },
+            },
+            save: m.preferences_save({}, t),
+            saved: m.preferences_saved({}, t),
+          }}
+        />
+      ) : (
+        <p>{m.preferences_invalid({}, t)}</p>
+      )
+    }
+  </Container>
+</Layout>

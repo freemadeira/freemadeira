@@ -1,0 +1,39 @@
+---
+import { Image } from "astro:assets";
+
+import SocialLinks from "@/components/social-links.astro";
+import { highlightedSpeakers } from "@/data/speakers";
+---
+
+<div
+  class="mt-14 grid grid-cols-1 items-start gap-x-8 gap-y-8 sm:mt-16 sm:gap-y-16 lg:mt-24 lg:grid-cols-4"
+>
+  <div
+    class="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-2 sm:gap-y-12 md:grid-cols-3 md:gap-x-8 lg:col-span-4 lg:grid-cols-5"
+  >
+    {
+      highlightedSpeakers.map((speaker) => (
+        <div>
+          <div class="group relative h-40 transform overflow-hidden rounded-4xl md:h-56">
+            <div class="absolute inset-0 bg-yellow-50">
+              <Image
+                class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-110"
+                src={speaker.image}
+                alt=""
+                widths={[280, 560]}
+                sizes="(min-width: 1280px) 17.5rem, (min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+              />
+            </div>
+          </div>
+          <h3 class="mt-8 font-display text-xl font-bold tracking-tight text-slate-900">
+            {speaker.name}
+          </h3>
+          <p class="mt-1 text-base tracking-tight text-slate-500">
+            {speaker.role}
+          </p>
+          <SocialLinks twitter={speaker.twitter} nostr={speaker.nostr} />
+        </div>
+      ))
+    }
+  </div>
+</div>

@@ -1,0 +1,181 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import kidsBlockBanner from "@/assets/kids-block-banner.jpg";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import PageHero from "@/components/page-hero.astro";
+import Section from "@/components/section.astro";
+import TravelPartnerLogos from "@/components/travel-partner-logos.astro";
+import { travelPartners } from "@/data/travel-partners";
+import { routes } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const events = `${routes.satelliteEvents[locale]}#`;
+const satelliteEvents = [
+  [`${events}catamaran-trip`, m.kids_block_event_catamaran({}, { locale })],
+  [`${events}mega-pleb-dinner`, m.kids_block_event_dinner({}, { locale })],
+  [routes.atlasMusicFestival[locale], m.kids_block_event_atlas({}, { locale })],
+  [`${events}atlantis-football-cup`, m.kids_block_event_football({}, { locale })],
+];
+const islandTips = [
+  [
+    "https://visitmadeira.com/en/what-to-do/nature-seekers/viewpoints/balcoes-viewpoint/",
+    m.kids_block_tip_balcoes({}, { locale }),
+  ],
+  [
+    "https://visitmadeira.com/pt/o-que-fazer/apaixonados-por-cultura/jardins/parque-de-santa-catarina/",
+    m.kids_block_tip_santa_catarina({}, { locale }),
+  ],
+  [
+    "https://visitmadeira.com/en/where-to-go/madeira/north-coast/porto-moniz/fanal/",
+    m.kids_block_tip_fanal({}, { locale }),
+  ],
+  [
+    "https://visitmadeira.com/en/where-to-go/madeira/north-coast/porto-moniz/natural-pools-of-porto-moniz/",
+    m.kids_block_tip_pools({}, { locale }),
+  ],
+];
+const linkClass =
+  "[&_a]:text-yellow-500 [&_a]:hover:text-yellow [&_a]:active:text-yellow";
+---
+
+<Layout
+  description={m.kids_block_description({}, { locale })}
+  route="kidsBlock"
+  title={m.kids_block_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title={m.kids_block_title({}, { locale })}
+      subtitle={m.kids_block_subtitle({}, { locale })}
+    />
+    <Image
+      src={kidsBlockBanner}
+      alt={m.kids_block_title({}, { locale })}
+      widths={[768, 1536, 2281]}
+      sizes="100vw"
+      class="my-14"
+    />
+    <Container class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+      <div>
+        <Container class:list={["max-w-4xl text-basalt", linkClass]}>
+          <div class="mt-20 flex flex-col gap-6 text-lg">
+            <p>{m.kids_block_intro_1({}, { locale })}</p>
+            <p>{m.kids_block_intro_2({}, { locale })}</p>
+          </div>
+
+          <div class="my-12 border-b sm:my-16"></div>
+
+          <h2
+            class="mb-10 text-center text-2xl font-bold tracking-tight text-basalt"
+          >
+            {m.kids_block_important_info({}, { locale })}
+          </h2>
+
+          <h3 class="text-xl font-bold">
+            {m.kids_block_accreditation_title({}, { locale })}
+          </h3>
+          <ul class="mt-4 mb-10 list-inside list-disc space-y-2">
+            <li set:html={m.kids_block_accreditation_1({}, { locale })} />
+            <li>{m.kids_block_accreditation_2({}, { locale })}</li>
+          </ul>
+
+          <div class="my-12 border-b sm:my-16"></div>
+
+          <h2
+            class="mb-10 text-center text-2xl font-bold tracking-tight text-basalt"
+          >
+            {m.kids_block_whats_up_title({}, { locale })}
+          </h2>
+          <p class="mb-10">{m.kids_block_whats_up_text({}, { locale })}</p>
+
+          <h4 class="font-bold">{m.kids_block_infants_title({}, { locale })}</h4>
+          <ul class="mt-2 mb-10 space-y-2">
+            <li>{m.kids_block_infants_text({}, { locale })}</li>
+          </ul>
+
+          <h4 class="font-bold">{m.kids_block_teens_title({}, { locale })}</h4>
+          <p class="mt-2">{m.kids_block_teens_text({}, { locale })}</p>
+          <ul class="mt-4 mb-10 space-y-2">
+            <li>{m.kids_block_teens_drawing({}, { locale })}</li>
+            <li>{m.kids_block_teens_reading({}, { locale })}</li>
+            <li>{m.kids_block_teens_grown_up_topics({}, { locale })}</li>
+            <li>{m.kids_block_teens_games({}, { locale })}</li>
+            <li>{m.kids_block_teens_other({}, { locale })}</li>
+          </ul>
+
+          <h4 class="font-bold">{m.kids_block_booth_title({}, { locale })}</h4>
+          <p class="mt-2">{m.kids_block_booth_1({}, { locale })}</p>
+          <p class="mt-2">{m.kids_block_booth_2({}, { locale })}</p>
+          <p class="mt-6" set:html={m.kids_block_booth_3({}, { locale })} />
+          <p class="mt-6">{m.kids_block_booth_4({}, { locale })}</p>
+
+          <h2
+            class="mt-16 mb-10 text-center text-2xl font-bold tracking-tight text-basalt"
+          >
+            🌴 BITCOIN ATLANTIS 🌴
+          </h2>
+          <p class="mt-2">{m.kids_block_activities({}, { locale })}</p>
+          <ul class="mt-4 mb-10 space-y-2">
+            {
+              satelliteEvents.map(([href, label]) => (
+                <li>
+                  <a href={href}>{label}</a>
+                </li>
+              ))
+            }
+          </ul>
+
+          <h2
+            class="mt-16 mb-10 text-center text-2xl font-bold tracking-tight text-basalt"
+          >
+            {m.kids_block_tips_title({}, { locale })}
+          </h2>
+          <p class="mt-2">{m.kids_block_tips_text({}, { locale })}</p>
+          <ul class="mt-4 mb-10 list-inside list-disc space-y-2">
+            <li>
+              <a href={islandTips[0]?.[0]} target="_blank" rel="noreferrer">
+                {islandTips[0]?.[1]}
+              </a>
+            </li>
+            <li set:html={m.kids_block_tip_cable_car({}, { locale })} />
+            {
+              islandTips.slice(1).map(([href, label]) => (
+                <li>
+                  <a href={href} target="_blank" rel="noreferrer">
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </Container>
+
+        <Section
+          id="transportation"
+          title={m.transportation_title({}, { locale })}
+          subtitle={m.transportation_subtitle({}, { locale })}
+        >
+          <TravelPartnerLogos
+            partners={travelPartners.transportation}
+            class="mt-16 max-w-7xl"
+          />
+        </Section>
+
+        <Container class:list={["max-w-4xl text-basalt", linkClass]}>
+          <p
+            class="mb-10 text-center text-2xl font-bold tracking-tight text-basalt"
+          >
+            {m.island_welcome({}, { locale })}
+          </p>
+          <p set:html={m.island_tips({}, { locale })} />
+          <p class="mt-10" set:html={m.island_contact({}, { locale })} />
+        </Container>
+      </div>
+    </Container>
+  </BackgroundEffect>
+</Layout>

@@ -1,0 +1,35 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import PageHero from "@/components/page-hero.astro";
+import SatelliteEvent from "@/components/satellite-event.astro";
+import SectionPills from "@/components/section-pills.astro";
+import { ScrollUp } from "@/components/scroll-up";
+import { satelliteEvents } from "@/data/satellite-events";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.satellite_events_description({}, { locale })}
+  route="satelliteEvents"
+  title={m.satellite_events_meta_title({}, { locale })}
+>
+  <div class="relative">
+    <BackgroundEffect>
+      <PageHero
+        title={m.satellite_events_title({}, { locale })}
+        subtitle={m.satellite_events_subtitle({}, { locale })}
+      />
+      <Container class="-mb-10 max-w-7xl">
+        <SectionPills topics={satelliteEvents.map((event) => event.name)} />
+        {satelliteEvents.map((event) => <SatelliteEvent event={event} />)}
+      </Container>
+      <ScrollUp client:idle label={m.scroll_to_top({}, { locale })} />
+    </BackgroundEffect>
+  </div>
+</Layout>

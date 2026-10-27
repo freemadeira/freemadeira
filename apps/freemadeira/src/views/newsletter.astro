@@ -1,0 +1,39 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import Container from "@/components/container.astro";
+import NewsletterForm from "@/components/newsletter-form";
+import { routes } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+---
+
+<Layout
+  description={m.newsletter_description({}, t)}
+  paths={routes.newsletter}
+  title={m.newsletter_title({}, t)}
+>
+  <Container class="my-12 gap-8 md:mx-32">
+    <h1 class={heading.h5}>{m.newsletter_title({}, t)}</h1>
+    <div class="w-full md:w-2/3">
+      <p>{m.newsletter_text({}, t)}</p>
+      <div class="my-12">
+        <NewsletterForm
+          client:visible
+          labels={{
+            email: m.newsletter_email({}, t),
+            error: m.newsletter_error({}, t),
+            submit: m.newsletter_subscribe({}, t),
+            success: m.newsletter_success({}, t),
+          }}
+          locale={locale}
+          variant="page"
+        />
+      </div>
+    </div>
+  </Container>
+</Layout>

@@ -1,0 +1,32 @@
+---
+import { cn } from "cn";
+import type { HTMLAttributes, HTMLTag } from "astro/types";
+
+import { containerWrapper } from "@/lib/typography";
+
+type Props = HTMLAttributes<"div"> & {
+  as?: HTMLTag;
+  /** The inner width: the full gutter, max-w-7xl or max-w-5xl. */
+  size?: "normal" | "tight" | "tighter";
+  wrapperClass?: string;
+};
+
+const {
+  as: Tag = "div",
+  class: className,
+  size = "normal",
+  wrapperClass,
+  ...attributes
+} = Astro.props;
+
+const width = { normal: "max-w-full", tight: "max-w-7xl", tighter: "max-w-5xl" };
+---
+
+<div class={cn(containerWrapper, wrapperClass)}>
+  <Tag
+    class={cn("mx-auto flex w-full flex-col", width[size], className)}
+    {...attributes}
+  >
+    <slot />
+  </Tag>
+</div>

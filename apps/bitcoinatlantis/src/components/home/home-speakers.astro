@@ -1,0 +1,53 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import Container from "@/components/container.astro";
+import Seal from "@/components/seal.astro";
+import HighlightedSpeakers from "@/components/speakers/highlighted-speakers.astro";
+import { routes } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<section
+  id="speakers"
+  aria-labelledby="speakers-title"
+  class="mt-4 scroll-mt-32"
+>
+  <Container class="relative max-w-7xl">
+    <div
+      class="absolute -top-4 right-4 z-10 overflow-hidden sm:top-10 sm:right-12"
+    >
+      <Seal
+        class="relative size-28 overflow-visible fill-red-600 stroke-red-800 sm:size-32"
+      />
+    </div>
+
+    <div class="mx-auto max-w-2xl lg:mx-0">
+      <h2
+        id="speakers-title"
+        class="font-display text-4xl font-medium tracking-tighter text-yellow sm:text-5xl"
+      >
+        {m.speakers_title({}, { locale })}
+      </h2>
+      <p
+        class="mt-4 hidden font-display text-2xl tracking-tight text-basalt-medium sm:block"
+      >
+        {m.speakers_subtitle({}, { locale })}
+      </p>
+    </div>
+    <div class="mt-4 sm:-mt-8">
+      <HighlightedSpeakers />
+    </div>
+    <div class="mt-10 flex justify-center">
+      <a
+        href={routes.speakers[locale]}
+        class="rounded-full border border-yellow px-3.5 py-1 text-lg font-semibold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
+      >
+        {m.home_see_all_speakers({}, { locale })}
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </Container>
+</section>

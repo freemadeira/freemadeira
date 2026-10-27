@@ -1,0 +1,93 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import Container from "@/components/container.astro";
+import {
+  institutionalPartners,
+  logoWidth,
+  mediaPartners,
+  partners,
+  sponsorTierOrder,
+  sponsorTiers,
+} from "@/data/sponsors";
+import type { Logo } from "@/data/types";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const width = (logo: Logo, base: number) =>
+  Math.round(base * (logo.sizeMultiplier ?? 1));
+const partnerSections = [
+  {
+    logos: institutionalPartners,
+    title: m.sponsors_institutional_partners({}, { locale }),
+  },
+  { logos: partners, title: m.sponsors_partners({}, { locale }) },
+  { logos: mediaPartners, title: m.sponsors_media_partners({}, { locale }) },
+];
+const rowClass =
+  "mx-auto flex max-w-max flex-wrap place-content-center gap-x-32 gap-y-10 md:gap-x-16 lg:gap-x-32";
+---
+
+<Container>
+  <section
+    id="sponsors"
+    aria-label={m.sponsors_title({}, { locale })}
+    class="py-20 sm:py-32"
+  >
+    <Container class="my-24">
+      <h2
+        class="mx-auto mb-16 max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-yellow-900 sm:text-5xl"
+      >
+        {m.sponsors_title({}, { locale })}
+      </h2>
+      {
+        sponsorTierOrder.map((tier, index) => (
+          <div>
+            {index > 0 && <hr class="border-basalt-light sm:mx-[20%]" />}
+            <div class:list={[rowClass, "my-12"]}>
+              {sponsorTiers[tier].map((sponsor) => (
+                <div class="flex items-center justify-center">
+                  <a href={sponsor.url} target="_blank" rel="noreferrer">
+                    <Image
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      width={width(sponsor, logoWidth[tier])}
+                      densities={[1, 2]}
+                    />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </Container>
+
+    <Container>
+      {
+        partnerSections.map(({ logos, title }) => (
+          <div class="my-16">
+            <h2 class="mx-auto max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-yellow-900 sm:text-5xl">
+              {title}
+            </h2>
+            <div class:list={[rowClass, "mt-14"]}>
+              {logos.map((logo) => (
+                <div class="flex items-center justify-center">
+                  <a href={logo.url} target="_blank" rel="noreferrer">
+                    <Image
+                      src={logo.logo}
+                      alt={logo.name}
+                      width={width(logo, logoWidth.partner)}
+                      densities={[1, 2]}
+                    />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </Container>
+  </section>
+</Container>

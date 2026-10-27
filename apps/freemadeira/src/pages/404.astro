@@ -1,0 +1,44 @@
+---
+import { buttonVariants } from "@freemadeira/ui/components/button";
+
+import "@/styles/global.css";
+import Logo from "@/assets/logo-horizontal.svg";
+import { routes } from "@/i18n/routes";
+import { heading } from "@/lib/typography";
+
+// One page for every unknown path, so it speaks both languages.
+---
+
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>Página não encontrada · Page not found – FREE Madeira</title>
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <main class="mx-auto flex w-full max-w-5xl grow flex-col gap-16 px-4 py-6 sm:px-8">
+      <a href={routes.home.pt}>
+        <Logo aria-label="FREE Madeira" class="h-18 w-auto" />
+      </a>
+      <div class="grid gap-16 sm:grid-cols-2">
+        <section class="flex flex-col items-start gap-6">
+          <h1 class={heading.h4}>Página não encontrada</h1>
+          <p>Esta página não existe ou mudou de sítio.</p>
+          <a class={buttonVariants({ variant: "fm" })} href={routes.home.pt}>
+            Ir para a página inicial
+          </a>
+        </section>
+        <section class="flex flex-col items-start gap-6" lang="en">
+          <h2 class={heading.h4}>Page not found</h2>
+          <p>This page doesn't exist or has moved.</p>
+          <a class={buttonVariants({ variant: "fm-outline" })} href={routes.home.en}>
+            Go to the home page
+          </a>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

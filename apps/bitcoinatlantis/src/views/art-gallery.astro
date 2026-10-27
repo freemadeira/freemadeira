@@ -1,0 +1,74 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import PageHero from "@/components/page-hero.astro";
+import { artGalleryArtists } from "@/data/art-gallery-artists";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.art_gallery_description({}, { locale })}
+  route="artGallery"
+  title={m.art_gallery_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title={m.art_gallery_title({}, { locale })}
+      subtitle={m.art_gallery_subtitle({}, { locale })}
+    />
+    <Container class="mt-2">
+      <div class="flex justify-center">
+        <a
+          href="https://timechainartifacts.com/3-bitcoin-atlantis"
+          target="_blank"
+          rel="noreferrer"
+          class="rounded-full border border-yellow px-3.5 py-1 text-lg font-semibold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
+        >
+          {m.art_gallery_live_auction({}, { locale })}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+      <div class="mx-auto mt-14 flex max-w-7xl flex-wrap place-content-center">
+        <div
+          class="columns-1 gap-4 px-12 sm:columns-2 lg:columns-3 xl:columns-4"
+        >
+          {
+            artGalleryArtists.map((artist) => {
+              const card = (
+                <div class="relative my-4 flex flex-col rounded-[0.25rem] bg-white shadow-sm">
+                  <Image
+                    src={artist.image}
+                    alt={artist.name}
+                    widths={[300, 600]}
+                    sizes="(min-width: 1280px) 18rem, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                    class="mb-12 w-full rounded-t-[0.25rem]"
+                  />
+                  <p class="absolute bottom-0 w-full rounded-b-[0.25rem] p-3 text-sm font-semibold text-basalt-medium">
+                    {artist.name}
+                  </p>
+                </div>
+              );
+              return artist.twitter ? (
+                <a
+                  href={`https://twitter.com/${artist.twitter}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {card}
+                </a>
+              ) : (
+                card
+              );
+            })
+          }
+        </div>
+      </div>
+    </Container>
+  </BackgroundEffect>
+</Layout>

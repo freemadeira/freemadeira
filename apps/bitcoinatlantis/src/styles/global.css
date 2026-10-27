@@ -1,4 +1,176 @@
 @import "tailwindcss";
 @import "@freemadeira/ui/styles.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/dm-sans";
 
-/* Bitcoin Atlantis's brand tokens go here, over the shared defaults. */
+/*
+ * Bitcoin Atlantis: the palette, type scale and radii of the 2024 site, which
+ * named its own colours (yellow, basalt, purple…) instead of Tailwind's.
+ */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-yellow: #ffc700;
+  --color-yellow-50: #fff9e5;
+  --color-yellow-100: #ffeeb3;
+  --color-yellow-200: #ffe380;
+  --color-yellow-300: #ffd84d;
+  --color-yellow-400: #ffcd1a;
+  --color-yellow-500: #e6b300;
+  --color-yellow-600: #b38b00;
+  --color-yellow-700: #806400;
+  --color-yellow-800: #4d3c00;
+  --color-yellow-900: #1a1400;
+
+  --color-gray: #4a4a4a;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --color-basalt: #292929;
+  --color-basalt-medium: #787882;
+  --color-basalt-bright: #c7c7d1;
+  --color-basalt-light: #f3f3f3;
+  --color-basalt-lighter: #f9f9fa;
+
+  --color-purple: #c551f2;
+  --color-purple-darker: #201424;
+  --color-purple-dark: #7f3f98;
+  --color-purple-light: #e9aeff;
+  --color-purple-lighter: #ebb7ff;
+
+  --color-green: #016635;
+  --color-green-darker: #011e0f;
+  --color-green-dark: #022814;
+  --color-green-medium: #047a3c;
+  --color-green-light: #99f3be;
+
+  --color-blue: #203467;
+  --color-blue-darker: #060a13;
+  --color-blue-dark: #121d3a;
+  --color-blue-medium: #121d3a;
+  --color-blue-light: #7791d5;
+  --color-blue-lighter: #c5d0ed;
+
+  --color-orange: #fb9f00;
+  --color-orange-light: #fdc566;
+
+  --color-red: #ff0000;
+  --color-red-50: #fff5f5;
+  --color-red-100: #fed7d7;
+  --color-red-200: #feb2b2;
+  --color-red-300: #fc8181;
+  --color-red-400: #f56565;
+  --color-red-500: #e53e3e;
+  --color-red-600: #c53030;
+  --color-red-700: #9b2c2c;
+  --color-red-800: #822727;
+  --color-red-900: #63171b;
+
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 2rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2.5rem;
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 2.5rem;
+  --text-4xl: 2.5rem;
+  --text-4xl--line-height: 3rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 3.5rem;
+  --text-6xl: 4rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
+
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.5rem;
+
+  --container-2xl: 40rem;
+
+  --shadow-glow: 0 0 15px -5px rgb(0 0 0 / 0.3);
+
+  --animate-sideways: sideways 3s infinite;
+  --animate-marquee: marquee 20s -10s linear infinite;
+
+  @keyframes sideways {
+    50% {
+      transform: translateX(-15px);
+    }
+    75% {
+      transform: translateX(15px);
+    }
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #292929;
+  --popover: #ffffff;
+  --popover-foreground: #292929;
+  --primary: #ffc700;
+  --primary-foreground: #4d3c00;
+  --secondary: #f3f3f3;
+  --secondary-foreground: #292929;
+  --muted: #f9f9fa;
+  --muted-foreground: #787882;
+  --accent: #fff9e5;
+  --accent-foreground: #4d3c00;
+  --destructive: #c53030;
+  --border: #e5e7eb;
+  --input: #d1d5db;
+  --ring: #ffd84d;
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Tailwind 3 gave buttons a pointer, which the 2024 site relied on. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

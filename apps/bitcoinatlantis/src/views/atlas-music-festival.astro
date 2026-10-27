@@ -1,0 +1,148 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+import { ExternalLinkIcon } from "lucide-react";
+
+import atlasDesktopBanner from "@/assets/atlas-desktop-banner.jpg";
+import atlasMobileBanner from "@/assets/atlas-mobile-banner.jpg";
+import atlasLogo from "@/assets/logos/events/atlas.svg";
+import quintaMagnolia from "@/assets/quinta-magnolia.jpg";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import EventHero from "@/components/event-hero.astro";
+import Section from "@/components/section.astro";
+import { atlasArtists } from "@/data/atlas-artists";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.atlas_description({}, { locale })}
+  route="atlasMusicFestival"
+  title={m.atlas_meta_title({}, { locale })}
+>
+  <BackgroundEffect gradient="from-[#f5daff] to-[#cd6ef3]">
+    <div class="pb-16 sm:pb-0">
+      <EventHero
+        logo={{ alt: "Atlas", hiddenFrom: "lg", src: atlasLogo }}
+        paragraphs={[
+          m.atlas_hero_1({}, { locale }),
+          m.atlas_hero_2({}, { locale }),
+        ]}
+        stats={[
+          [m.stat_location({}, { locale }), "Quinta Magnólia"],
+          [m.stat_date({}, { locale }), m.atlas_date({}, { locale })],
+          [m.stat_time({}, { locale }), m.atlas_time({}, { locale })],
+          [m.stat_price({}, { locale }), "29€"],
+        ]}
+        title={m.atlas_hero_title({}, { locale })}
+        titleClass="text-purple"
+      />
+    </div>
+    <Image
+      src={atlasMobileBanner}
+      alt="Atlas Music Festival"
+      widths={[640, 1280]}
+      sizes="100vw"
+      class="mt-2 block border sm:hidden"
+    />
+    <Image
+      src={atlasDesktopBanner}
+      alt="Atlas Music Festival"
+      widths={[1024, 2000]}
+      sizes="100vw"
+      class="mt-14 hidden sm:block"
+    />
+
+    <Section
+      id="the-venue"
+      title={m.atlas_venue_title({}, { locale })}
+      titleClass="text-purple"
+    >
+      <div class="mx-auto max-w-2xl">
+        <p class="mt-6 text-center text-lg leading-8 text-gray-600">
+          {m.atlas_venue_1({}, { locale })}
+        </p>
+        <p class="mt-2 text-center text-lg leading-8 text-gray-600">
+          {m.atlas_venue_2({}, { locale })}
+        </p>
+        <p class="mt-2 text-center text-lg leading-8">
+          <a
+            href="https://maps.app.goo.gl/jZPBFA5WoaG5cDxo6"
+            class="font-medium whitespace-nowrap text-purple hover:text-purple-dark"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {m.atlas_venue_directions({}, { locale })}
+          </a>
+        </p>
+      </div>
+      <div class="mt-6 flex w-full justify-center">
+        <Image
+          class="rounded-lg md:rounded-2xl"
+          src={quintaMagnolia}
+          width={800}
+          height={450}
+          densities={[1, 2]}
+          alt="Quinta Magnólia"
+        />
+      </div>
+    </Section>
+
+    <Container class="max-w-6xl">
+      <Section
+        id="line-up"
+        title={m.atlas_lineup_title({}, { locale })}
+        subtitle={m.atlas_lineup_subtitle({}, { locale })}
+        titleClass="text-purple"
+      >
+        {
+          atlasArtists.map((artist) => (
+            <div class="my-16 flex w-full space-x-16 sm:my-28">
+              <div class="w-full md:w-3/5">
+                <h2 class="mb-5 text-2xl font-medium tracking-tight text-purple sm:text-4xl">
+                  {artist.name}
+                </h2>
+                <Image
+                  src={artist.photo}
+                  alt={artist.name}
+                  widths={[640, 1280]}
+                  sizes="100vw"
+                  class="h-52 w-full rounded-md object-cover md:hidden"
+                />
+                {artist.bio.map((paragraph) => (
+                  <p class="my-4 text-lg text-basalt">{paragraph}</p>
+                ))}
+                <ul class="mt-6 flex space-x-4">
+                  {artist.links.map((link) => (
+                    <li>
+                      <a
+                        href={link.url}
+                        class="rounded-md p-1 pl-2 text-sm font-medium whitespace-nowrap text-purple hover:bg-basalt-lighter hover:text-purple/80 active:text-purple-dark"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.name} <ExternalLinkIcon className="inline size-4" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Image
+                src={artist.photo}
+                alt={artist.name}
+                width={400}
+                height={400}
+                fit="cover"
+                densities={[1, 2]}
+                class="hidden size-100 rounded-lg object-cover md:block md:rounded-2xl"
+              />
+            </div>
+          ))
+        }
+      </Section>
+    </Container>
+  </BackgroundEffect>
+</Layout>

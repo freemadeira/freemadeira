@@ -1,0 +1,464 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import atlasLogo from "@/assets/logos/events/atlas.svg";
+import holecoinerLogo from "@/assets/logos/events/holecoiner.svg";
+import megaPlebDinnerLogo from "@/assets/logos/events/mega-pleb-dinner.svg";
+import riseOfAtlantisLogo from "@/assets/logos/events/rise-of-atlantis.svg";
+import debifiLogo from "@/assets/logos/partners/debifi.svg";
+import amberAppLogo from "@/assets/logos/sponsors/amber-app.svg";
+import { routes } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+
+/** "6:30PM" in English; "18h30" in Portuguese. */
+function clock(time: string): string {
+  if (locale === "en") {
+    return time;
+  }
+  const { hours = "0", minutes = "", period } =
+    /^(?<hours>\d+)(?::(?<minutes>\d+))?(?<period>[AP]M)$/u.exec(time)
+      ?.groups ?? {};
+  const hour = (Number(hours) % 12) + (period === "PM" ? 12 : 0);
+  return `${hour}h${minutes}`;
+}
+---
+
+<div
+  data-timeline
+  class="relative mt-16 flex cursor-grab gap-x-4 overflow-x-auto pt-[305px] pb-[25px] pl-3 whitespace-nowrap scrollbar-hide data-dragging:cursor-grabbing"
+>
+  <svg
+    data-swipe-gesture
+    aria-hidden="true"
+    viewBox="0 0 723.4 945.96"
+    class="absolute left-[calc(50%-calc(3rem/2))] size-12 animate-sideways sm:top-32"
+  >
+    <path d="M243.81,437.82c0-6.15,0-12.31,0-18.46,0-30.83.01-61.66.01-92.48,0-59.29-.01-118.57,0-177.86.01-39.34,28.8-71.02,69.18-74.41,38.2-3.21,71.52,23.43,78.02,60.08,1.93,10.87,1.47,22.23,1.5,33.36.13,49.16.04,98.33.03,147.49,0,1.48,0,2.96,0,5.16,18.66-9.27,37.52-11.54,57.12-5.82,19.79,5.78,33.66,18.8,44.65,36.4,18.47-14.31,39.73-17.67,61.97-12.64,22.74,5.15,38.99,19.44,49.19,39.43,9.04-3.47,17.55-7.78,26.59-10.02,45.74-11.37,90.9,24.31,90.92,71.44.04,85.83.08,171.66.06,257.48,0,20.32,1.04,40.74-.54,60.94-5.92,76.04-43.39,131.72-110.75,167.25-18.27,9.63-37.87,16.15-58.33,18.27-18.27,1.89-36.79,1.42-55.21,1.93-9.29.25-18.58.48-27.87.5-25.67.06-51.33.19-77-.02-88.4-.7-163.69-57.26-190.02-141.6-23.22-74.36-47.3-148.44-71-222.65-11.09-34.72-22.36-69.38-33.21-104.18-13.8-44.26,15.06-90.32,60.76-95.89,37.01-4.51,69.31,15.53,81.15,51.3.56,1.7,1.17,3.38,1.75,5.07.34-.03.68-.05,1.02-.08ZM282.43,356.07c0,57.66,0,115.31,0,172.97,0,12,.09,24-.03,35.99-.07,7.11-2.9,13.01-9.09,16.8-11.62,7.13-24.88,1.28-29.33-12.69-13.34-41.86-26.6-83.75-40.15-125.55-6.08-18.76-26.35-28.62-45.09-22.47-18.38,6.04-28.79,26.06-22.91,44.54,18.11,56.91,36.33,113.79,54.5,170.68,4.65,14.56,9.29,29.11,13.93,43.67,11.12,34.9,22.52,69.7,33.25,104.72,7.46,24.34,17.6,47.24,34.48,66.45,31.57,35.91,71.48,55.13,119.38,55.87,45.48.7,90.99.52,136.48.05,30.92-.32,59.54-9.43,84.94-27.08,47.81-33.21,71.69-79.27,71.78-137.49.1-67.16.02-134.32,0-201.48,0-33.49.12-66.99-.06-100.48-.11-20.24-16.47-36.46-35.8-36.03-20.59.45-36.07,16.54-35.91,37.04.15,19.17.06,38.33.06,57.5,0,14.83.03,29.66-.02,44.49-.05,12.67-10.74,21.29-23.21,18.8-9.5-1.9-15.21-9.27-15.22-19.96-.03-43.16-.03-86.32.03-129.49.02-12.84-4.45-23.55-14.98-31.09-11.54-8.26-24.16-9.41-36.83-3.02-13.02,6.57-19.78,17.66-19.86,32.25-.19,33.16-.02,66.32-.12,99.49-.03,10.56-8.17,18.81-18.49,19.16-10.55.36-19.32-7.6-19.9-18.27-.25-4.49-.18-9-.18-13.5,0-37.16.1-74.32,0-111.48-.07-22.86-19.73-39.33-42.1-35.56-16.99,2.86-29.34,17.79-29.39,35.9-.09,35.16,0,70.33-.03,105.49,0,9.2-5.04,16.26-13.37,19.01-7.73,2.55-17.03.16-21.2-6.92-2.55-4.33-3.93-10-3.94-15.07-.23-88.67-.16-177.33-.17-266,0-25.16.09-50.32-.04-75.48-.1-18.88-15.95-34.63-34.8-34.87-21.07-.27-36.61,15.64-36.62,37.64-.03,68.49-.01,136.99,0,205.48Z"></path>
+    <path d="M70.26,171.04c6.1,5.8,12.17,11.02,17.57,16.85,6.73,7.28,6.23,18.04-.55,24.83-7.1,7.1-17.64,7.48-25.29.91-1.01-.87-2-1.77-2.97-2.68-17.81-16.56-35.65-33.09-53.42-49.69-7.57-7.07-7.42-13.23.16-20.25,18.44-17.1,36.81-34.29,55.31-51.34,9.64-8.89,23.37-6.82,29.31,4.21,3.92,7.27,2.6,15.82-3.63,21.99-5.2,5.15-10.59,10.11-15.89,15.17-.08.07,0,.3,0,.8h96.23c3.65-12.48,6.39-24.69,10.77-36.28,8.23-21.8,21.45-40.54,38.78-56.06,73.6-65.93,183.56-45.94,231.59,34.77,9.84,16.54,16.55,34.42,19.33,53.59.37,2.52.65,4.29,4.02,4.28,31-.13,61.99-.1,92.99-.13.29,0,.59-.2,1.63-.58-5.29-4.94-10.33-9.63-15.34-14.35-6.28-5.9-8.81-12.91-5.71-21.23,4.43-11.9,19.74-15.72,29.35-6.96,19.46,17.72,38.64,35.74,57.82,53.76,5.61,5.27,5.64,11.85.08,17.07-19.19,18.01-38.42,35.98-57.83,53.76-7.6,6.97-18.77,6.3-25.66-.94-6.94-7.29-6.87-18.13.5-25.64,5.29-5.39,10.99-10.39,17.26-16.27-2.38-.17-3.65-.33-4.92-.33-29.49,0-58.98.08-88.46-.08-3.98-.02-5.31,1.11-5.92,5.11-2.5,16.42-7.75,31.99-15.61,46.65-5.77,10.75-16.86,14.35-27.03,8.81-9.42-5.13-12.25-16.38-6.77-26.87,39.72-76.05-15.71-166.42-101.54-165.55-76.08.77-130.07,77.76-104.8,149.56,1.98,5.63,4.57,11.06,7.19,16.43,5.12,10.54,2.07,21.59-7.59,26.65-10.05,5.27-20.89,1.47-26.54-9.11-8-14.98-13.25-30.87-15.8-47.63-.42-2.8-1.12-4.04-4.22-4.03-30.99.1-61.99.07-92.98.09-.27,0-.54.27-1.4.71Z"></path>
+  </svg>
+  <div class="flex flex-col pr-3">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_feb_27({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-basalt-medium flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[350px]">{clock("5PM")}</div>
+    </div>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-32 -mt-[156px]" />
+      </div>
+      <a href={routes.holecoiner[locale]}>
+        <li class="-mt-[350px] -ml-3 hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <Image src={holecoinerLogo} alt="Holecoiner" class="w-32" />
+          <p class="mb-1 mt-3 text-2xl font-semibold">Holecoiner</p>
+          <p class="font-semibold">{m.timechain_golf_challenge({}, { locale })}</p>
+          <p>Santo da Serra Golf Club</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-20 -mt-[123px] ml-[213px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#cypherpunk-bbq`}>
+        <li class="-mt-[208px] -ml-3 hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">Cypherpunk BBQ</p>
+          <p>Cowork Funchal</p>
+        </li>
+      </a>
+    </ol>
+  </div>
+
+  <div class="flex flex-col pr-3">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_feb_28({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-basalt-medium flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[450px]">{clock("4PM")}</div>
+    </div>
+    <ol class="flex w-[250px] ml-[475px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-20 -mt-[100px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#raspiblitz-meetup`}>
+        <li class="-mt-[208px] -ml-3 hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">RaspiBlitz</p>
+          <p class="font-semibold">{m.timechain_meetup_party({}, { locale })}</p>
+          <p>Three House</p>
+        </li>
+      </a>
+    </ol>
+  </div>
+
+  <div class="flex flex-col pr-3">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_feb_29({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-basalt-medium flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[75px]">{clock("9AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("10AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("11AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[90px]">{clock("3PM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[75px]">{clock("6PM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("6:30PM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[25px] mr-[15px]">{clock("9:30PM")}</div>
+    </div>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[185px] -mt-[198px] -ml-[23px]" />
+      </div>
+      <a href={routes.bemVindoAoBitcoin[locale]}>
+        <li class="-mt-[330px] whitespace-nowrap hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300 -ml-[31px]">
+          <p class="mb-1 text-2xl font-semibold">Bem-vindo ao Bitcoin</p>
+          <p class="font-semibold">{m.timechain_bem_vindo({}, { locale })}</p>
+          <p>
+            Centro Cultural e de <br /> Investigação do Funchal
+          </p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-48 -mt-[220px] ml-[30px]" />
+      </div>
+      <a href={routes.riseOfAtlantis[locale]}>
+        <li class="-mt-[410px] -ml-[10px] whitespace-nowrap hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <Image src={riseOfAtlantisLogo} alt="Rise of Atlantis" class="w-32" />
+          <p class="mb-1 mt-3 text-2xl font-semibold">Rise of Atlantis</p>
+          <p class="font-semibold">{m.timechain_pitch_competition({}, { locale })}</p>
+          <p>Centro Cultural e de Investigação do Funchal</p>
+        </li>
+      </a>
+    </ol>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-14 -mt-7 ml-[115px]" />
+      </div>
+      <div class="flex flex-col">
+        <a href={`${routes.satelliteEvents[locale]}#mi-primer-bitcoin-unconference`} class="z-10">
+          <li class="mt-[27px] -ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+            <p class="mb-1 text-2xl font-semibold leading-7">
+              Mi Primer Bitcoin <br /> Unconference
+            </p>
+            <p class="font-semibold">{m.timechain_independent_education({}, { locale })}</p>
+            <p>Porto Mare Hotel</p>
+          </li>
+        </a>
+        <div class="flex-start block">
+          <div class="border-l-2 border-basalt h-8" />
+        </div>
+        <a href={`${routes.satelliteEvents[locale]}#the-planb-exam`} class="z-10">
+          <li class="-ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+            <p class="mb-1 text-2xl font-semibold leading-7">The PlanB Exam</p>
+            <p class="font-semibold">{m.timechain_test_knowledge({}, { locale })}</p>
+            <p>
+              Centro Cultural e de
+              <br />
+              Investigação do Funchal
+            </p>
+          </li>
+        </a>
+      </div>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[180px] -mt-7 -ml-[315px] z-0" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#women-of-bitcoin`} class="-ml-[520px]">
+        <li class="text-right mt-[152px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">Women of Bitcoin</p>
+          <p class="font-semibold">{m.timechain_brunch({}, { locale })}</p>
+          <p>Nini Design Center</p>
+        </li>
+      </a>
+    </ol>
+  </div>
+
+  <div class="flex flex-col pr-10">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_mar_1({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-yellow flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[60px]">{clock("7:30AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[65px]">{clock("9AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[320px]">{clock("7PM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("8PM")}</div>
+    </div>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[60px] -mt-[100px] -ml-[305px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#no-bs-self-defence`} class="-ml-[315px]">
+        <li class="-mt-[197px] whitespace-nowrap p-2 hover:bg-yellow-50 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold leading-7">No BS Self-Defence</p>
+          <p class="font-semibold">{m.timechain_self_defence({}, { locale })}</p>
+          <p>{m.timechain_santa_catarina({}, { locale })}</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[200px] -mt-[225px] ml-[10px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#hal-finney-seaside-run`}>
+        <li class="-mt-[333px] -ml-[10px] whitespace-nowrap hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">Hal Finney Seaside Run</p>
+          <p class="font-semibold">{m.timechain_social_run({}, { locale })}</p>
+          <p>Lido Beach Complex, Funchal</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-24 -mt-28 -ml-[145px]" />
+      </div>
+      <li class="-mt-[192px] -ml-[153px] whitespace-nowrap p-2 rounded-lg transition-all duration-300">
+        <p class="text-2xl font-semibold">{m.timechain_conference_day_1({}, { locale })}</p>
+        <p>{m.timechain_maritimo_stadium({}, { locale })}</p>
+      </li>
+    </ol>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[165px] -mt-[10px] -ml-[380px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#bitcoin-bar-cafe`} class="-ml-[390px] z-0">
+        <li class="mt-[155px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300 z-20">
+          <p class="mb-1 text-2xl font-semibold">Bitcoin Bar Café</p>
+          <p class="font-semibold">{m.timechain_opening_party({}, { locale })}</p>
+          <p>Barreirinha Bar Café</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[50px] -mt-[10px] -ml-[65px]" />
+      </div>
+      <li class="mt-[42px] -ml-[66px]">
+        <p class="text-2xl font-semibold">{m.timechain_tourism_reception({}, { locale })}</p>
+        <Image src={debifiLogo} alt="Debifi" class="w-20" />
+      </li>
+    </ol>
+  </div>
+
+  <div class="flex flex-col pr-10">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_mar_2({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-yellow flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[440px]">{clock("6PM")}</div>
+    </div>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[167px] -mt-[207px] -ml-[280px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#special-meetup-party`}>
+        <li class="-mt-[350px] whitespace-nowrap -ml-[289px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <Image src={amberAppLogo} alt="Amber" class="w-36" />
+          <p class="mb-1 text-2xl font-semibold">Special Meetup Party</p>
+          <p class="font-semibold">{m.timechain_meetup_turns_party({}, { locale })}</p>
+          <p>Nini Design Center</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-24 -mt-28 -ml-[83px]" />
+      </div>
+      <li class="-mt-[192px] whitespace-nowrap -ml-[92px] p-2 rounded-lg transition-all duration-300">
+        <p class="text-2xl font-semibold">{m.timechain_conference_day_2({}, { locale })}</p>
+        <p>{m.timechain_maritimo_stadium({}, { locale })}</p>
+      </li>
+    </ol>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[100px] -mt-[10px] -ml-[215px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#no-more-inflation-film-screening`}>
+        <li class="mt-[90px] -ml-[225px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="text-2xl font-semibold">{m.timechain_no_more_inflation({}, { locale })}</p>
+          <p class="font-semibold">{m.timechain_film_preview({}, { locale })}</p>
+          <p>NOS Cinemas Forum Madeira</p>
+        </li>
+      </a>
+    </ol>
+  </div>
+  <div class="flex flex-col pr-10">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_mar_3({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-yellow flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[500px]">{clock("7PM")}</div>
+    </div>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-44 -mt-48 -ml-[256px]" />
+      </div>
+      <a href={routes.atlasMusicFestival[locale]}>
+        <li class="-mt-[389px] whitespace-nowrap -ml-[264px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <Image src={atlasLogo} alt="Atlas" class="w-32" />
+          <p class="mb-1 mt-3 text-2xl font-semibold">Atlas</p>
+          <p class="font-semibold">{m.timechain_music_festival({}, { locale })}</p>
+          <p>Quinta Magnólia</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-24 -mt-28 ml-[2px]" />
+      </div>
+      <li class="-mt-[192px] whitespace-nowrap -ml-[10px] p-2 rounded-lg transition-all duration-300">
+        <p class="text-2xl font-semibold">{m.timechain_conference_day_3({}, { locale })}</p>
+        <p>{m.timechain_maritimo_stadium({}, { locale })}</p>
+      </li>
+    </ol>
+  </div>
+
+  <div class="flex flex-col pr-10">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_mar_4({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full bg-basalt-medium flex items-center">
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[20px]">{clock("10AM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[220px]">{clock("3PM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[20px]">{clock("4PM")}</div>
+      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[20px]">{clock("5PM")}</div>
+    </div>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-40 -mt-[200px] -ml-[198px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#mega-pleb-dinner`}>
+        <li class="-mt-[385px] whitespace-nowrap -ml-[206px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <Image src={megaPlebDinnerLogo} alt="Mega Pleb Dinner" class="w-32" />
+          <p class="mb-1 mt-3 text-2xl font-semibold">Mega Pleb Dinner</p>
+          <p class="font-semibold">{m.timechain_madeiran_dinner({}, { locale })}</p>
+          <p>{m.timechain_o_lagar({}, { locale })}</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-20 -mt-[120px] ml-[65px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#atlantis-football-cup`}>
+        <li class="-mt-[201px] -ml-[10px] whitespace-nowrap hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">Atlantis Football Cup</p>
+          <p class="font-semibold">{m.timechain_football_skills({}, { locale })}</p>
+        </li>
+      </a>
+    </ol>
+    <ol class="flex w-[600px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[170px] -mt-7" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#bitcoinwalk-madeira`}>
+        <li class="mt-[142px] -ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">BitcoinWalk Madeira</p>
+          <p class="font-semibold">{m.timechain_walking_meetup({}, { locale })}</p>
+          <p>{m.timechain_meeting_point_stadium({}, { locale })}</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-12 -mt-7 -ml-[228px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#hal-finney-mountain-run`}>
+        <li class="mt-[20px] -ml-[236px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">Hal Finney Mountain Run</p>
+          <p class="font-semibold">{m.timechain_run_to_top({}, { locale })}</p>
+          <p>{m.timechain_meeting_point_venue({}, { locale })}</p>
+        </li>
+      </a>
+    </ol>
+  </div>
+
+  <div class="flex flex-col pr-10">
+    <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-basalt-lighter whitespace-nowrap -ml-2 mt-2">{m.timechain_mar_5({}, { locale })}</div>
+    <div class="flex-start block">
+      <div class="border-l-2 border-basalt h-[108px] -mt-8" />
+    </div>
+  </div>
+  <div class="mt-16 -ml-32">
+    <div class="h-14 w-full flex bg-basalt-medium items-center" />
+    <ol class="flex w-[80px] ml-[125px]">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-52 -mt-[240px] -ml-[395px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#bitcoin-filmfest-mini`} class="-ml-[403px]">
+        <li class="-mt-[348px] whitespace-nowrap hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">Bitcoin FilmFest Mini</p>
+          <p class="font-semibold">{m.timechain_bitcoin_cinema({}, { locale })}</p>
+          <p>Centro Cultural e de Investigação do Funchal</p>
+        </li>
+      </a>
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-24 -mt-[120px] -ml-[273px]" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#bitcoinwalk-madeira`}>
+        <li class="-mt-[228px] whitespace-nowrap -ml-[283px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">BitcoinWalk Madeira</p>
+          <p class="font-semibold">{m.timechain_walking_meetup({}, { locale })}</p>
+          <p>{m.timechain_meeting_point_stadium({}, { locale })}</p>
+        </li>
+      </a>
+    </ol>
+    <ol class="flex w-[80px] -ml-[120px] whitespace-nowrap">
+      <div class="flex-start block">
+        <div class="border-l-2 border-basalt h-[100px] -mt-7" />
+      </div>
+      <a href={`${routes.satelliteEvents[locale]}#catamaran-trip`}>
+        <li class="mt-[72px] -ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+          <p class="mb-1 text-2xl font-semibold">{m.timechain_catamaran_trip({}, { locale })}</p>
+          <p class="font-semibold">{m.timechain_maritime_journey({}, { locale })}</p>
+          <p>{m.timechain_meeting_point_marina({}, { locale })}</p>
+        </li>
+      </a>
+    </ol>
+  </div>
+</div>
+
+<script>
+  // Drag to scroll on desktop; the swipe hint goes once the reader scrolls.
+  for (const timeline of document.querySelectorAll<HTMLElement>(
+    "[data-timeline]"
+  )) {
+    const gesture = timeline.querySelector("[data-swipe-gesture]");
+    let startX = 0;
+    let startScroll = 0;
+
+    timeline.addEventListener(
+      "scroll",
+      () => {
+        gesture?.remove();
+      },
+      { once: true, passive: true }
+    );
+    timeline.addEventListener("mousedown", (event) => {
+      timeline.dataset.dragging = "";
+      startX = event.pageX - timeline.offsetLeft;
+      startScroll = timeline.scrollLeft;
+    });
+    for (const type of ["mouseleave", "mouseup"]) {
+      timeline.addEventListener(type, () => {
+        delete timeline.dataset.dragging;
+      });
+    }
+    timeline.addEventListener("mousemove", (event) => {
+      if (timeline.dataset.dragging === undefined) {
+        return;
+      }
+      event.preventDefault();
+      const x = event.pageX - timeline.offsetLeft;
+      timeline.scrollLeft = startScroll - (x - startX) * 2;
+    });
+  }
+</script>

@@ -1,0 +1,39 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { getImage } from "astro:assets";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import { GalleryGrid } from "@/components/gallery-grid";
+import PageHero from "@/components/page-hero.astro";
+import { sketches } from "@/data/sketches";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const photos = await Promise.all(
+  sketches.map(async (sketch) => {
+    const image = await getImage({ format: "webp", src: sketch, width: 1600 });
+    return {
+      height: Math.round((sketch.height * 1600) / sketch.width),
+      src: image.src,
+      width: 1600,
+    };
+  })
+);
+---
+
+<Layout
+  description={m.sketches_description({}, { locale })}
+  route="sketches"
+  title={m.sketches_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title={m.sketches_title({}, { locale })}
+      subtitle={m.sketches_subtitle({}, { locale })}
+    />
+    <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-12">
+      <GalleryGrid client:visible photos={photos} />
+    </div>
+  </BackgroundEffect>
+</Layout>

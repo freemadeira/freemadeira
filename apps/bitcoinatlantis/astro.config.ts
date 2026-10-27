@@ -1,9 +1,11 @@
 import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
-import { defaultLocale, locales } from "@freemadeira/i18n";
+import { defaultLocale, legacyRedirects, locales } from "@freemadeira/i18n";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
+
+import { routes } from "./src/i18n/routes";
 
 export default defineConfig({
   adapter: vercel(),
@@ -13,6 +15,7 @@ export default defineConfig({
     routing: { prefixDefaultLocale: false },
   },
   integrations: [react()],
+  redirects: legacyRedirects(routes),
   server: { port: 4322 },
   site: "https://bitcoinatlantis.com",
   vite: {

@@ -37,3 +37,22 @@ export function isLocale(value: unknown): value is Locale {
 export function toLocale(value: string | undefined): Locale {
   return isLocale(value) ? value : defaultLocale;
 }
+
+/**
+ * The sites used to be English-only, with no /en prefix. This maps each old
+ * path to its English page, for Astro's `redirects` (a 301 on Vercel). A path
+ * that is now a Portuguese page, like `/`, is left to that page.
+ */
+export function legacyRedirects(
+  routes: Record<string, LocalizedPaths>
+): Record<string, string> {
+  const portuguese = new Set(Object.values(routes).map((paths) => paths.pt));
+  const redirects: Record<string, string> = {};
+  for (const paths of Object.values(routes)) {
+    const legacy = paths.en.replace(/^\/en(?=\/|$)/u, "") || "/";
+    if (!portuguese.has(legacy)) {
+      redirects[legacy] = paths.en;
+    }
+  }
+  return redirects;
+}

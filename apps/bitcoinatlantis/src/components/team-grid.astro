@@ -1,0 +1,40 @@
+---
+import { Image } from "astro:assets";
+
+import type { Person } from "@/data/types";
+
+import SocialLinks from "./social-links.astro";
+
+interface Props {
+  people: Person[];
+  /** Book Corner authors and the Bem-vindo team show their socials. */
+  showSocials?: boolean;
+}
+
+const { people, showSocials = false } = Astro.props;
+---
+
+<div
+  class="mx-auto my-10 flex max-w-max flex-wrap place-content-center gap-x-32 gap-y-10 md:gap-x-16 lg:gap-x-32"
+>
+  {
+    people.map((person) => (
+      <div class="flex flex-col items-center justify-center text-center">
+        <Image
+          src={person.image}
+          alt={person.name}
+          width={160}
+          densities={[1, 2]}
+          class="w-40 rounded-full"
+        />
+        <h3 class="mt-2 font-display text-lg font-bold tracking-tight text-slate-900">
+          {person.name}
+        </h3>
+        <p class="mt-1 tracking-tight text-slate-500">{person.company}</p>
+        {showSocials && (
+          <SocialLinks nostr={person.nostr} twitter={person.twitter} />
+        )}
+      </div>
+    ))
+  }
+</div>

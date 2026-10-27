@@ -1,0 +1,25 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import PageHero from "@/components/page-hero.astro";
+import Timeline from "@/components/timeline.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.timechain_description({}, { locale })}
+  route="timechain"
+  title={m.timechain_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title="Timechain"
+      subtitle={m.timechain_subtitle({}, { locale })}
+    />
+    <Timeline />
+  </BackgroundEffect>
+</Layout>

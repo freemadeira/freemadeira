@@ -9,8 +9,15 @@ import {
   toLocale,
 } from "@freemadeira/i18n";
 
+import logoVertical from "@/assets/logos/logo-vertical.svg";
+import logo from "@/assets/logos/logo.svg";
+import Banner from "@/components/banner.astro";
+import { SiteHeader } from "@/components/site-header";
+import type { HeaderLink } from "@/components/site-header";
+import SiteFooter from "@/components/site-footer.astro";
 import { routes } from "@/i18n/routes";
 import type { Route } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
 
 interface Props {
   description: string;
@@ -22,18 +29,44 @@ const { description, route, title } = Astro.props;
 const locale = toLocale(Astro.currentLocale);
 const paths = routes[route];
 const site = Astro.site ?? Astro.url;
-const otherLocales = locales.filter((other) => other !== locale);
+const canonical = new URL(paths[locale], site);
+const ogImage = new URL("/images/bitcoin-atlantis-og.png", site);
+const other = locales.find((alternate) => alternate !== locale) ?? defaultLocale;
+const ogDescription = m.meta_og_description({}, { locale });
+
+const link = (to: Route, label: string, more = false): HeaderLink => ({
+  href: routes[to][locale],
+  label,
+  more,
+});
+const links = [
+  link("recap", m.nav_recap({}, { locale })),
+  link("speakers", m.nav_speakers({}, { locale })),
+  link("satelliteEvents", m.nav_satellite_events({}, { locale })),
+  link("photoGallery", m.nav_photo_gallery({}, { locale })),
+  link("timechain", m.nav_timechain({}, { locale }), true),
+  link("bookCorner", m.nav_book_corner({}, { locale }), true),
+  link("kidsBlock", m.nav_kids_block({}, { locale }), true),
+  link("atlanticBazaar", m.nav_atlantic_bazaar({}, { locale }), true),
+  link("artGallery", m.nav_art_gallery({}, { locale }), true),
+  link("sketches", m.nav_sketches({}, { locale }), true),
+  link("venueMap", m.nav_venue_map({}, { locale }), true),
+].map((item) => ({ ...item, label: item.label.toUpperCase() }));
 ---
 
 <!doctype html>
-<html lang={htmlLang[locale]}>
+<html lang={htmlLang[locale]} class="bg-white antialiased">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.ico" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(paths[locale], site)} />
+    <meta
+      name="keywords"
+      content="Bitcoin, Madeira, money, Lightning Network, Portugal, Funchal"
+    />
+    <link rel="canonical" href={canonical} />
     {
       locales.map((alternate) => (
         <link
@@ -48,17 +81,56 @@ const otherLocales = locales.filter((other) => other !== locale);
       hreflang="x-default"
       href={new URL(paths[defaultLocale], site)}
     />
+    <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={htmlLang[locale].replace("-", "_")} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@FREEMadeiraOrg" />
+    <meta name="twitter:creator" content="@FREEMadeiraOrg" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={ogDescription} />
+    <meta name="twitter:image" content={ogImage} />
   </head>
-  <body>
-    <header class="mx-auto flex max-w-5xl justify-end px-6 py-4 text-sm">
-      {
-        otherLocales.map((other) => (
-          <a href={paths[other]} hreflang={other} lang={htmlLang[other]}>
-            {localeNames[other]}
-          </a>
-        ))
-      }
-    </header>
-    <slot />
+  <body class="flex min-h-dvh flex-col">
+    <Banner />
+    <SiteHeader
+      client:idle
+      currentPath={paths[locale]}
+      labels={{
+        menu: m.nav_open_menu({}, { locale }),
+        more: m.nav_more({}, { locale }),
+      }}
+      language={{
+        href: paths[other],
+        hreflang: other,
+        label: localeNames[other],
+        lang: htmlLang[other],
+      }}
+      links={links}
+      logo={{
+        horizontal: {
+          height: logo.height,
+          src: logo.src,
+          width: logo.width,
+        },
+        vertical: {
+          height: logoVertical.height,
+          src: logoVertical.src,
+          width: logoVertical.width,
+        },
+      }}
+      logoHref={routes.home[locale]}
+      recap={{
+        href: routes.recap[locale],
+        label: m.nav_watch_recap({}, { locale }),
+      }}
+    />
+    <div class="grow">
+      <slot />
+    </div>
+    <SiteFooter />
   </body>
 </html>

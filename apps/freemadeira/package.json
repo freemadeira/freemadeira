@@ -17,6 +17,9 @@
     "@inlang/paraglide-js": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "astro": "catalog:",
+    "cn": "catalog:",
+    "iron-session": "^9.0.1",
+    "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:"

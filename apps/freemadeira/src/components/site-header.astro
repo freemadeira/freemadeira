@@ -1,0 +1,96 @@
+---
+import { htmlLang, localeNames, toLocale } from "@freemadeira/i18n";
+import type { LocalizedPaths } from "@freemadeira/i18n";
+import { buttonVariants } from "@freemadeira/ui/components/button";
+
+import Logo from "@/assets/logo-horizontal.svg";
+import AboutMenu from "@/components/about-menu";
+import Container from "@/components/container.astro";
+import MobileMenu from "@/components/mobile-menu";
+import { routes } from "@/i18n/routes";
+import { menuItemClass, navigation } from "@/lib/navigation";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  /** This page's path in each locale, for the language link. */
+  paths: LocalizedPaths;
+}
+
+const { paths } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const nav = navigation(Astro.currentLocale);
+const current = Astro.url.pathname;
+const language = {
+  href: paths[nav.otherLocale],
+  hreflang: nav.otherLocale,
+  label: localeNames[nav.otherLocale],
+  lang: htmlLang[nav.otherLocale],
+};
+const newTab = { rel: "noopener noreferrer", target: "_blank" };
+---
+
+<header>
+  <Container
+    aria-label={m.nav_label({}, t)}
+    as="nav"
+    class="flex-row items-center justify-between gap-12 py-6"
+  >
+    <a aria-label={m.nav_home({}, t)} href={routes.home[locale]}>
+      <Logo aria-hidden="true" class="h-18 w-auto" />
+    </a>
+
+    <div class="hidden items-center gap-8 lg:flex">
+      <AboutMenu
+        client:idle
+        current={current}
+        items={nav.about.items}
+        label={nav.about.label}
+      />
+      <a class={menuItemClass} href={nav.bitcoinAtlantis.href} {...newTab}>
+        {nav.bitcoinAtlantis.label}
+      </a>
+      <div class="flex gap-4">
+        <a
+          class={buttonVariants({ variant: "fm-outline" })}
+          href={nav.learn.href}
+          {...newTab}
+        >
+          {nav.learn.label}
+        </a>
+        <a
+          class={buttonVariants({ variant: "fm" })}
+          href={nav.shop.href}
+          {...newTab}
+        >
+          {nav.shop.label}
+        </a>
+      </div>
+      <a
+        class={menuItemClass}
+        href={language.href}
+        hreflang={language.hreflang}
+        lang={language.lang}
+        title={language.label}
+      >
+        {nav.otherLocale.toUpperCase()}
+      </a>
+    </div>
+
+    <MobileMenu
+      about={nav.about}
+      backLabel={m.nav_back({}, t)}
+      bitcoinAtlantis={nav.bitcoinAtlantis}
+      client:idle
+      closeLabel={m.nav_close_menu({}, t)}
+      current={current}
+      home={routes.home[locale]}
+      language={language}
+      learn={nav.learn}
+      openLabel={m.nav_open_menu({}, t)}
+      shop={nav.shop}
+    >
+      <Logo aria-hidden="true" class="h-18 w-auto" slot="logo" />
+    </MobileMenu>
+  </Container>
+</header>

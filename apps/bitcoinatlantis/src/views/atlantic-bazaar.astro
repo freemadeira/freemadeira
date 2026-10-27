@@ -1,0 +1,51 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import PageHero from "@/components/page-hero.astro";
+import { merchants } from "@/data/bazaar-merchants";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.bazaar_description({}, { locale })}
+  route="atlanticBazaar"
+  title={m.bazaar_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title="Atlantic Bazaar"
+      subtitle={m.bazaar_subtitle({}, { locale })}
+    />
+    <Container class="mt-20">
+      <Container>
+        <div
+          class="mx-auto flex max-w-7xl flex-wrap place-content-center gap-x-32 gap-y-12 md:gap-x-16 md:gap-y-16 lg:gap-x-32"
+        >
+          {
+            merchants.map((merchant) => (
+              <a
+                href={merchant.url}
+                target="_blank"
+                rel="noreferrer"
+                class="flex flex-col items-center justify-center text-center"
+              >
+                <Image
+                  src={merchant.logo}
+                  alt={merchant.name}
+                  width={Math.round(150 * (merchant.sizeMultiplier ?? 1))}
+                  densities={[1, 2]}
+                />
+              </a>
+            ))
+          }
+        </div>
+      </Container>
+    </Container>
+  </BackgroundEffect>
+</Layout>

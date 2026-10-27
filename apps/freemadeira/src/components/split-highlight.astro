@@ -1,0 +1,35 @@
+---
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import type { SvgComponent } from "astro/types";
+
+import Container from "@/components/container.astro";
+import { externalLinkProps } from "@/lib/links";
+import { heading } from "@/lib/typography";
+
+interface Props {
+  button?: { href: string; label: string };
+  illustration: SvgComponent;
+  title: string;
+}
+
+const { button, illustration: Illustration, title } = Astro.props;
+---
+
+<Container class="mt-32 mb-28 items-center gap-12 md:flex-row" size="tight">
+  <div class="flex flex-col gap-6 md:w-[53%]">
+    <h2 class={heading.h4}>{title}</h2>
+    <p class={heading.h6}><slot /></p>
+    {
+      button && (
+        <a
+          class:list={[buttonVariants({ variant: "fm" }), "mt-5"]}
+          href={button.href}
+          {...externalLinkProps(button.href)}
+        >
+          {button.label}
+        </a>
+      )
+    }
+  </div>
+  <Illustration aria-hidden="true" class="h-auto w-full md:w-[47%]" />
+</Container>

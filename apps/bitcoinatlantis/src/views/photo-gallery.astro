@@ -1,0 +1,78 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import { GalleryGrid } from "@/components/gallery-grid";
+import PageHero from "@/components/page-hero.astro";
+import { PhotoGalleryIndex } from "@/components/photo-gallery-index";
+import { ScrollUp } from "@/components/scroll-up";
+import {
+  conferencePhotos,
+  photoUrl,
+  satelliteEventPhotos,
+} from "@/data/photo-gallery";
+import type { GallerySection } from "@/data/photo-gallery";
+import Layout from "@/layouts/base-layout.astro";
+import { slugify } from "@/lib/slugify";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+
+const resolve = (section: GallerySection) => {
+  const topic =
+    typeof section.topic === "string" ? section.topic : section.topic[locale];
+  return {
+    id: slugify(topic),
+    photos: section.photos.map(({ asset, height, width }) => ({
+      height,
+      src: photoUrl(asset),
+      width,
+    })),
+    topic,
+  };
+};
+const conference = conferencePhotos.map(resolve);
+const satelliteEvents = satelliteEventPhotos.map(resolve);
+const sections = [...conference, ...satelliteEvents];
+---
+
+<Layout
+  description={m.photo_gallery_description({}, { locale })}
+  route="photoGallery"
+  title={m.photo_gallery_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero title={m.photo_gallery_title({}, { locale })} />
+    <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-12">
+      <div class="pb-16">
+        <PhotoGalleryIndex
+          client:idle
+          sections={[
+            {
+              pills: conference.map(({ id, topic }) => ({ id, label: topic })),
+              title: m.photo_gallery_conference({}, { locale }),
+            },
+            {
+              pills: satelliteEvents.map(({ id, topic }) => ({
+                id,
+                label: topic,
+              })),
+              title: m.photo_gallery_satellite_events({}, { locale }),
+            },
+          ]}
+        />
+      </div>
+      {
+        sections.map(({ id, photos, topic }) => (
+          <div id={id} class="mt-12 scroll-mt-36 sm:scroll-mt-32">
+            <h2 class="pb-8 text-2xl leading-10 font-bold tracking-tight text-gray-900">
+              {topic}
+            </h2>
+            <GalleryGrid client:visible photos={photos} />
+          </div>
+        ))
+      }
+    </div>
+    <ScrollUp client:idle label={m.scroll_to_top({}, { locale })} />
+  </BackgroundEffect>
+</Layout>

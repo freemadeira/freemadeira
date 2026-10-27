@@ -1,0 +1,31 @@
+---
+import { cn } from "cn";
+
+import { socialNetworks } from "@/data/socials";
+import type { Social } from "@/data/socials";
+
+interface Props {
+  social: Social;
+  username: string;
+  /** Outlined on yellow, filled white on top of a photo. */
+  variant?: "outlined" | "filled";
+}
+
+const { social, username, variant = "outlined" } = Astro.props;
+const network = socialNetworks[social];
+const Icon = network.icon;
+---
+
+<a
+  class={cn(
+    "inline-flex size-10 shrink-0 items-center justify-center rounded-full border fill-dark p-[9px] transition duration-75 hover:bg-dark hover:fill-white active:scale-95",
+    variant === "outlined" ? "border-dark" : "border-transparent bg-white"
+  )}
+  href={network.baseUrl + username}
+  rel="noopener noreferrer"
+  target="_blank"
+  title={network.name}
+>
+  <span class="sr-only">{network.name}</span>
+  <Icon aria-hidden="true" class="size-full" />
+</a>

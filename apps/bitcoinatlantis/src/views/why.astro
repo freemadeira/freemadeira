@@ -1,0 +1,76 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import whyImage from "@/assets/madeira-why.jpg";
+import BackgroundBanner from "@/components/background-banner.astro";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import StayConnected from "@/components/stay-connected.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.why_description({}, { locale })}
+  route="why"
+  title={m.why_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <BackgroundBanner
+      image={whyImage}
+      class="relative mb-12 flex h-96 items-center justify-center overflow-hidden bg-center"
+    >
+      <div class="py-6 sm:py-8">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+          <div class="mx-auto max-w-2xl text-center">
+            <h1
+              class="text-4xl font-bold tracking-tight text-white sm:text-6xl"
+            >
+              {m.why_title({}, { locale })}
+            </h1>
+            <p class="mt-6 text-lg leading-8 text-white">
+              {m.why_subtitle({}, { locale })}
+            </p>
+          </div>
+        </div>
+      </div>
+    </BackgroundBanner>
+
+    <Container class="my-12 max-w-4xl">
+      {
+        [
+          m.why_free_madeira({}, { locale }),
+          m.why_passionate({}, { locale }),
+        ].map((text) => <p class="py-3">{text}</p>)
+      }
+      <h2 class="mt-4 text-xl font-bold tracking-tight text-basalt sm:text-2xl">
+        {m.why_purpose_title({}, { locale })}
+      </h2>
+      {
+        [
+          m.why_purpose_1({}, { locale }),
+          m.why_purpose_2({}, { locale }),
+          m.why_purpose_3({}, { locale }),
+        ].map((text) => <p class="py-3">{text}</p>)
+      }
+      <h2 class="mt-4 text-xl font-bold tracking-tight text-basalt sm:text-2xl">
+        {m.why_be_here_title({}, { locale })}
+      </h2>
+      {
+        [
+          m.why_be_here_1({}, { locale }),
+          m.why_be_here_2({}, { locale }),
+          m.why_be_here_3({}, { locale }),
+          m.why_be_here_4({}, { locale }),
+          m.why_be_here_5({}, { locale }),
+          m.why_be_here_6({}, { locale }),
+          m.why_see_you({}, { locale }),
+        ].map((text) => <p class="py-3">{text}</p>)
+      }
+    </Container>
+
+    <StayConnected />
+  </BackgroundEffect>
+</Layout>

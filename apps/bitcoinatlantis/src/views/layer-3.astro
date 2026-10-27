@@ -1,0 +1,212 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { Image } from "astro:assets";
+
+import layer3TicketBanner from "@/assets/layer3-ticket-banner.jpg";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import TravelPartnerLogos from "@/components/travel-partner-logos.astro";
+import { travelPartners } from "@/data/travel-partners";
+import { routes } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const outline = buttonVariants({ variant: "atlantis-outline" });
+const linkClass =
+  "[&_a:not([data-slot])]:text-yellow-500 [&_a:not([data-slot])]:hover:text-yellow";
+const perks = [
+  {
+    items: [m.layer3_access_1({}, { locale }), m.layer3_access_2({}, { locale })],
+    title: m.layer3_access_title({}, { locale }),
+  },
+  {
+    items: [
+      m.layer3_lounge_1({}, { locale }),
+      m.layer3_lounge_2({}, { locale }),
+      m.layer3_lounge_3({}, { locale }),
+      m.layer3_lounge_4({}, { locale }),
+    ],
+    title: m.layer3_lounge_title({}, { locale }),
+  },
+  {
+    items: [m.layer3_seating_1({}, { locale }), m.layer3_seating_2({}, { locale })],
+    title: m.layer3_seating_title({}, { locale }),
+  },
+];
+---
+
+<Layout
+  description={m.layer3_description({}, { locale })}
+  route="layer3"
+  title={m.layer3_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <Image
+      src={layer3TicketBanner}
+      alt={m.layer3_banner_alt({}, { locale })}
+      widths={[768, 1536, 2720]}
+      sizes="100vw"
+      class="mb-14"
+    />
+
+    <Container class:list={["max-w-4xl", linkClass]}>
+      <h2
+        class="mb-20 text-center text-2xl font-bold tracking-tight text-basalt"
+      >
+        {m.layer3_title({}, { locale })}
+      </h2>
+
+      {
+        perks.map(({ items, title }) => (
+          <>
+            <h3 class="text-xl font-bold">{title}</h3>
+            <ul class="mt-4 mb-10 list-inside list-disc space-y-2">
+              {items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </>
+        ))
+      }
+
+      <h3 class="text-xl font-bold">{m.layer3_atlas_title({}, { locale })}</h3>
+      <ul class="mt-4 mb-8 list-inside list-disc space-y-2">
+        <li>{m.layer3_atlas_1({}, { locale })}</li>
+        <li set:html={m.layer3_atlas_2({}, { locale })} />
+        <li>{m.layer3_atlas_3({}, { locale })}</li>
+      </ul>
+      <a
+        href={routes.atlasMusicFestival[locale]}
+        data-slot="button"
+        class:list={[outline, "mb-10"]}
+      >
+        {m.learn_more({}, { locale })}
+      </a>
+
+      <h3 class="text-xl font-bold">
+        {m.layer3_dinner_title({}, { locale })}
+      </h3>
+      <ul class="mt-4 mb-8 list-inside list-disc space-y-2">
+        <li>{m.layer3_dinner_1({}, { locale })}</li>
+        <li>{m.layer3_dinner_2({}, { locale })}</li>
+        <li>{m.layer3_dinner_3({}, { locale })}</li>
+      </ul>
+      <div class="flex gap-4">
+        <a
+          href="https://forms.gle/uH41cu5VkqggPPb4A"
+          target="_blank"
+          rel="noreferrer"
+          data-slot="button"
+          class={buttonVariants({ variant: "atlantis" })}
+        >
+          {m.layer3_dinner_save_seat({}, { locale })}
+        </a>
+      </div>
+
+      <div class="my-16 border-b sm:my-20"></div>
+
+      <h2
+        class="mb-16 text-center text-2xl font-bold tracking-tight text-basalt"
+      >
+        {m.layer3_also_interested({}, { locale })}
+      </h2>
+
+      <h3 class="text-xl font-bold">⛳ Holecoiner</h3>
+      <ul class="mt-4 mb-8 list-inside list-disc space-y-2">
+        <li>{m.layer3_holecoiner_1({}, { locale })}</li>
+        <li>{m.layer3_holecoiner_2({}, { locale })}</li>
+        <li>{m.layer3_holecoiner_3({}, { locale })}</li>
+      </ul>
+      <a
+        href={routes.holecoiner[locale]}
+        data-slot="button"
+        class={outline}
+      >
+        {m.learn_more({}, { locale })}
+      </a>
+
+      <h3 class="mt-10 text-xl font-bold">🎯 Rise of Atlantis</h3>
+      <ul class="mt-4 mb-8 list-inside list-disc space-y-2">
+        <li>{m.layer3_rise_1({}, { locale })}</li>
+        <li>{m.layer3_rise_2({}, { locale })}</li>
+      </ul>
+      <a
+        href={routes.riseOfAtlantis[locale]}
+        data-slot="button"
+        class={outline}
+      >
+        {m.learn_more({}, { locale })}
+      </a>
+
+      <h3 class="mt-10 text-xl font-bold">
+        {m.layer3_meetup_title({}, { locale })}
+      </h3>
+      <ul class="mt-4 mb-8 list-inside list-disc space-y-2">
+        <li set:html={m.layer3_meetup_1({}, { locale })} />
+        <li>{m.layer3_meetup_2({}, { locale })}</li>
+        <li>{m.layer3_meetup_3({}, { locale })}</li>
+      </ul>
+      <a
+        href="https://www.meetup.com/madeira-bitcoin-meetup-group/events/297068040/"
+        target="_blank"
+        rel="noreferrer"
+        data-slot="button"
+        class={outline}
+      >
+        {m.layer3_meetup_confirm({}, { locale })}
+      </a>
+
+      <h3 class="mt-10 text-xl font-bold">🍹 Bitcoin Bar Café</h3>
+      <ul class="mt-4 list-inside list-disc space-y-2">
+        <li set:html={m.layer3_bar_cafe_1({}, { locale })} />
+        <li set:html={m.layer3_bar_cafe_2({}, { locale })} />
+      </ul>
+
+      <p
+        class="mt-20 mb-10 text-center text-2xl font-bold tracking-tight text-basalt"
+      >
+        {m.layer3_much_more({}, { locale })}
+      </p>
+      <p
+        class="text-center"
+        set:html={m.layer3_satellite_events(
+          { href: routes.satelliteEvents[locale] },
+          { locale }
+        )}
+      />
+
+      <div class="my-16 border-b sm:my-20"></div>
+
+      <p class="mb-10 text-center text-2xl font-bold tracking-tight text-basalt">
+        {m.layer3_booked_stay({}, { locale })}
+      </p>
+      <p class="text-center">{m.layer3_name_dropping({}, { locale })}</p>
+    </Container>
+
+    <TravelPartnerLogos
+      partners={travelPartners.hotels}
+      class="mt-16 max-w-7xl"
+    />
+
+    <Container class:list={["max-w-4xl", linkClass]}>
+      <p class="mt-16" set:html={m.layer3_discount({}, { locale })} />
+
+      <div class="mt-20 text-center">
+        <p>{m.layer3_not_sure({}, { locale })}</p>
+        <p
+          set:html={m.layer3_plan_trip({ href: routes.plan[locale] }, { locale })}
+        />
+      </div>
+
+      <div class="my-16 border-b sm:my-20"></div>
+
+      <p class="mb-10 text-center text-2xl font-bold tracking-tight text-basalt">
+        {m.island_welcome({}, { locale })}
+      </p>
+      <p set:html={m.island_tips({}, { locale })} />
+      <p class="mt-10" set:html={m.island_contact({}, { locale })} />
+    </Container>
+  </BackgroundEffect>
+</Layout>

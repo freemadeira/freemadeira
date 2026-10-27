@@ -1,0 +1,81 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { cn } from "cn";
+
+import Container from "@/components/container.astro";
+import { partners } from "@/data/partners";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  /** A scrolling strip on the home page, a grid of tiles on Partnerships. */
+  layout: "marquee" | "grid";
+}
+
+const { layout } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const visit = (name: string) => m.partners_visit({ name }, { locale });
+// The strip repeats so it never shows a gap on wide screens; only the first
+// copy is announced or reachable by keyboard.
+const copies = [0, 1, 2, 3];
+---
+
+<section class="my-20 flex flex-col gap-12 sm:my-28">
+  <h2 class:list={[heading.h6, "text-center"]}>{m.partners_title({}, { locale })}</h2>
+  {
+    layout === "marquee" ? (
+      <div class="group flex overflow-hidden">
+        {copies.map((copy) => (
+          <ul
+            aria-hidden={copy > 0 ? "true" : undefined}
+            class="flex w-fit shrink-0 animate-loop-scroll items-center gap-10 pe-10 group-hover:paused sm:gap-20 sm:pe-20"
+          >
+            {partners.map((partner) => (
+              <li class="shrink-0">
+                <a
+                  aria-label={visit(partner.name)}
+                  href={partner.href}
+                  rel="noopener noreferrer"
+                  tabindex={copy > 0 ? -1 : undefined}
+                  target="_blank"
+                >
+                  <partner.logo
+                    aria-hidden="true"
+                    class={cn(
+                      "h-auto w-44 fill-dark opacity-50 hover:opacity-100 sm:w-52",
+                      partner.width
+                    )}
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    ) : (
+      <Container size="tighter">
+        <ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-8">
+          {partners.map((partner) => (
+            <li>
+              <a
+                aria-label={visit(partner.name)}
+                class="group flex h-25 w-full items-center justify-center rounded-[10px] bg-bridal-100 px-4 sm:h-31"
+                href={partner.href}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <partner.logo
+                  aria-hidden="true"
+                  class={cn(
+                    "h-auto w-26 fill-dark opacity-50 group-hover:opacity-100 sm:w-40",
+                    partner.width
+                  )}
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    )
+  }
+</section>

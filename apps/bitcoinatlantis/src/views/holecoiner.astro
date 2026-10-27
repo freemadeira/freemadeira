@@ -1,0 +1,162 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+import { ExternalLinkIcon } from "lucide-react";
+
+import holecoinerBanner from "@/assets/holecoiner-banner.jpg";
+import holecoinerLogo from "@/assets/logos/events/holecoiner.svg";
+import BackgroundBanner from "@/components/background-banner.astro";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import EventHero from "@/components/event-hero.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const rulesUrl =
+  "https://bitcoin-atlantis-assets.s3.eu-west-3.amazonaws.com/Terms+of+Competition.pdf";
+const agenda = [
+  [m.holecoiner_agenda_reception_time({}, { locale }), m.holecoiner_agenda_reception({}, { locale })],
+  [m.holecoiner_agenda_start_time({}, { locale }), m.holecoiner_agenda_start({}, { locale })],
+];
+const extras = [
+  [m.holecoiner_extra_tokens({}, { locale }), "€5"],
+  [m.holecoiner_extra_trolley({}, { locale }), "€8"],
+  [m.holecoiner_extra_trolley_extra({}, { locale }), "5€"],
+  [m.holecoiner_extra_buggies({}, { locale }), "45€"],
+  [m.holecoiner_extra_clubs({}, { locale }), "45€"],
+];
+const greenLink =
+  "flex w-fit items-center space-x-1 rounded-md p-1 font-medium text-green-medium hover:bg-basalt-lighter active:text-green";
+---
+
+<Layout
+  description={m.holecoiner_description({}, { locale })}
+  route="holecoiner"
+  title={m.holecoiner_meta_title({}, { locale })}
+>
+  <BackgroundEffect gradient="from-[#99f3be] to-[#016635]">
+    <EventHero
+      logo={{ alt: "Holecoiner", hiddenFrom: "sm", src: holecoinerLogo }}
+      paragraphs={[
+        m.holecoiner_hero_1({}, { locale }),
+        m.holecoiner_hero_2({}, { locale }),
+        m.holecoiner_hero_3({}, { locale }),
+      ]}
+      stats={[
+        [m.stat_date({}, { locale }), m.holecoiner_date({}, { locale })],
+        [m.stat_time({}, { locale }), m.holecoiner_time({}, { locale })],
+        [m.stat_location({}, { locale }), "Santo da Serra Golf Club"],
+        [m.stat_price({}, { locale }), "145€"],
+      ]}
+      title={m.holecoiner_hero_title({}, { locale })}
+    />
+    <BackgroundBanner
+      image={holecoinerBanner}
+      class="relative my-12 flex h-[200px] items-center justify-center overflow-hidden bg-bottom sm:h-[500px]"
+    >
+      <Image
+        src={holecoinerLogo}
+        class="relative z-30 h-2/5 w-auto md:h-1/3"
+        alt="Holecoiner"
+      />
+    </BackgroundBanner>
+    <Container class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+      <p class="mt-16">{m.holecoiner_prizes({}, { locale })}</p>
+
+      <div class="mt-10">
+        <h2
+          class="font-display text-xl font-bold tracking-tighter text-green-darker sm:text-3xl"
+        >
+          {m.holecoiner_agenda({}, { locale })}
+        </h2>
+        <ul class="mt-6 space-y-2 text-gray-600">
+          {
+            agenda.map(([time, item]) => (
+              <li class="flex gap-x-2">
+                <strong class="font-semibold text-basalt">{time}</strong>
+                {item}
+              </li>
+            ))
+          }
+          <li class="flex gap-x-2">
+            <strong class="font-semibold text-basalt">
+              {m.holecoiner_agenda_bar({}, { locale })}
+            </strong>
+          </li>
+          <li class="flex items-center gap-x-2">
+            <strong class="font-semibold text-basalt">
+              {m.holecoiner_agenda_lunch_time({}, { locale })}
+            </strong>
+            {m.holecoiner_agenda_lunch({}, { locale })}
+            <a
+              href="https://bitcoin-atlantis-assets.s3.eu-west-3.amazonaws.com/Holecoiner_Catering.pdf"
+              target="_blank"
+              rel="noreferrer"
+              class="flex items-center space-x-1 rounded-md p-1 pl-2 text-sm text-green-medium hover:bg-basalt-lighter active:text-green"
+            >
+              <span>{m.holecoiner_menu({}, { locale })}</span>
+              <ExternalLinkIcon className="inline size-4" />
+            </a>
+          </li>
+          <li class="flex gap-x-2">
+            <strong class="font-semibold text-basalt">
+              {m.holecoiner_agenda_prizes_time({}, { locale })}
+            </strong>
+            {m.holecoiner_agenda_prizes({}, { locale })}
+          </li>
+        </ul>
+        <aside
+          class="mt-6 text-sm text-gray-600"
+          set:html={m.holecoiner_bar_note({}, { locale })}
+        />
+      </div>
+
+      <div class="mt-10">
+        <p class="text-xl font-bold">
+          {m.holecoiner_read_rules({}, { locale })}
+        </p>
+        <a href={rulesUrl} target="_blank" rel="noreferrer" class={greenLink}>
+          <span>{m.holecoiner_terms({}, { locale })}</span>
+          <ExternalLinkIcon className="inline size-4" />
+        </a>
+        <p class="mt-4">{m.holecoiner_enrolment({}, { locale })}</p>
+      </div>
+
+      <div class="mt-12">
+        <h3 class="text-xl font-bold">
+          {m.holecoiner_info_title({}, { locale })}
+        </h3>
+        <h4 class="mt-4 text-lg font-bold text-basalt">
+          {m.holecoiner_training_title({}, { locale })}
+        </h4>
+        <p class="[&_a]:text-green-medium [&_a]:hover:text-green-medium/80">
+          <Fragment set:html={m.holecoiner_training({}, { locale })} />
+        </p>
+
+        <div class="my-6">
+          <h4 class="text-lg font-bold text-basalt">
+            {m.holecoiner_extras_title({}, { locale })}
+          </h4>
+          <ul class="mt-1 space-y-2 text-gray-600">
+            {
+              extras.map(([item, price]) => (
+                <li>
+                  <strong class="font-semibold text-basalt">{item}</strong>{" "}
+                  {price}
+                </li>
+              ))
+            }
+          </ul>
+          <aside class="mt-4">{m.holecoiner_extras_note({}, { locale })}</aside>
+        </div>
+
+        <p
+          class="mt-10 font-medium [&_a]:font-medium [&_a]:text-green-medium [&_a]:hover:text-green-medium/80"
+          set:html={m.holecoiner_rules_reminder({ href: rulesUrl }, { locale })}
+        />
+        <p class="mt-6">{m.holecoiner_good_luck({}, { locale })}</p>
+      </div>
+    </Container>
+  </BackgroundEffect>
+</Layout>

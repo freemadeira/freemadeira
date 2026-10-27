@@ -1,0 +1,22 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.mega_pleb_dinner_description({}, { locale })}
+  route="megaPlebDinner"
+  title={m.mega_pleb_dinner_meta_title({}, { locale })}
+>
+  <BackgroundEffect />
+  <h1 class="mt-8 text-center text-4xl font-bold">Mega Pleb Dinner</h1>
+  <Container class="flex max-w-7xl flex-col items-center justify-center">
+    <p class="my-20">{m.mega_pleb_dinner_sold_out({}, { locale })}</p>
+  </Container>
+</Layout>

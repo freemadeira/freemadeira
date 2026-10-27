@@ -1,0 +1,81 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+
+import Container from "@/components/container.astro";
+import type { EventCard } from "@/data/events";
+import { externalLinkProps, isExternal } from "@/lib/links";
+import { heading } from "@/lib/typography";
+
+interface Props {
+  events: EventCard[];
+  title: string;
+}
+
+const { events, title } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const hrefOf = (event: EventCard) =>
+  typeof event.href === "object" ? event.href[locale] : event.href;
+---
+
+<Container class="gap-7" wrapperClass="px-0 sm:px-8 md:px-10 xl:px-12">
+  <h2 class:list={[heading.h5, "mx-4 sm:mx-0"]}>{title}</h2>
+  <slot />
+  <div class="no-scrollbar overflow-x-auto">
+    <ul class="flex w-fit gap-8 px-4 sm:px-0">
+      {
+        events.map((event) => {
+          const href = hrefOf(event);
+          const Tag = href ? "a" : "div";
+          return (
+            <li class="flex w-[70vw] flex-1 sm:w-auto">
+              <Tag
+                class="group flex w-full flex-col gap-5 border-b border-dark pb-6"
+                href={href}
+                {...(href ? externalLinkProps(href) : {})}
+              >
+                <div class="relative isolate h-48 w-full">
+                  <Image
+                    alt=""
+                    class="absolute inset-0 -z-10 size-full object-cover"
+                    sizes="(max-width: 640px) 70vw, 25vw"
+                    src={event.image}
+                    width={960}
+                    widths={[320, 480, 640, 960]}
+                  />
+                  {href && (
+                    <>
+                      <div class="size-full bg-linear-to-tr from-transparent via-transparent to-black/60" />
+                      <span class="absolute top-4 right-3 inline-flex rounded-full border border-white p-2 text-white transition duration-75 group-hover:bg-white group-hover:text-dark group-active:scale-95">
+                        {isExternal(href) ? (
+                          <ArrowUpRight aria-hidden="true" />
+                        ) : (
+                          <ArrowRight aria-hidden="true" />
+                        )}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div class="flex grow flex-col gap-3">
+                  <p class="text-sm leading-4 tracking-[4%] text-mountain-mist-400 uppercase">
+                    {event.date[locale]}
+                  </p>
+                  <h3 class={heading.h6}>{event.title[locale]}</h3>
+                  <p class="grow">{event.description[locale]}</p>
+                </div>
+                <div class="flex gap-2.5">
+                  {event.tags.map((tag) => (
+                    <span class="bg-primary-400 px-2.5 py-2 text-center text-sm leading-2.5 font-medium text-dark">
+                      {tag[locale]}
+                    </span>
+                  ))}
+                </div>
+              </Tag>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</Container>

@@ -4,25 +4,29 @@ import "@/styles/global.css";
 import {
   defaultLocale,
   htmlLang,
-  localeNames,
   locales,
   toLocale,
 } from "@freemadeira/i18n";
+import type { LocalizedPaths } from "@freemadeira/i18n";
 
-import { routes } from "@/i18n/routes";
-import type { Route } from "@/i18n/routes";
+import SiteFooter from "@/components/site-footer.astro";
+import SiteHeader from "@/components/site-header.astro";
 
 interface Props {
   description: string;
-  route: Route;
-  title: string;
+  /** For pages that shouldn't be in search results, such as preferences. */
+  noindex?: boolean;
+  /** This page's path in each locale. */
+  paths: LocalizedPaths;
+  /** The page's own title; the site name is added after it. */
+  title?: string;
 }
 
-const { description, route, title } = Astro.props;
+const { description, noindex = false, paths, title } = Astro.props;
 const locale = toLocale(Astro.currentLocale);
-const paths = routes[route];
 const site = Astro.site ?? Astro.url;
-const otherLocales = locales.filter((other) => other !== locale);
+const fullTitle = title ? `${title} – FREE Madeira` : "FREE Madeira";
+const canonical = new URL(paths[locale], site);
 ---
 
 <!doctype html>
@@ -31,9 +35,10 @@ const otherLocales = locales.filter((other) => other !== locale);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.ico" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(paths[locale], site)} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
     {
       locales.map((alternate) => (
         <link
@@ -48,17 +53,20 @@ const otherLocales = locales.filter((other) => other !== locale);
       hreflang="x-default"
       href={new URL(paths[defaultLocale], site)}
     />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FREE Madeira" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={htmlLang[locale].replace("-", "_")} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@FREEMadeiraOrg" />
   </head>
-  <body>
-    <header class="mx-auto flex max-w-5xl justify-end px-6 py-4 text-sm">
-      {
-        otherLocales.map((other) => (
-          <a href={paths[other]} hreflang={other} lang={htmlLang[other]}>
-            {localeNames[other]}
-          </a>
-        ))
-      }
-    </header>
-    <slot />
+  <body class="flex min-h-dvh flex-col">
+    <SiteHeader paths={paths} />
+    <main class="grow">
+      <slot />
+    </main>
+    <SiteFooter />
   </body>
 </html>

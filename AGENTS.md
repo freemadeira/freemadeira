@@ -50,7 +50,10 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 - **File names** are kebab-case, `.astro` files too (`base-layout.astro`, `home.astro`).
 - **Formatting.** oxfmt doesn't read `.astro` files; the Astro VS Code extension formats them.
 - **UI components** are added from `packages/ui` with `pnpm exec shadcn add <name>`, then `pnpm fix` to match the lint rules. Apps import them as `@freemadeira/ui/components/<name>`. Each app's `src/styles/global.css` imports Tailwind, then `@freemadeira/ui/styles.css`, then overrides the tokens with its brand.
-- **Astro islands.** Ship no JavaScript by default. React components render to HTML; add `client:*` only where a component needs to be interactive.
+- **Site variants.** Until the sites share one design system, shared components carry a variant per site, prefixed with it: `fm`, `fm-outline`, `fm-outline-light`, `atlantis`, `atlantis-outline` on the button. To style a link as a button, put `buttonVariants({ variant })` on the `<a>`.
+- **Astro islands.** Ship no JavaScript by default. React components render to HTML; add `client:*` only where a component needs to be interactive, and prefer `client:visible` or `client:idle`. An island gets Astro-rendered markup (an SVG, a list of links) through a slot.
+- **Images** live in `src/assets/` and go through `astro:assets`, optimised at build time. Give `<Image>` both `width` and `widths`, or the fallback `src` is the full-size original. An island gets its image from `getImage()` as `src` and `srcset` props. Illustrations and logos are `.svg` files imported as components. `public/` is only for files that need a fixed URL.
+- **Copy.** UI strings and page copy are Paraglide messages, keyed by page and section (`about_donations_title`). Lists and structured content (events, people, FAQs) are typed modules in `src/data/`, with translated fields as `Record<Locale, string>`. Names, bios and similar stay in the language they were written in.
 
 ### i18n
 
@@ -58,11 +61,19 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 - Each app lists every page's paths in `src/i18n/routes.ts`. Pages, links, the language switcher and hreflang all read that map, so a new page gets its entry there first.
 - A page is two thin files, such as `src/pages/sobre.astro` and `src/pages/en/about.astro`, rendering one view from `src/views/`.
 - UI strings are Paraglide messages in `messages/{pt,en}.json`. Pages are prerendered, so pass the locale explicitly: `m.home_title({}, { locale })`, with `locale = toLocale(Astro.currentLocale)`.
+- The sites were English-only, with no `/en`. `legacyRedirects(routes)` in each `astro.config.ts` sends the old paths to their English pages with a 301, unless a Portuguese page now has that path. Add other old URLs to `redirects` by hand.
 - Planned: edge middleware that sends a first-time visitor whose browser prefers English to the English page. The language switcher sets a cookie that turns it off.
 
 ### freemadeira.org specifics
 
 - `/.well-known/nostr.json` (NIP-05) and `/.well-known/lnurlp/<name>` (Lightning addresses paid through Blink) are on-demand endpoints, not files in `public/`. The Vercel adapter ignores `vercel.json` headers, and wallets and Nostr clients need CORS. The CDN caches both for a day.
+- The newsletter runs on MailerLite. The sign-up form posts to `/api/newsletter/subscribe`. Each newsletter email links to `/newsletter/preferencias/<email>/<token>`, rendered on demand, which checks the token and keeps the subscriber in a sealed cookie for `/api/newsletter/preferences`. Both need `MAILERLITE_TOKEN` and `SESSION_PASSWORD` (see `apps/freemadeira/.env.example`), in Vercel and in a local `.env`.
+- Upcoming and recurring events are listed by hand in `src/data/events.ts` until they come from freehub. Past events drop off at the next build.
+
+### bitcoinatlantis.com specifics
+
+- The site is the 2024 edition's archive until the 2028 lineup and programme come from freehub. Its content is static: speakers, satellite events, FAQs and the rest live in `src/data/`, and the photo gallery and videos stay on S3.
+- `/.well-known/nostr.json` is an on-demand endpoint, like freemadeira.org's.
 
 ## Deploying
 

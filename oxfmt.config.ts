@@ -3,5 +3,11 @@ import ultracite from "ultracite/oxfmt";
 
 export default defineConfig({
   ...ultracite,
-  ignorePatterns: [...ultracite.ignorePatterns, "**/src/paraglide"],
+  ignorePatterns: [
+    ...ultracite.ignorePatterns,
+    "**/src/paraglide",
+    // Agent skills, installed as published.
+    ".agents",
+    ".claude",
+  ],
 });

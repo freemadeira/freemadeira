@@ -1,0 +1,75 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import blockImage from "@/assets/block.png";
+import Section from "@/components/section.astro";
+import { programme } from "@/data/programme";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const hours = {
+  afternoon: m.programme_afternoon({}, { locale }),
+  morning: m.programme_morning({}, { locale }),
+};
+---
+
+<Section
+  id="programme"
+  title={m.programme_title({}, { locale })}
+  subtitle={m.programme_subtitle({}, { locale })}
+>
+  <div class="mx-auto my-10 max-w-5xl justify-center sm:px-6 lg:px-8">
+    {
+      programme.map((day) => (
+        <div class="pb-4">
+          <p class="border-b pb-1 text-lg font-extrabold text-basalt">
+            {m.programme_day({ day: String(day.day) }, { locale })}
+            <span class="ml-4 text-base font-medium text-basalt-bright">
+              {day.date[locale]}
+            </span>
+          </p>
+          {day.blocks.map((block) => (
+            <div class="m-8 mx-auto flex max-w-5xl justify-center">
+              <div class="mr-6 sm:mr-10">
+                <Image src={blockImage} width={56} densities={[1, 2]} alt="" />
+              </div>
+              <div class="flex grow flex-col sm:flex-row">
+                <div class="grow flex-col">
+                  <p class="font-medium">
+                    <span>
+                      {m.programme_block(
+                        { height: String(block.height) },
+                        { locale }
+                      )}
+                    </span>
+                    <span class="ml-2 text-basalt-bright">
+                      {hours[block.time]}
+                    </span>
+                  </p>
+                  <p class="text-2xl font-bold text-basalt">
+                    {block.title[locale]}
+                  </p>
+                </div>
+                <div class="flex flex-col sm:w-1/2 sm:flex-row">
+                  <div class="w-full flex-col py-2 font-medium sm:ml-8 sm:w-1/2 sm:py-0 sm:text-right">
+                    <p class="text-lg text-yellow">
+                      {m.programme_curated_by({}, { locale })}
+                    </p>
+                    <p class="break-normal text-basalt">{block.curator}</p>
+                  </div>
+                  <div class="w-full flex-col py-2 font-medium sm:ml-8 sm:w-1/2 sm:py-0 sm:text-right">
+                    <p class="text-lg text-yellow">
+                      {m.programme_keynote_by({}, { locale })}
+                    </p>
+                    <p class="break-normal text-basalt">{block.mainSpeaker}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</Section>

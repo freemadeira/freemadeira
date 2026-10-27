@@ -1,0 +1,39 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import Container from "@/components/container.astro";
+import Contribute from "@/components/contribute.astro";
+import PersonCard from "@/components/person-card.astro";
+import { advisoryBoardMembers } from "@/data/advisory-board";
+import { teamMembers } from "@/data/team";
+import { routes } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const grid = "my-12 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+---
+
+<Layout
+  description={m.team_page_description({}, t)}
+  paths={routes.team}
+  title={m.team_page_title({}, t)}
+>
+  <Container class="mt-16">
+    <h1 class={heading.h1}>{m.team_title({}, t)}</h1>
+    <div class={grid}>
+      {teamMembers.map((person) => <PersonCard person={person} />)}
+    </div>
+  </Container>
+
+  <Container class="my-16">
+    <h2 class={heading.h1}>{m.advisory_title({}, t)}</h2>
+    <div class={grid}>
+      {advisoryBoardMembers.map((person) => <PersonCard person={person} />)}
+    </div>
+  </Container>
+
+  <Contribute />
+</Layout>

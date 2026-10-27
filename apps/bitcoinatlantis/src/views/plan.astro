@@ -1,0 +1,83 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import HomeVenue from "@/components/home/home-venue.astro";
+import PageHero from "@/components/page-hero.astro";
+import Section from "@/components/section.astro";
+import StayConnected from "@/components/stay-connected.astro";
+import TravelPartnerLogos from "@/components/travel-partner-logos.astro";
+import { travelPartners } from "@/data/travel-partners";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const sections = [
+  {
+    id: "accommodation",
+    partners: travelPartners.hotels,
+    subtitle: m.plan_accommodation_subtitle({}, { locale }),
+    title: m.plan_accommodation_title({}, { locale }),
+  },
+  {
+    id: "activities-&-tours",
+    partners: travelPartners.activities,
+    subtitle: m.plan_activities_subtitle({}, { locale }),
+    title: m.plan_activities_title({}, { locale }),
+  },
+  {
+    id: "travel-agencies",
+    partners: travelPartners.travelAgencies,
+    subtitle: m.plan_travel_agencies_subtitle({}, { locale }),
+    title: m.plan_travel_agencies_title({}, { locale }),
+  },
+  {
+    id: "transportation",
+    partners: travelPartners.transportation,
+    subtitle: m.transportation_subtitle({}, { locale }),
+    title: m.transportation_title({}, { locale }),
+  },
+];
+---
+
+<Layout
+  description={m.plan_description({}, { locale })}
+  route="plan"
+  title={m.plan_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title={m.plan_title({}, { locale })}
+      subtitle={m.plan_subtitle({}, { locale })}
+    />
+
+    <HomeVenue />
+
+    {
+      sections.map(({ id, partners, subtitle, title }) => (
+        <Section id={id} title={title} subtitle={subtitle}>
+          <TravelPartnerLogos partners={partners} />
+        </Section>
+      ))
+    }
+
+    <Section
+      id="spend-your-sats"
+      title={m.plan_spend_sats_title({}, { locale })}
+      subtitle={m.plan_spend_sats_subtitle({}, { locale })}
+    >
+      <div class="mt-10">
+        <iframe
+          id="btcmap"
+          title="BTC Map"
+          width="100%"
+          height="400"
+          allowfullscreen
+          allow="geolocation"
+          loading="lazy"
+          src="https://btcmap.org/map#14/32.64650/-16.92400"></iframe>
+      </div>
+    </Section>
+    <StayConnected />
+  </BackgroundEffect>
+</Layout>

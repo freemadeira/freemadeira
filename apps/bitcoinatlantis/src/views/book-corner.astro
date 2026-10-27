@@ -1,0 +1,33 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import PageHero from "@/components/page-hero.astro";
+import TeamGrid from "@/components/team-grid.astro";
+import { bookCornerAuthors } from "@/data/book-corner-authors";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.book_corner_description({}, { locale })}
+  route="bookCorner"
+  title={m.book_corner_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title={m.book_corner_title({}, { locale })}
+      subtitle={m.book_corner_subtitle({}, { locale })}
+    />
+    <Container class="mt-14">
+      <div
+        class="mx-auto flex max-w-7xl flex-wrap place-content-center gap-x-32 gap-y-12 md:gap-x-16 md:gap-y-16 lg:gap-x-32"
+      >
+        <TeamGrid people={bookCornerAuthors} showSocials />
+      </div>
+    </Container>
+  </BackgroundEffect>
+</Layout>

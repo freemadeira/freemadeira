@@ -1,0 +1,66 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import partnershipImage from "@/assets/images/partnership-cta-image.jpg";
+import HighFive from "@/assets/illustrations/high-five.svg";
+import Container from "@/components/container.astro";
+import DiscreetLink from "@/components/discreet-link.astro";
+import Hero from "@/components/hero.astro";
+import PartnerLogos from "@/components/partner-logos.astro";
+import { links, organisation } from "@/data/organisation";
+import { routes } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+---
+
+<Layout
+  description={m.partnerships_hero_text({}, t)}
+  paths={routes.partnerships}
+  title={m.partnerships_title({}, t)}
+>
+  <Hero
+    illustration={HighFive}
+    illustrationClass="mx-auto w-75 sm:w-90"
+    layout="tight"
+    title={m.partnerships_title({}, t)}
+  >
+    {m.partnerships_hero_text({}, t)}
+  </Hero>
+
+  <Container class="mt-22 flex-col-reverse sm:mt-28 sm:flex-row">
+    <div class="relative h-64 w-full sm:h-auto sm:w-1/2">
+      <Image
+        alt={m.partnerships_cta_image({}, t)}
+        class="absolute inset-0 size-full object-cover"
+        sizes="(max-width: 640px) 100vw, 50vw"
+        src={partnershipImage}
+        width={1280}
+        widths={[640, 960, 1280]}
+      />
+    </div>
+    <div
+      class="flex w-full flex-col gap-4 bg-bridal-700 px-6 py-9 text-white sm:w-1/2 sm:px-28 sm:py-20"
+    >
+      <h2 class={heading.h5}>{m.partnerships_cta_title({}, t)}</h2>
+      <p>{m.partnerships_cta_text({}, t)}</p>
+      <div
+        class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6"
+      >
+        <a
+          class="w-fit underline decoration-1 underline-offset-6 hover:text-primary-500"
+          href={`mailto:${organisation.email}`}
+        >
+          {m.send_email({}, t)}
+        </a>
+        <DiscreetLink href={links.donate}>{m.make_donation({}, t)}</DiscreetLink>
+      </div>
+    </div>
+  </Container>
+
+  <PartnerLogos layout="grid" />
+</Layout>

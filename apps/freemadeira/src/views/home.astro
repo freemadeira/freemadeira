@@ -1,28 +1,169 @@
 ---
 import { toLocale } from "@freemadeira/i18n";
-import { buttonVariants } from "@freemadeira/ui/components/button";
+import { Image } from "astro:assets";
 
+import bitcoinAtlantisImage from "@/assets/images/carousel/bitcoin-atlantis.jpg";
+import madeiraImage from "@/assets/images/carousel/madeira.jpg";
+import sovereignIndividualImage from "@/assets/images/carousel/o-individuo-soberano.jpg";
+import shopImage from "@/assets/images/carousel/shop.jpg";
+import merchantMap from "@/assets/images/merchant-map-light.png";
+import Coin from "@/assets/illustrations/coin.svg";
+import HandCoin from "@/assets/illustrations/hand-coin.svg";
+import PortalHands from "@/assets/illustrations/portal-hands.svg";
+import Container from "@/components/container.astro";
+import Contribute from "@/components/contribute.astro";
+import DiscreetLink from "@/components/discreet-link.astro";
+import EventRow from "@/components/event-row.astro";
+import Hero from "@/components/hero.astro";
+import PartnerLogos from "@/components/partner-logos.astro";
+import SlideCarousel from "@/components/slide-carousel";
+import { upcomingEvents } from "@/data/events";
+import { links, organisation } from "@/data/organisation";
 import { routes } from "@/i18n/routes";
 import Layout from "@/layouts/base-layout.astro";
+import { slideImage } from "@/lib/images";
+import { heading } from "@/lib/typography";
 import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const events = upcomingEvents();
+const atlantisRecap = {
+  en: "https://bitcoinatlantis.com/en/recap",
+  pt: "https://bitcoinatlantis.com/retrospetiva",
+}[locale];
+
+const slides = [
+  {
+    buttons: [
+      {
+        href: "https://btcmap.org/map#10/32.80748/-16.82419",
+        label: m.home_slide_adoption_button({}, t),
+      },
+    ],
+    image: await slideImage(madeiraImage),
+    text: m.home_slide_adoption_text({}, t),
+    title: m.home_slide_adoption_title({}, t),
+  },
+  {
+    buttons: [
+      {
+        href: "https://shop.freemadeira.org/products/o-individuo-soberano",
+        label: m.home_slide_books_button({}, t),
+      },
+    ],
+    image: await slideImage(sovereignIndividualImage),
+    text: m.home_slide_books_text({}, t),
+    title: m.home_slide_books_title({}, t),
+  },
+  {
+    buttons: [{ href: links.shop, label: m.home_slide_shop_button({}, t) }],
+    image: await slideImage(shopImage),
+    text: m.home_slide_shop_text({}, t),
+    title: m.home_slide_shop_title({}, t),
+  },
+  {
+    buttons: [
+      { href: atlantisRecap, label: m.home_slide_atlantis_button({}, t) },
+      {
+        href: links.bitcoinAtlantis,
+        label: m.home_slide_atlantis_secondary({}, t),
+        light: true,
+      },
+    ],
+    image: await slideImage(bitcoinAtlantisImage),
+    text: m.home_slide_atlantis_text({}, t),
+    title: m.home_slide_atlantis_title({}, t),
+  },
+];
 ---
 
-<Layout
-  description={m.home_description({}, { locale })}
-  route="home"
-  title={m.home_title({}, { locale })}
->
-  <main class="mx-auto flex max-w-5xl flex-col items-start gap-6 px-6 py-24">
-    <h1 class="text-5xl font-semibold tracking-tight">
-      {m.home_title({}, { locale })}
-    </h1>
-    <p class="max-w-prose text-lg text-muted-foreground">
-      {m.home_description({}, { locale })}
+<Layout description={m.site_description({}, t)} paths={routes.home}>
+  <Hero illustration={PortalHands} title={m.home_hero_title({}, t)}>
+    {m.home_hero_text({}, t)}
+  </Hero>
+
+  {
+    events.length > 0 && (
+      <div class="mb-16">
+        <EventRow events={events} title={m.events_upcoming({}, t)} />
+      </div>
+    )
+  }
+
+  <Container class="my-24 sm:my-22">
+    <div
+      class="relative z-0 flex flex-col justify-around gap-6 overflow-hidden bg-bridal-50 p-6 pt-28 sm:flex-row sm:gap-8 sm:p-28 sm:pt-28"
+    >
+      <Coin
+        aria-hidden="true"
+        class="absolute top-0 left-0 -z-10 fill-mountain-mist-200 p-8 sm:top-1/2 sm:right-0 sm:h-[140%] sm:translate-x-44 sm:-translate-y-1/2"
+      />
+      <div class="flex w-full flex-col gap-4 sm:w-3/5 sm:gap-8">
+        <p class="flex items-center text-lg leading-[150%]">
+          {m.home_education_tag({}, t)}
+        </p>
+        <h2 class={heading.h3}>{m.home_education_title({}, t)}</h2>
+      </div>
+      <div class="mb-2 flex w-full flex-col justify-end gap-8 sm:w-2/5">
+        <p>{m.home_education_text({}, t)}</p>
+      </div>
+    </div>
+  </Container>
+
+  <SlideCarousel
+    client:visible
+    label={m.carousel_label({ name: m.home_carousel_name({}, t) }, t)}
+    nextLabel={m.carousel_next({}, t)}
+    previousLabel={m.carousel_previous({}, t)}
+    slides={slides}
+  />
+
+  <Container class="my-20 sm:my-28">
+    <p class="flex items-center text-lg leading-[150%]">
+      {m.home_about_tag({}, t)}
     </p>
-    <a class={buttonVariants({ size: "lg" })} href={routes.about[locale]}>
-      {m.about_title({}, { locale })}
-    </a>
-  </main>
+    <div class="flex flex-col-reverse items-end sm:flex-row sm:gap-48">
+      <div class="flex h-full w-full flex-col justify-end gap-12 sm:w-4/7">
+        <div class="grow">
+          <h2 class={heading.h3}>{m.home_about_title({}, t)}</h2>
+        </div>
+        <DiscreetLink href={routes.about[locale]}>
+          {m.home_about_button({}, t)}
+        </DiscreetLink>
+      </div>
+      <HandCoin
+        aria-hidden="true"
+        class="mt-14 mb-10 h-auto w-full sm:my-0 sm:w-3/7"
+      />
+    </div>
+  </Container>
+
+  <Container class="flex-col sm:flex-row">
+    <div
+      class="flex w-full flex-col gap-4 bg-bridal-700 px-6 py-9 text-white sm:w-1/2 sm:px-28 sm:py-20"
+    >
+      <h2 class={heading.h5}>{m.home_merchants_title({}, t)}</h2>
+      <p>{m.home_merchants_text({}, t)}</p>
+      <a
+        class="w-fit underline decoration-1 underline-offset-6 hover:text-primary-500"
+        href={`mailto:${organisation.email}`}
+      >
+        {m.send_email({}, t)}
+      </a>
+    </div>
+    <div class="relative h-64 w-full sm:h-auto sm:w-1/2">
+      <Image
+        alt={m.home_merchants_map({}, t)}
+        class="absolute inset-0 size-full object-cover"
+        sizes="(max-width: 640px) 100vw, 50vw"
+        src={merchantMap}
+        width={1280}
+        widths={[640, 960, 1280]}
+      />
+    </div>
+  </Container>
+
+  <PartnerLogos layout="marquee" />
+  <Contribute />
 </Layout>

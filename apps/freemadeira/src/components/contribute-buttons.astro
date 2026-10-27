@@ -1,0 +1,32 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { cn } from "cn";
+
+import { links } from "@/data/organisation";
+import { routes } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  class?: string;
+}
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<div class={cn("flex gap-4", Astro.props.class)}>
+  <a
+    class={buttonVariants({ variant: "fm" })}
+    href={links.donate}
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    {m.contribute_donations({}, { locale })}
+  </a>
+  <a
+    class={buttonVariants({ variant: "fm-outline" })}
+    href={routes.partnerships[locale]}
+  >
+    {m.contribute_partnerships({}, { locale })}
+  </a>
+</div>

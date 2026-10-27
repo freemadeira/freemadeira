@@ -1,0 +1,131 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { BookDown, BookOpen, ChevronDown } from "lucide-react";
+
+import Container from "@/components/container.astro";
+import { CALENDAR, diplomaBitcoin, diplomaLinks } from "@/data/diploma-bitcoin";
+import { routes } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const content = diplomaBitcoin[locale];
+const newTab = { rel: "noopener noreferrer", target: "_blank" };
+---
+
+<Layout
+  description={m.diploma_description({}, t)}
+  paths={routes.diplomaBitcoin}
+  title={m.diploma_title({}, t)}
+>
+  <Container class="my-10 max-w-4xl gap-4" size="tighter">
+    <h1 class={heading.h3}>{m.diploma_title({}, t)}</h1>
+
+    {content.intro.map((paragraph) => <p>{paragraph}</p>)}
+
+    <p>{content.formatIntro}</p>
+    <ul class="list-disc pl-5">
+      {content.format.map((item) => <li>{item}</li>)}
+    </ul>
+
+    <h2 class={heading.h6}>{content.summary.title}</h2>
+    <ul class="list-disc pl-5">
+      {
+        content.summary.items.map((item) => (
+          <li>
+            <b>{item.label}:</b> {item.value}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class={heading.h6}>{content.topics.title}</h2>
+    <ul class="list-disc pl-5">
+      {content.topics.items.map((item) => <li>{item}</li>)}
+    </ul>
+
+    <h2 class={heading.h6}>{content.materials.title}</h2>
+    <ul class="list-disc pl-5">
+      {content.materials.items.map((item) => <li>{item}</li>)}
+    </ul>
+
+    <h2 class={heading.h6}>{content.manual.title}</h2>
+    <p>{content.manual.text}</p>
+    <ul>
+      <li>
+        <a
+          class="flex w-fit items-center gap-1.5 hover:underline"
+          href={diplomaLinks.digital}
+          {...newTab}
+        >
+          <BookDown aria-hidden="true" size={18} strokeWidth={1} />
+          {content.manual.digital}
+        </a>
+      </li>
+      <li>
+        <a
+          class="flex w-fit items-center gap-1.5 hover:underline"
+          href={diplomaLinks.printed}
+          {...newTab}
+        >
+          <BookOpen aria-hidden="true" size={18} strokeWidth={1} />
+          {content.manual.printed}
+        </a>
+      </li>
+    </ul>
+
+    <a
+      class:list={[buttonVariants({ variant: "fm" }), "mt-6"]}
+      href={diplomaLinks.signUp}
+      {...newTab}
+    >
+      {m.diploma_sign_up({}, t)}
+    </a>
+  </Container>
+
+  <Container class="my-10 max-w-4xl" size="tighter">
+    <h2 class:list={[heading.h5, "my-4 mt-8"]}>{m.diploma_faq_title({}, t)}</h2>
+    {
+      content.faq.map((item) => (
+        <details class="group border-b border-mountain-mist-200 py-4">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium [&::-webkit-details-marker]:hidden">
+            {item.question}
+            <ChevronDown
+              aria-hidden="true"
+              className="size-6 shrink-0 transition-transform group-open:rotate-180"
+            />
+          </summary>
+          <div class="mt-2">
+            {item.answer === CALENDAR ? (
+              <div class="overflow-x-auto">
+                <table class="my-8 w-full">
+                  <thead class="text-left">
+                    <tr class="h-8">
+                      <th>{content.calendarHeadings.chapter}</th>
+                      <th>{content.calendarHeadings.theory}</th>
+                      <th>{content.calendarHeadings.practice}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {content.calendar.map((row) => (
+                      <tr class="h-10 border-b border-mountain-mist-200">
+                        <td>{row.chapter}</td>
+                        <td class="text-nowrap">{row.theory}</td>
+                        <td class="text-nowrap">{row.practice}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p>{item.answer}</p>
+            )}
+          </div>
+        </details>
+      ))
+    }
+  </Container>
+</Layout>

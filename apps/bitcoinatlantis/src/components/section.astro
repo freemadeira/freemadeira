@@ -1,0 +1,32 @@
+---
+import Container from "./container.astro";
+
+interface Props {
+  /** Kept in English in both languages, so links to it work from either. */
+  id: string;
+  subtitle?: string;
+  title: string;
+  titleClass?: string;
+}
+
+const { id, subtitle, title, titleClass = "text-yellow-900" } = Astro.props;
+---
+
+<section id={id} aria-label={title} class="my-16 scroll-mt-32 sm:my-32">
+  <Container>
+    <div class="mx-auto max-w-2xl">
+      <h2
+        class:list={[
+          titleClass,
+          "mx-auto max-w-2xl text-center font-display text-4xl font-medium tracking-tighter sm:text-5xl",
+        ]}
+      >
+        {title}
+      </h2>
+      <p class="mt-6 text-center text-lg leading-8 text-gray-600">
+        {subtitle && <Fragment set:html={subtitle} />}
+      </p>
+    </div>
+    <slot />
+  </Container>
+</section>

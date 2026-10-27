@@ -1,0 +1,47 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import venueMap from "@/assets/ba24-venue-map.png";
+import BackgroundEffect from "@/components/background-effect.astro";
+import Container from "@/components/container.astro";
+import PageHero from "@/components/page-hero.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.venue_map_description({}, { locale })}
+  route="venueMap"
+  title={m.venue_map_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero
+      title={m.venue_map_title({}, { locale })}
+      subtitle={m.venue_map_subtitle({}, { locale })}
+    />
+    <div>
+      <Container class="max-w-7xl text-basalt">
+        <div class="flex justify-center">
+          <a
+            href="https://bitcoin-atlantis-assets.s3.eu-west-3.amazonaws.com/BA24_map.pdf"
+            target="_blank"
+            rel="noreferrer"
+            class="mb-10 inline-flex items-center justify-center rounded-full border border-yellow bg-white/50 px-3.5 py-1 text-lg font-semibold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
+          >
+            {m.venue_map_download({}, { locale })}
+            <span aria-hidden="true">&nbsp;&darr;</span>
+          </a>
+        </div>
+        <Image
+          src={venueMap}
+          alt={m.venue_map_title({}, { locale })}
+          widths={[640, 1280, 2300]}
+          sizes="(min-width: 1280px) 1216px, 100vw"
+        />
+      </Container>
+    </div>
+  </BackgroundEffect>
+</Layout>

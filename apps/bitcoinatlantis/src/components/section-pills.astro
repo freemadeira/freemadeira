@@ -1,0 +1,24 @@
+---
+import { slugify } from "@/lib/slugify";
+
+interface Props {
+  topics: string[];
+}
+
+const { topics } = Astro.props;
+---
+
+<ul class="my-16 flex list-none flex-wrap justify-center gap-4 text-lg font-semibold">
+  {
+    topics.map((topic) => (
+      <li>
+        <a
+          href={`#${slugify(topic)}`}
+          class="inline-flex items-center rounded-full bg-gray-200 px-3 py-1.5 text-sm font-medium whitespace-nowrap text-basalt-medium hover:bg-yellow-200 hover:text-yellow-800"
+        >
+          {topic}
+        </a>
+      </li>
+    ))
+  }
+</ul>

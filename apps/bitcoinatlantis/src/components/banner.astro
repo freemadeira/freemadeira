@@ -1,0 +1,26 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<div
+  class="sticky top-0 z-50 flex w-full items-center justify-center gap-x-6 bg-yellow px-6 py-2.5 sm:px-3.5"
+>
+  <p class="text-center text-sm leading-6 text-yellow-900">
+    <strong class="pr-2 font-semibold">
+      {m.banner_attention({}, { locale })}
+    </strong>
+    {m.banner_returns({}, { locale })}
+    <a
+      href="https://x.com/FREEMadeiraOrg/status/1808430825920205222"
+      target="_blank"
+      rel="noreferrer"
+      class="pl-3 font-semibold whitespace-nowrap"
+    >
+      {m.banner_learn_more({}, { locale })}
+    </a>
+  </p>
+</div>

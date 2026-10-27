@@ -1,0 +1,224 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { Image } from "astro:assets";
+import { ExternalLinkIcon } from "lucide-react";
+
+import type { Href, SatelliteEvent } from "@/data/satellite-events";
+import { routes } from "@/i18n/routes";
+import { slugify } from "@/lib/slugify";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  event: SatelliteEvent;
+}
+
+const { event } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const text = (copy: Record<typeof locale, string> | string) =>
+  typeof copy === "string" ? copy : copy[locale];
+const resolve = (href: Href) =>
+  typeof href === "string" ? href : routes[href.route][locale];
+
+const slug = slugify(event.name);
+const moreInfo =
+  event.moreInfo && "href" in event.moreInfo ? event.moreInfo : undefined;
+const moreInfoNote =
+  event.moreInfo && !("href" in event.moreInfo) ? event.moreInfo : undefined;
+// Like the 2024 site: the "more info" page, else the sign-up, else itself.
+const logoTarget = moreInfo?.href ?? event.link;
+const logoHref = logoTarget ? resolve(logoTarget) : `#${slug}`;
+const external = logoHref.startsWith("http");
+
+const rowClass =
+  "flex flex-col gap-x-2 border-b pb-2 sm:flex-row sm:border-b-0 sm:pb-0";
+const mapLinkClass =
+  "ml-0 flex items-center space-x-1 rounded-md p-1 pl-2 text-sm text-yellow-500 hover:bg-basalt-lighter active:text-yellow-600 sm:ml-2";
+---
+
+<section
+  id={slug}
+  aria-label={event.name}
+  class="scroll-mt-20 sm:scroll-mt-10"
+>
+  <div
+    class="relative isolate overflow-hidden px-6 py-14 sm:py-24 lg:overflow-visible lg:px-0"
+  >
+    <div
+      class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 sm:gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-[3fr_2fr] lg:items-start lg:gap-y-10"
+    >
+      <div
+        class="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8"
+      >
+        <div class="lg:pr-4">
+          <div class="lg:max-w-lg">
+            <h2
+              class="mt-2 text-3xl font-bold tracking-tight text-yellow-900 sm:text-4xl"
+            >
+              {event.name}
+            </h2>
+            {
+              event.tagline && (
+                <p class="text-base leading-7 font-semibold text-basalt-medium">
+                  {event.tagline[locale]}
+                </p>
+              )
+            }
+            {
+              event.description.map((paragraph) => (
+                <p class="mt-6 text-xl leading-8 text-gray-700">
+                  {paragraph[locale]}
+                </p>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+      <div
+        class="p-8 sm:-mt-12 sm:-ml-12 lg:sticky lg:top-20 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden"
+      >
+        <a
+          href={logoHref}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noreferrer" : undefined}
+        >
+          <Image
+            src={event.logo}
+            alt={event.name}
+            widths={[400, 800]}
+            sizes="(min-width: 1024px) 40vw, 100vw"
+          />
+        </a>
+      </div>
+      <div
+        class="lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8"
+      >
+        <div class="lg:pr-4">
+          <div
+            class="max-w-xl text-base leading-7 text-gray-700 lg:max-w-lg [&_a]:text-yellow-500 [&_a]:hover:text-yellow"
+          >
+            {
+              event.extendedDescription?.map((paragraph) => (
+                <p class="mb-4" set:html={paragraph[locale]} />
+              ))
+            }
+            <ul class="mt-8 space-y-2 text-gray-600">
+              <li class={rowClass}>
+                <strong class="font-semibold text-basalt">
+                  {m.event_organised_by({}, { locale })}
+                </strong>
+                {event.organizer}
+              </li>
+              <li class={rowClass}>
+                <strong class="font-semibold text-basalt">
+                  {m.event_date({}, { locale })}
+                </strong>
+                {event.date[locale]}
+              </li>
+              <li class={rowClass}>
+                <strong class="font-semibold text-basalt">
+                  {m.event_time({}, { locale })}
+                </strong>
+                {event.time[locale]}
+              </li>
+              <li class:list={[rowClass, "items-start gap-x-1 sm:items-center"]}>
+                <strong class="font-semibold text-basalt">
+                  {m.event_location({}, { locale })}
+                </strong>
+                <div class="flex items-start gap-x-1 sm:items-center sm:gap-x-0">
+                  {text(event.location.name)}
+                  {
+                    event.location.link && (
+                      <a
+                        href={event.location.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        class={mapLinkClass}
+                      >
+                        <span>{m.event_map({}, { locale })}</span>
+                        <ExternalLinkIcon className="inline size-4" />
+                      </a>
+                    )
+                  }
+                </div>
+              </li>
+              {
+                event.route && (
+                  <li class:list={[rowClass, "items-start gap-x-1 sm:items-center"]}>
+                    <strong class="font-semibold text-basalt">
+                      {m.event_route({}, { locale })}
+                    </strong>
+                    <div class="flex items-start gap-x-1 sm:items-center sm:gap-x-0">
+                      {text(event.route.name)}
+                      {event.route.link && (
+                        <a
+                          href={event.route.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          class={mapLinkClass}
+                        >
+                          <span>{m.event_map({}, { locale })}</span>
+                          <ExternalLinkIcon className="inline size-4" />
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                )
+              }
+              <li class="flex flex-col gap-x-2 pb-2 sm:flex-row sm:pb-0">
+                <strong class="font-semibold text-basalt">
+                  {m.event_price({}, { locale })}
+                </strong>
+                {
+                  Array.isArray(event.price) ? (
+                    <ul class="list-disc pl-4">
+                      {event.price.map(({ category, price }) => (
+                        <li>
+                          {category[locale]}: {text(price)}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    event.price[locale]
+                  )
+                }
+              </li>
+            </ul>
+
+            {
+              event.partnerLogo && (
+                <div class="mt-8 w-48">
+                  <Image src={event.partnerLogo} alt="" width={192} />
+                </div>
+              )
+            }
+
+            {
+              moreInfoNote && (
+                <p class="my-4 font-semibold">{moreInfoNote[locale]}</p>
+              )
+            }
+
+            {
+              moreInfo && (
+                <div class="mt-10 flex flex-col items-center justify-start gap-4 whitespace-nowrap sm:flex-row-reverse sm:justify-end">
+                  <a
+                    href={resolve(moreInfo.href)}
+                    target={moreInfo.newTab ? "_blank" : undefined}
+                    rel={moreInfo.newTab ? "noreferrer" : undefined}
+                    class={buttonVariants({
+                      className: "min-w-full sm:min-w-fit",
+                      variant: "atlantis-outline",
+                    })}
+                  >
+                    {moreInfo.text[locale]}
+                  </a>
+                </div>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

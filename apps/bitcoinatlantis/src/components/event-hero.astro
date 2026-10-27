@@ -1,0 +1,72 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+import Container from "./container.astro";
+
+interface Props {
+  /** Shown above the title on small screens only. */
+  logo?: { alt: string; hiddenFrom: "lg" | "sm"; src: ImageMetadata };
+  paragraphs: string[];
+  stats: [string, string][];
+  /** Trusted HTML, so it may break lines. */
+  title: string;
+  titleClass?: string;
+}
+
+const {
+  logo,
+  paragraphs,
+  stats,
+  title,
+  titleClass = "text-green-darker",
+} = Astro.props;
+---
+
+<div class="relative pt-10 sm:py-8">
+  <Container class="relative max-w-7xl">
+    {
+      logo && (
+        <div
+          class:list={[
+            "relative -mt-20 mb-10 flex justify-center sm:-mt-24 sm:mb-16",
+            logo.hiddenFrom === "lg" ? "lg:hidden" : "sm:hidden",
+          ]}
+        >
+          <Image src={logo.src} alt={logo.alt} loading="eager" />
+        </div>
+      )
+    }
+    <div class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+      <h1
+        class:list={[
+          "font-display text-5xl font-bold tracking-tighter sm:text-7xl",
+          titleClass,
+        ]}
+        set:html={title}
+      />
+
+      <div
+        class="mt-6 space-y-6 font-display text-2xl tracking-tight text-basalt"
+      >
+        {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+
+      <dl
+        class="mt-10 grid grid-cols-2 gap-x-10 gap-y-6 sm:mt-12 sm:gap-x-16 sm:gap-y-10 sm:text-center lg:auto-cols-auto lg:grid-flow-col lg:grid-cols-none lg:justify-start lg:text-left"
+      >
+        {
+          stats.map(([name, value]) => (
+            <div>
+              <dt class="font-mono text-sm text-basalt-medium">{name}</dt>
+              <dd class="mt-0.5 flex gap-x-2 text-2xl font-semibold tracking-tight text-yellow-900">
+                {value}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <slot />
+    </div>
+  </Container>
+</div>

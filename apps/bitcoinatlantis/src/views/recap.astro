@@ -1,0 +1,32 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import BackgroundEffect from "@/components/background-effect.astro";
+import PageHero from "@/components/page-hero.astro";
+import { RecapClips } from "@/components/recap-clips";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+---
+
+<Layout
+  description={m.recap_description({}, { locale })}
+  route="recap"
+  title={m.recap_meta_title({}, { locale })}
+>
+  <BackgroundEffect>
+    <PageHero title={m.recap_title({}, { locale })} />
+    <RecapClips
+      client:visible
+      labels={{
+        all: m.recap_filter_all({}, { locale }),
+        and: m.recap_and({}, { locale }),
+        day: m.recap_filter_day({}, { locale }),
+        noMatches: m.recap_no_matches({}, { locale }),
+        speaker: m.recap_filter_speaker({}, { locale }),
+        stage: m.recap_filter_stage({}, { locale }),
+      }}
+    />
+  </BackgroundEffect>
+</Layout>

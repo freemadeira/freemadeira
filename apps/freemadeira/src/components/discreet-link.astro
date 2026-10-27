@@ -1,0 +1,24 @@
+---
+import { ArrowRight } from "lucide-react";
+import { cn } from "cn";
+
+import { externalLinkProps } from "@/lib/links";
+
+interface Props {
+  class?: string;
+  href: string;
+}
+
+const { class: className, href } = Astro.props;
+---
+
+<a
+  class={cn("group flex w-fit items-center gap-4", className)}
+  href={href}
+  {...externalLinkProps(href)}
+>
+  <span class="underline-offset-6 group-hover:underline"><slot /></span>
+  <span class="rounded-full bg-primary-400 p-1 text-black">
+    <ArrowRight aria-hidden="true" size={22} strokeWidth={1.2} />
+  </span>
+</a>

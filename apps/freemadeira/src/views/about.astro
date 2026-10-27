@@ -1,23 +1,183 @@
 ---
 import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+import { ArrowDownToLine, MessagesSquare, Zap } from "lucide-react";
 
+import educationGoals from "@/assets/images/education-goals.jpg";
+import NamasteB from "@/assets/illustrations/namaste-b.svg";
+import OrangeFile from "@/assets/illustrations/orange-file.svg";
+import Planet from "@/assets/illustrations/planet.svg";
+import BrownCard from "@/components/brown-card.astro";
+import Container from "@/components/container.astro";
+import ContributeButtons from "@/components/contribute-buttons.astro";
+import EventRow from "@/components/event-row.astro";
+import Hero from "@/components/hero.astro";
+import SentenceList from "@/components/sentence-list.astro";
+import SplitHighlight from "@/components/split-highlight.astro";
+import { upcomingEvents } from "@/data/events";
+import { links, organisation } from "@/data/organisation";
+import { routes } from "@/i18n/routes";
 import Layout from "@/layouts/base-layout.astro";
+import { heading } from "@/lib/typography";
 import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const events = upcomingEvents();
+
+const who = [
+  m.about_who_1({}, t),
+  m.about_who_2({}, t),
+  m.about_who_3({}, t),
+  m.about_who_4({}, t),
+  m.about_who_5({}, t),
+];
+const goals = [
+  m.about_goals_1({}, t),
+  m.about_goals_2({}, t),
+  m.about_goals_3({}, t),
+  m.about_goals_4({}, t),
+];
+const details = [
+  { label: m.about_organisation_name({}, t), value: organisation.registeredName },
+  { label: m.about_organisation_legal_form({}, t), value: organisation.legalForm[locale] },
+  { label: m.about_organisation_nipc({}, t), value: organisation.nipc },
+  { label: m.about_organisation_office({}, t), value: organisation.address },
+];
+const mediaKit =
+  "https://freemadeira.s3.eu-west-3.amazonaws.com/FREE_Madeira-Media_Kit.zip";
+const tag = "flex items-center text-lg leading-[150%]";
 ---
 
 <Layout
-  description={m.about_description({}, { locale })}
-  route="about"
-  title={m.about_title({}, { locale })}
+  description={m.about_hero_text({}, t)}
+  paths={routes.about}
+  title={m.about_title({}, t)}
 >
-  <main class="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-24">
-    <h1 class="text-4xl font-semibold tracking-tight">
-      {m.about_title({}, { locale })}
-    </h1>
-    <p class="max-w-prose text-lg text-muted-foreground">
-      {m.about_description({}, { locale })}
-    </p>
-  </main>
+  <Hero illustration={Planet} title={m.about_hero_title({}, t)}>
+    {m.about_hero_text({}, t)}
+  </Hero>
+
+  <section class="my-24 bg-bridal-50">
+    <Container class="gap-12 pt-18 pb-20" size="tight">
+      <p class={tag}>{m.about_who_tag({}, t)}</p>
+      <div class="mb-4 flex flex-col gap-8 lg:mb-7 lg:flex-row">
+        <div class="flex flex-3/5 flex-col justify-between gap-8">
+          <h2 class={heading.h4}>{m.about_who_title({}, t)}</h2>
+        </div>
+        <div class="flex flex-2/5 flex-col gap-8 lg:gap-18">
+          <SentenceList sentences={who} />
+        </div>
+      </div>
+      <div class="flex h-56 w-full flex-col gap-5 lg:w-1/2 lg:flex-row lg:gap-8">
+        <a
+          class="group relative w-full flex-1 overflow-clip bg-white p-7"
+          href={mediaKit}
+        >
+          <div class="flex h-full w-1/2 flex-col justify-between lg:w-2/5">
+            <h3 class:list={[heading.h6, "z-10"]}>{m.about_media_kit({}, t)}</h3>
+            <span
+              class="z-10 inline-flex w-fit rounded-full bg-primary-400 p-2 text-dark transition duration-75 group-hover:bg-dark group-hover:text-white group-active:scale-95"
+            >
+              <ArrowDownToLine aria-hidden="true" size={34} strokeWidth={0.7} />
+            </span>
+          </div>
+          <OrangeFile
+            aria-hidden="true"
+            class="absolute right-4 bottom-0 h-[162px] w-auto lg:right-12 lg:h-full"
+          />
+        </a>
+      </div>
+    </Container>
+  </section>
+
+  <Container class="my-28 gap-8" size="tight">
+    <h2 class={heading.h3}>{m.about_donations_title({}, t)}</h2>
+    <div class="-mb-6 columns-1 gap-8 space-y-6 text-lg lg:columns-2">
+      <p>{m.about_donations_1({}, t)}</p>
+      <p>{m.about_donations_2({}, t)}</p>
+      <p>{m.about_donations_3({}, t)}</p>
+    </div>
+    <ContributeButtons class="mt-2" />
+  </Container>
+
+  <section class="bg-bridal-50">
+    <Container class="gap-12 py-16 sm:flex-row lg:gap-20" size="tight">
+      <div class="relative h-[95vw] w-full md:h-[550px] md:w-1/2">
+        <Image
+          alt={m.about_goals_image({}, t)}
+          class="absolute inset-0 size-full object-cover"
+          sizes="(max-width: 640px) 100vw, 50vw"
+          src={educationGoals}
+          width={1280}
+          widths={[640, 960, 1280]}
+        />
+      </div>
+      <div class="flex w-full flex-col justify-center gap-10 sm:w-2/5 lg:gap-12">
+        <h2 class={heading.h4}>{m.about_goals_title({}, t)}</h2>
+        <SentenceList sentences={goals} />
+      </div>
+    </Container>
+  </section>
+
+  <Container class="my-20 gap-7 sm:my-28 sm:flex-row sm:gap-9">
+    <BrownCard
+      class="px-20 py-12 lg:px-30"
+      icon={Zap}
+      link={{ href: links.energySummit, label: m.about_energy_button({}, t) }}
+      title={m.about_energy_title({}, t)}
+      titleClass={heading.h3}
+    >
+      <p class="text-lg">{m.about_energy_text({}, t)}</p>
+    </BrownCard>
+    <BrownCard
+      class="px-20 py-12 lg:px-30"
+      icon={MessagesSquare}
+      link={{ href: links.meetups, label: m.attend_next_meetup({}, t) }}
+      title={m.about_meetups_title({}, t)}
+      titleClass={heading.h3}
+    >
+      <p class="text-lg">{m.about_meetups_text({}, t)}</p>
+    </BrownCard>
+  </Container>
+
+  <SplitHighlight illustration={NamasteB} title={m.about_hub_title({}, t)}>
+    {m.about_hub_text({}, t)}
+  </SplitHighlight>
+
+  {
+    events.length > 0 && (
+      <div class="mb-16">
+        <EventRow events={events} title={m.events_upcoming({}, t)} />
+      </div>
+    )
+  }
+
+  <section class="bg-bridal-50">
+    <Container class="gap-8 pt-18 pb-20" size="tight">
+      <h2 class={heading.h3}>{m.about_organisation_title({}, t)}</h2>
+      <p class="text-lg text-pretty">{m.about_organisation_text({}, t)}</p>
+      <dl class="grid gap-x-8 gap-y-3 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
+        {
+          details.map(({ label, value }) => (
+            <div class="flex flex-col gap-1 sm:contents">
+              <dt class="font-bold">{label}</dt>
+              <dd class="text-pretty">{value}</dd>
+            </div>
+          ))
+        }
+        <div class="flex flex-col gap-1 sm:contents">
+          <dt class="font-bold">{m.about_organisation_contact({}, t)}</dt>
+          <dd>
+            <a
+              class="underline decoration-1 underline-offset-7 hover:text-dark"
+              href={`mailto:${organisation.email}`}
+            >
+              {organisation.email}
+            </a>
+          </dd>
+        </div>
+      </dl>
+    </Container>
+  </section>
 </Layout>

@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+
+import logoSecondary from "@/assets/logos/logo-secondary.svg";
+
+// Spare the S3 bandwidth while developing.
+const video = import.meta.env.DEV
+  ? undefined
+  : "https://bitcoin-atlantis-assets.s3.eu-west-3.amazonaws.com/madeira.mp4";
+---
+
+<div
+  class="relative mb-12 flex h-screen items-center justify-center overflow-hidden bg-cover bg-center"
+>
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    class="absolute z-10 min-h-full w-auto max-w-none min-w-full brightness-90"
+  >
+    {video && <source src={video} type="video/mp4" />}
+  </video>
+  <Image
+    src={logoSecondary}
+    class="relative z-30 h-1/4 w-auto md:h-2/5"
+    alt="Bitcoin Atlantis"
+  />
+</div>

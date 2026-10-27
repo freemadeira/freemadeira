@@ -1,0 +1,98 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+import { ExternalLinkIcon } from "lucide-react";
+
+import backgroundImage from "@/assets/bg-hero.jpg";
+import Container from "@/components/container.astro";
+import SocialLinks from "@/components/social-links.astro";
+import { socialProfiles } from "@/data/socials";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const stats = [
+  [m.home_stat_attendees({}, { locale }), "3,000+"],
+  [m.home_stat_points_of_sale({}, { locale }), "60"],
+  [m.home_stat_ln_payments({}, { locale }), "8,750"],
+  [m.home_stat_ln_volume({}, { locale }), "2.029416 BTC"],
+];
+---
+
+<div class="relative pt-8 pb-16 sm:py-12">
+  <div
+    class="absolute inset-x-0 -top-48 -bottom-14 overflow-hidden bg-basalt-light"
+  >
+    <Image
+      class="absolute top-0 left-0 max-w-none translate-x-[-55%] translate-y-[-10%] -scale-x-100 sm:left-1/2 sm:translate-x-[-98%] sm:translate-y-[-6%] lg:translate-x-[-106%] xl:translate-x-[-122%]"
+      src={backgroundImage}
+      alt=""
+      width={918}
+      height={1495}
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-white"></div>
+    <div class="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-white">
+    </div>
+  </div>
+
+  <Container class="relative max-w-7xl">
+    <div class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+      <h1
+        class="font-display text-5xl font-bold tracking-tighter text-yellow sm:text-7xl"
+      >
+        <span class="sr-only">Bitcoin Atlantis – </span>
+        {m.home_hero_title({}, { locale })}
+      </h1>
+
+      <div
+        class="mt-6 space-y-6 font-display text-2xl tracking-tight text-basalt"
+      >
+        <p>{m.home_hero_text_1({}, { locale })}</p>
+        <p>{m.home_hero_text_2({}, { locale })}</p>
+      </div>
+
+      <div class="mt-10 flex justify-center sm:justify-start">
+        <SocialLinks
+          nostr={socialProfiles.nostr}
+          twitter={socialProfiles.twitter}
+          instagram={socialProfiles.instagram}
+          youtube={socialProfiles.youtube}
+          height={36}
+          color="#1a1400"
+          hoverColor="#4d3c00"
+        />
+      </div>
+
+      <dl
+        class="mt-10 grid grid-cols-2 gap-x-10 gap-y-6 sm:mt-12 sm:gap-x-16 sm:gap-y-10 sm:text-center lg:auto-cols-auto lg:grid-flow-col lg:grid-cols-none lg:justify-start lg:text-left"
+      >
+        {
+          stats.map(([name, value]) => (
+            <div>
+              <dt class="font-mono text-sm text-basalt-medium">{name}</dt>
+              <dd class="mt-0.5 text-2xl font-semibold tracking-tight text-yellow-900">
+                {value}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div
+        class="my-6 space-y-6 font-display text-xl tracking-tight text-basalt"
+      >
+        <p>{m.home_hero_case_study({}, { locale })}</p>
+        <a
+          href="https://blog.btcpayserver.org/case-study-bitcoin-atlantis/"
+          class="inline-block rounded-full border border-yellow px-5 py-2 text-lg font-semibold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {m.home_hero_read_case_study({}, { locale })}
+          <ExternalLinkIcon className="inline size-4" />
+        </a>
+      </div>
+    </div>
+  </Container>
+</div>

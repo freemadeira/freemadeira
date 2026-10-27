@@ -1,0 +1,22 @@
+---
+interface Props {
+  subtitle?: string;
+  title: string;
+}
+
+const { subtitle, title } = Astro.props;
+---
+
+<div class="py-6 sm:py-8">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h1 class="text-4xl font-bold tracking-tight text-basalt sm:text-6xl">
+        {title}
+      </h1>
+      <p class="mt-6 text-lg leading-8 text-gray-600 [&_a]:text-yellow-500 [&_a]:hover:text-yellow">
+        {subtitle && <Fragment set:html={subtitle} />}
+        <slot />
+      </p>
+    </div>
+  </div>
+</div>

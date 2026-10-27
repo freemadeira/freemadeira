@@ -1,5 +1,5 @@
 {
-  "name": "freemadeira",
+  "name": "freemadeira-monorepo",
   "private": true,
   "type": "module",
   "scripts": {
