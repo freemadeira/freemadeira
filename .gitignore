@@ -1,0 +1,17 @@
+node_modules
+dist
+.astro
+.vercel
+.turbo
+.env
+.env.*
+!.env.example
+*.local
+*.log
+.DS_Store
+
+# Paraglide compiles messages into each app.
+src/paraglide
+
+# Local libSQL data.
+infra/data

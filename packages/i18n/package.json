@@ -1,0 +1,15 @@
+{
+  "name": "@freemadeira/i18n",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@freemadeira/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "extends": "@freemadeira/tsconfig/react.json",
+  "compilerOptions": {
+    "paths": {
+      "@freemadeira/ui/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

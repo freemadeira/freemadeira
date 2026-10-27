@@ -1,0 +1,26 @@
+{
+  "name": "freemadeira",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "check": "ultracite check",
+    "dev": "turbo run dev",
+    "fix": "ultracite fix",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
+    "turbo": "^2.11.10",
+    "ultracite": "^8.1.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.0.0",
+      "onFail": "error"
+    }
+  },
+  "packageManager": "pnpm@12.15.0"
+}

@@ -1,0 +1,4 @@
+{
+  "extends": "@freemadeira/tsconfig/base.json",
+  "include": ["src"]
+}

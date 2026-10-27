@@ -1,0 +1,14 @@
+# libSQL server (sqld) for local development: SQLite over HTTP, without auth.
+#
+#   docker compose -f infra/compose.yaml up -d
+#
+# Then LIBSQL_URL=http://127.0.0.1:8080 reaches it. See README.md for production.
+services:
+  sqld:
+    image: ghcr.io/tursodatabase/libsql-server:latest
+    environment:
+      SQLD_NODE: primary
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/var/lib/sqld

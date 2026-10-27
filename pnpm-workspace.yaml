@@ -1,0 +1,37 @@
+packages:
+  - apps/*
+  - packages/*
+  - services/*
+
+# Versions shared across packages. Reference them as "catalog:".
+catalog:
+  "@astrojs/check": ^0.9.12
+  "@astrojs/react": ^7.1.1
+  "@astrojs/vercel": ^11.0.16
+  "@base-ui/react": ^1.9.0
+  "@inlang/paraglide-js": ^2.29.1
+  "@libsql/client": ^0.18.0
+  "@tailwindcss/vite": ^4.3.3
+  "@types/node": ^24.0.0
+  "@types/react": ^19.3.0
+  "@types/react-dom": ^19.3.0
+  astro: ^7.4.2
+  drizzle-kit: ^0.31.11
+  drizzle-orm: ^0.45.4
+  react: ^19.3.1
+  react-dom: ^19.3.1
+  tailwindcss: ^4.3.3
+  typescript: ^7.0.2
+
+catalogs:
+  # astro check type-checks through TypeScript's JS API, which TypeScript 7
+  # dropped, so the Astro apps stay on 6 until @astrojs/check moves on.
+  astro:
+    typescript: ^6.0.3
+
+# Wait a day before installing a new release, so a hijacked publish has time
+# to be caught and pulled.
+minimumReleaseAge: 1440
+
+allowBuilds:
+  esbuild: true

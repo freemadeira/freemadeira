@@ -1,0 +1,64 @@
+---
+import "@/styles/global.css";
+
+import {
+  defaultLocale,
+  htmlLang,
+  localeNames,
+  locales,
+  toLocale,
+} from "@freemadeira/i18n";
+
+import { routes } from "@/i18n/routes";
+import type { Route } from "@/i18n/routes";
+
+interface Props {
+  description: string;
+  route: Route;
+  title: string;
+}
+
+const { description, route, title } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const paths = routes[route];
+const site = Astro.site ?? Astro.url;
+const otherLocales = locales.filter((other) => other !== locale);
+---
+
+<!doctype html>
+<html lang={htmlLang[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(paths[locale], site)} />
+    {
+      locales.map((alternate) => (
+        <link
+          rel="alternate"
+          hreflang={alternate}
+          href={new URL(paths[alternate], site)}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(paths[defaultLocale], site)}
+    />
+  </head>
+  <body>
+    <header class="mx-auto flex max-w-5xl justify-end px-6 py-4 text-sm">
+      {
+        otherLocales.map((other) => (
+          <a href={paths[other]} hreflang={other} lang={htmlLang[other]}>
+            {localeNames[other]}
+          </a>
+        ))
+      }
+    </header>
+    <slot />
+  </body>
+</html>

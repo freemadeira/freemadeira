@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "@freemadeira/ui/styles.css";
+@import "@fontsource-variable/schibsted-grotesk";
+
+@theme inline {
+  --font-sans:
+    "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* FREE Madeira: Supernova yellow on Bridal Heath. */
+:root {
+  --background: #fbf7f0;
+  --foreground: #090506;
+  --card: #ffffff;
+  --card-foreground: #090506;
+  --popover: #ffffff;
+  --popover-foreground: #090506;
+  --primary: #ffcb05;
+  --primary-foreground: #090506;
+  --secondary: #f6eede;
+  --secondary-foreground: #090506;
+  --muted: #f3ecdf;
+  --muted-foreground: #696971;
+  --accent: #f6eede;
+  --accent-foreground: #090506;
+  --border: rgb(9 5 6 / 0.1);
+  --input: rgb(9 5 6 / 0.14);
+  --ring: #090506;
+}
