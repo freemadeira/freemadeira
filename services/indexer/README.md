@@ -39,6 +39,7 @@ From the repository root:
 ```bash
 pnpm --filter @freemadeira/indexer dev       # run, restarting on changes; reads .env
 pnpm --filter @freemadeira/indexer key       # a new Nostr key for it
+pnpm --filter @freemadeira/indexer projects  # the relay's projects and their addresses, for SITES
 pnpm --filter @freemadeira/indexer seed      # publish a sample blog to a local relay
 pnpm --filter @freemadeira/indexer rebuild   # empty the tables, then run
 pnpm --filter @freemadeira/indexer test
