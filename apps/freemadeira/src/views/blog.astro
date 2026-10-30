@@ -8,14 +8,13 @@ import Container from "@/components/container.astro";
 import Hero from "@/components/hero.astro";
 import PostCard from "@/components/post-card.astro";
 import Layout from "@/layouts/base-layout.astro";
-import { blogDb, SITE } from "@/lib/blog";
+import { readBlog, SITE } from "@/lib/blog";
 import { heading } from "@/lib/typography";
 import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
 const t = { locale };
-const db = blogDb();
-const posts = db ? await listPosts(db, SITE, locale) : [];
+const posts = await readBlog((db) => listPosts(db, SITE, locale), []);
 const feed = feedPath(locale);
 ---
 

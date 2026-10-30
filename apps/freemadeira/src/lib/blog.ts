@@ -10,16 +10,36 @@ export const SITE: Site = "freemadeira";
 
 let client: Db | undefined;
 
+/** Whether SQLite answered "no such table", which Drizzle wraps in its own error. */
+function noSuchTable(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  return error.message.includes("no such table") || noSuchTable(error.cause);
+}
+
 /**
- * The blog's database, written by the indexer. Undefined where there's none
- * (a deployment without LIBSQL_URL): the blog is then empty, not broken.
+ * Reads the blog's database, written by the indexer, or gives `empty` where
+ * there's none yet: a deployment without LIBSQL_URL, or a database the indexer
+ * hasn't made the tables in, as before its first run. The blog is then empty,
+ * not broken.
  */
-export function blogDb(): Db | undefined {
+export async function readBlog<T>(
+  read: (db: Db) => Promise<T>,
+  empty: T
+): Promise<T> {
   if (!LIBSQL_URL) {
-    return undefined;
+    return empty;
   }
   client ??= createDb({ authToken: LIBSQL_AUTH_TOKEN, url: LIBSQL_URL });
-  return client;
+  try {
+    return await read(client);
+  } catch (error) {
+    if (noSuchTable(error)) {
+      return empty;
+    }
+    throw error;
+  }
 }
 
 /** "October 28, 2026" or "28 de outubro de 2026", Madeira time, like events. */
@@ -57,22 +77,26 @@ export async function postPage(
   locale: Locale,
   slug: string
 ): Promise<PostPage> {
-  const db = blogDb();
-  const found = db ? await findPost(db, SITE, locale, slug) : undefined;
-  if (!(db && found)) {
-    return { type: "missing" };
-  }
-  if (found.type === "moved") {
-    return { path: postPath(locale, found.slug), type: "moved" };
-  }
-  const [slugs, people] = await Promise.all([
-    translations(db, SITE, found.post.postId),
-    bylines(db, found.post.authors),
-  ]);
-  return {
-    authors: people.filter((person) => person.name),
-    post: found.post,
-    slugs,
-    type: "post",
-  };
+  return await readBlog(
+    async (db): Promise<PostPage> => {
+      const found = await findPost(db, SITE, locale, slug);
+      if (!found) {
+        return { type: "missing" };
+      }
+      if (found.type === "moved") {
+        return { path: postPath(locale, found.slug), type: "moved" };
+      }
+      const [slugs, people] = await Promise.all([
+        translations(db, SITE, found.post.postId),
+        bylines(db, found.post.authors),
+      ]);
+      return {
+        authors: people.filter((person) => person.name),
+        post: found.post,
+        slugs,
+        type: "post",
+      };
+    },
+    { type: "missing" }
+  );
 }
