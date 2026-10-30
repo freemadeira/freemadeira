@@ -16,12 +16,17 @@ const year = new Date().toLocaleString("pt-PT", {
   timeZone: "Atlantic/Madeira",
   year: "numeric",
 });
-const link = "w-fit decoration-1 underline-offset-7 hover:underline";
+// Inline blocks, so each link's tap target is the full 28px line.
+const link = "inline-block decoration-1 underline-offset-7 hover:underline";
 ---
 
 <footer class="bg-primary-400 fill-dark text-dark">
   <Container class="gap-12 py-16">
-    <div class="flex flex-col items-start gap-12 md:flex-row md:gap-14">
+    {/* One row from xl. Between md and xl the links take a row of their own
+        under the newsletter and the socials, or their columns get squashed. */}
+    <div
+      class="flex flex-col items-start gap-12 md:flex-row md:flex-wrap md:justify-between md:gap-14 xl:flex-nowrap"
+    >
       <div class="flex w-full flex-col gap-4 md:w-auto">
         <p class="text-lg">{m.footer_newsletter_title({}, t)}</p>
         <NewsletterForm
@@ -38,7 +43,7 @@ const link = "w-fit decoration-1 underline-offset-7 hover:underline";
       </div>
 
       <div
-        class="grid grow grid-cols-2 gap-8 text-sm leading-[200%] sm:grid-cols-4"
+        class="grid grow grid-cols-2 gap-8 text-sm leading-[200%] sm:grid-cols-4 md:order-last md:basis-full xl:order-none xl:basis-auto"
       >
         <ul class="flex flex-col">
           <li>
@@ -61,6 +66,11 @@ const link = "w-fit decoration-1 underline-offset-7 hover:underline";
           </li>
         </ul>
         <ul class="flex flex-col">
+          <li>
+            <a class:list={[link, "font-bold"]} href={routes.blog[locale]}>
+              {m.nav_blog({}, t)}
+            </a>
+          </li>
           <li>
             <a
               class:list={[link, "font-bold"]}

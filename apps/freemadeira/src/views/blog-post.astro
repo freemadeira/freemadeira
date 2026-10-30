@@ -1,0 +1,247 @@
+---
+import { blogPath, postPath } from "@freemadeira/blog";
+import { locales, toLocale } from "@freemadeira/i18n";
+import type { LocalizedPaths } from "@freemadeira/i18n";
+import { ArrowLeft } from "lucide-react";
+
+import Container from "@/components/container.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { names, postDate } from "@/lib/blog";
+import type { PostPage } from "@/lib/blog";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  /** Looked up by the page, which answers 404 when it's missing. */
+  page: Exclude<PostPage, { type: "moved" }>;
+}
+
+const { page } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const slug = Astro.params.slug ?? "";
+const post = page.type === "post" ? page.post : undefined;
+const slugs = page.type === "post" ? page.slugs : {};
+const authors = page.type === "post" ? page.authors : [];
+// The language switcher goes to the translation, or to the other blog.
+const paths = Object.fromEntries(
+  locales.map((other) => {
+    const translated = other === locale ? slug : slugs[other];
+    return [other, translated ? postPath(other, translated) : blogPath(other)];
+  })
+) as LocalizedPaths;
+const alternates = Object.fromEntries(
+  locales
+    .filter((other) => slugs[other])
+    .map((other) => [other, postPath(other, slugs[other] ?? "")])
+);
+const translation = locales.find((other) => other !== locale && slugs[other]);
+const back = blogPath(locale);
+---
+
+{
+  post ? (
+    <Layout
+      alternates={alternates}
+      article={{
+        cover: post.cover,
+        publishedAt: post.publishedAt,
+        updatedAt: post.updatedAt,
+      }}
+      description={post.summary || post.title}
+      paths={paths}
+      title={post.title}
+    >
+      <article class="mt-10 mb-24 flex flex-col gap-12 sm:mt-16">
+        <Container class="gap-8" size="tighter">
+          <a
+            class="flex w-fit items-center gap-2 text-sm hover:text-bridal-700"
+            href={back}
+          >
+            <ArrowLeft aria-hidden="true" size={16} />
+            {m.blog_all_posts({}, t)}
+          </a>
+          <div class="@container flex flex-col gap-6">
+            <h1 class:list={[heading.h3, "wrap-break-word hyphens-auto"]}>
+              {post.title}
+            </h1>
+            {post.summary && <p class={heading.h6}>{post.summary}</p>}
+          </div>
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-mountain-mist-700">
+            {authors.length > 0 && (
+              <p class="flex items-center gap-3">
+                <span class="flex -space-x-2">
+                  {authors
+                    .filter((author) => author.picture)
+                    .map((author) => (
+                      <img
+                        alt=""
+                        class="size-8 rounded-full border-2 border-white object-cover"
+                        height="32"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                        src={author.picture}
+                        width="32"
+                      />
+                    ))}
+                </span>
+                {m.blog_by(
+                  {
+                    names: names(
+                      authors.map((author) => author.name ?? ""),
+                      locale
+                    ),
+                  },
+                  t
+                )}
+              </p>
+            )}
+            <p>
+              <time datetime={post.publishedAt.toISOString()}>
+                {postDate(post.publishedAt, locale)}
+              </time>
+              {" · "}
+              {m.blog_reading_time({ minutes: post.readingMinutes }, t)}
+            </p>
+          </div>
+        </Container>
+
+        {post.cover && (
+          <Container size="tighter">
+            <img
+              alt={post.cover.alt}
+              class="aspect-3/2 w-full object-cover"
+              decoding="async"
+              fetchpriority="high"
+              height={post.cover.height}
+              sizes="(min-width: 64rem) 64rem, 100vw"
+              src={post.cover.url}
+              srcset={post.cover.srcset}
+              width={post.cover.width}
+            />
+          </Container>
+        )}
+
+        <Container size="tighter">
+          <div class="article mx-auto w-full max-w-3xl" set:html={post.html} />
+        </Container>
+
+        <Container class="gap-8" size="tighter">
+          <div class="mx-auto flex w-full max-w-3xl flex-col gap-6 border-t border-dark pt-8">
+            {post.topics.length > 0 && (
+              <ul class="flex flex-wrap gap-2.5">
+                {post.topics.map((topic) => (
+                  <li class="bg-primary-400 px-2.5 py-2 text-sm leading-2.5 font-medium text-dark">
+                    {topic}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div class="flex flex-wrap justify-between gap-4">
+              <a
+                class="flex items-center gap-2 hover:text-bridal-700"
+                href={back}
+              >
+                <ArrowLeft aria-hidden="true" size={18} />
+                {m.blog_all_posts({}, t)}
+              </a>
+              {translation && (
+                <a
+                  class="underline decoration-1 underline-offset-6 hover:text-bridal-700"
+                  href={paths[translation]}
+                  hreflang={translation}
+                  lang={translation}
+                >
+                  {m.blog_read_translation({}, t)}
+                </a>
+              )}
+            </div>
+          </div>
+        </Container>
+      </article>
+    </Layout>
+  ) : (
+    <Layout
+        description={m.blog_not_found({}, t)}
+        noindex
+        paths={{ ...paths, [locale]: back }}
+        title={m.blog_not_found({}, t)}
+      >
+        <Container class="my-24 gap-8" size="tighter">
+          <h1 class={heading.h4}>{m.blog_not_found({}, t)}</h1>
+          <a
+            class="flex w-fit items-center gap-2 underline decoration-1 underline-offset-6"
+            href={back}
+          >
+            <ArrowLeft aria-hidden="true" size={18} />
+            {m.blog_all_posts({}, t)}
+          </a>
+        </Container>
+      </Layout>
+  )
+}
+
+<style>
+  @reference "../styles/global.css";
+
+  /* The post's HTML comes from the indexer, so it's styled by tag. */
+  .article {
+    @apply text-lg leading-[1.7];
+
+    & :global(> * + *) {
+      @apply mt-6;
+    }
+    & :global(h2) {
+      @apply mt-14 text-[28px] leading-[36px] font-medium sm:text-[32px] sm:leading-[40px];
+    }
+    & :global(h3) {
+      @apply mt-10 text-2xl leading-[32px] font-medium;
+    }
+    & :global(:is(h4, h5, h6)) {
+      @apply mt-8 text-xl font-medium;
+    }
+    & :global(a) {
+      @apply underline decoration-1 underline-offset-4 hover:text-bridal-700;
+    }
+    & :global(:is(ul, ol)) {
+      @apply flex flex-col gap-2 pl-6;
+    }
+    & :global(ul) {
+      @apply list-disc;
+    }
+    & :global(ol) {
+      @apply list-decimal;
+    }
+    & :global(blockquote) {
+      @apply border-l-4 border-primary-400 pl-5 text-mountain-mist-700;
+    }
+    & :global(:not(pre) > code) {
+      @apply bg-bridal-50 px-1.5 py-0.5 text-base;
+    }
+    & :global(pre) {
+      @apply overflow-x-auto bg-dark p-5 text-base leading-normal text-white;
+    }
+    & :global(figure) {
+      @apply my-10 flex flex-col gap-3;
+    }
+    & :global(img) {
+      @apply h-auto w-full;
+    }
+    & :global(figcaption) {
+      @apply text-sm text-mountain-mist-500;
+    }
+    & :global(hr) {
+      @apply my-12 border-mountain-mist-200;
+    }
+    /* A wide table scrolls on its own instead of widening the page. */
+    & :global(table) {
+      @apply block w-full overflow-x-auto border-collapse text-base;
+    }
+    & :global(:is(th, td)) {
+      @apply border-b border-mountain-mist-200 px-3 py-2 text-left whitespace-nowrap;
+    }
+    & :global(th) {
+      @apply font-medium;
+    }
+  }
+</style>

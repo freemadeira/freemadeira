@@ -20,4 +20,7 @@ export function createDb(config: DbConfig) {
 
 export type Db = ReturnType<typeof createDb>;
 
+// oxlint-disable-next-line no-barrel-file -- the apps and the indexer read the tables through it, as Drizzle does
 export * as schema from "./schema.ts";
+export { sites } from "./schema.ts";
+export type { PostImage, Site } from "./schema.ts";

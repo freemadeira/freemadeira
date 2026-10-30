@@ -1,0 +1,60 @@
+---
+import { blogPaths, feedPath, listPosts } from "@freemadeira/blog";
+import { toLocale } from "@freemadeira/i18n";
+import { Rss } from "lucide-react";
+
+import File from "@/assets/illustrations/orange-file.svg";
+import Container from "@/components/container.astro";
+import Hero from "@/components/hero.astro";
+import PostCard from "@/components/post-card.astro";
+import Layout from "@/layouts/base-layout.astro";
+import { blogDb, SITE } from "@/lib/blog";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const db = blogDb();
+const posts = db ? await listPosts(db, SITE, locale) : [];
+const feed = feedPath(locale);
+---
+
+<Layout
+  description={m.blog_description({}, t)}
+  paths={blogPaths}
+  title={m.blog_title({}, t)}
+>
+  <link
+    href={feed}
+    rel="alternate"
+    slot="head"
+    title={m.blog_feed_title({}, t)}
+    type="application/rss+xml"
+  />
+  <Hero illustration={File} title={m.blog_title({}, t)}>
+    {m.blog_description({}, t)}
+  </Hero>
+
+  <Container class="mb-24 gap-12">
+    {
+      posts.length > 0 ? (
+        <ul class="grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
+          {posts.map((post) => (
+            <li>
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class={heading.h6}>{m.blog_empty({}, t)}</p>
+      )
+    }
+    <a
+      class="flex w-fit items-center gap-2 underline decoration-1 underline-offset-6 hover:text-bridal-700"
+      href={feed}
+    >
+      <Rss aria-hidden="true" size={18} />
+      {m.blog_feed({}, t)}
+    </a>
+  </Container>
+</Layout>

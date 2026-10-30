@@ -22,6 +22,7 @@ interface Props {
   about: { items: Link[]; label: string };
   backLabel: string;
   bitcoinAtlantis: Link;
+  blog: Link;
   closeLabel: string;
   current: string;
   home: string;
@@ -126,7 +127,7 @@ export default function MobileMenu(props: Props) {
             </ul>
           </>
         ) : (
-          <div className="flex h-full flex-col justify-between gap-8 px-4 py-8 sm:pt-2 sm:pb-0">
+          <div className="flex grow flex-col justify-between gap-8 px-4 py-8 sm:pt-2 sm:pb-0">
             <ul className="divide-mountain-mist-700 flex flex-col divide-y">
               <li>
                 <button
@@ -140,6 +141,22 @@ export default function MobileMenu(props: Props) {
                   {props.about.label}
                   <ChevronRight className="h-4 w-8" />
                 </button>
+              </li>
+              <li>
+                <a
+                  aria-current={
+                    props.current.startsWith(props.blog.href)
+                      ? "page"
+                      : undefined
+                  }
+                  className={cn(
+                    "text-mountain-mist-700 hover:text-dark aria-[current=page]:text-dark block py-6",
+                    heading.h4
+                  )}
+                  href={props.blog.href}
+                >
+                  {props.blog.label}
+                </a>
               </li>
               <li>
                 <a

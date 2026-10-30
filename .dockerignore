@@ -1,0 +1,16 @@
+# Images build from the repository root; they need the sources, not what was built or installed here.
+**/node_modules
+**/.astro
+**/.vercel
+**/.turbo
+**/dist
+**/src/paraglide
+**/.env
+**/.env.*
+!**/.env.example
+.git
+.agents
+.claude
+.github
+.vscode
+infra/data

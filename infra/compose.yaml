@@ -5,7 +5,7 @@
 # Then LIBSQL_URL=http://127.0.0.1:8080 reaches it. See README.md for production.
 services:
   sqld:
-    image: ghcr.io/tursodatabase/libsql-server:latest
+    image: ghcr.io/tursodatabase/libsql-server:v0.24.32
     environment:
       SQLD_NODE: primary
     ports:

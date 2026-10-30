@@ -12,6 +12,8 @@
     "@astrojs/react": "catalog:",
     "@astrojs/vercel": "catalog:",
     "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@freemadeira/blog": "workspace:*",
+    "@freemadeira/db": "workspace:*",
     "@freemadeira/i18n": "workspace:*",
     "@freemadeira/ui": "workspace:*",
     "@inlang/paraglide-js": "catalog:",

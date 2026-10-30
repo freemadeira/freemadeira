@@ -1,0 +1,22 @@
+{
+  "name": "@freemadeira/blog",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --test src/*.test.ts",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@freemadeira/db": "workspace:*",
+    "@freemadeira/i18n": "workspace:*",
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "@freemadeira/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

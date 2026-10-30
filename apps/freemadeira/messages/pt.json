@@ -10,6 +10,7 @@
   "nav_bitcoin_atlantis": "Bitcoin Atlantis",
   "nav_learn": "Aprender",
   "nav_shop": "Loja",
+  "nav_blog": "Blog",
   "nav_open_menu": "Abrir o menu",
   "nav_close_menu": "Fechar o menu",
   "nav_back": "Voltar",
@@ -164,5 +165,15 @@
   "diploma_title": "Diploma Bitcoin",
   "diploma_description": "Um curso de Bitcoin de 10 semanas, online e em português, adaptado do programa internacionalmente reconhecido da My First Bitcoin.",
   "diploma_faq_title": "Perguntas frequentes",
-  "diploma_sign_up": "Inscreve-te já!"
+  "diploma_sign_up": "Inscreve-te já!",
+  "blog_title": "Blog",
+  "blog_description": "Notícias, guias e histórias da comunidade Bitcoin na Madeira.",
+  "blog_empty": "Ainda não há artigos. Volta em breve.",
+  "blog_feed": "Seguir por RSS",
+  "blog_feed_title": "Blog da FREE Madeira",
+  "blog_reading_time": "{minutes} min de leitura",
+  "blog_all_posts": "Todos os artigos",
+  "blog_by": "Por {names}",
+  "blog_read_translation": "Ler em inglês",
+  "blog_not_found": "Este artigo não existe ou já não está publicado."
 }

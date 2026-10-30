@@ -9,7 +9,8 @@ apps/freemadeira        freemadeira.org: Astro on Vercel
 apps/bitcoinatlantis    bitcoinatlantis.com: Astro on Vercel
 packages/ui             shadcn/ui on Base UI, Tailwind v4 tokens, shared by both sites
 packages/i18n           locales and the localized-path types every site uses
-packages/db             Drizzle schema and libSQL client for the read model
+packages/db             Drizzle schema, migrations and libSQL client for the read model
+packages/blog           the blog's paths, queries and RSS feed, for every site
 packages/tsconfig       shared tsconfig bases
 services/indexer        Node service on the VPS: team relay → libSQL → Vercel revalidation
 infra                   sqld for local development; production notes
@@ -17,9 +18,9 @@ infra                   sqld for local development; production notes
 
 ## How content flows
 
-There's no admin app here. Editors write blog posts, events, speakers and the programme in [freehub](https://github.com/freemadeira/freehub), the team's Nostr app, which saves them as signed events on the team relay. Each site has an owner in freehub who decides which npubs may edit which sections.
+There's no admin app here. Editors write blog posts, events, speakers and the programme in [freehub](https://github.com/freemadeira/freehub), the team's Nostr app, which saves them as signed events on the team relay. Each site's blog comes from a freehub project, linked by configuration on both sides (freehub's `websites`, the indexer's `SITES`): the project's members may publish, and its viewers only read.
 
-1. The indexer subscribes to the relay, drops events from npubs without the right role, and writes what's left to libSQL (sqld on the Hetzner VPS in Germany, run by Coolify).
+1. The indexer subscribes to the relay, drops events from npubs that aren't members of the site's project, and writes what's left to libSQL (sqld on the Hetzner VPS in Germany, run by Coolify).
 2. It then asks Vercel to revalidate the pages that changed.
 3. Pages are cached on Vercel's CDN, so visitors almost never wait on the database, and the sites stay up while the VPS is down.
 
@@ -34,6 +35,7 @@ pnpm install
 pnpm dev          # every app and service; or pnpm --filter freemadeira dev
 pnpm build        # every app
 pnpm typecheck    # tsc for packages, astro check for apps
+pnpm test         # node --test for packages and services
 pnpm check        # oxlint and oxfmt, through ultracite
 pnpm fix          # the same, fixing what it can
 ```
@@ -47,6 +49,7 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 - **Dependencies.** Versions used by more than one package live in the `catalog` in `pnpm-workspace.yaml`; reference them as `"catalog:"`. pnpm won't install a release younger than a day (`minimumReleaseAge`): pick the previous version rather than excluding it. New packages with install scripts must be listed under `allowBuilds`.
 - **TypeScript.** Packages and services use TypeScript 7. The Astro apps use 6 (`catalog:astro`), because `astro check` needs the JS API that 7 dropped.
 - **Internal packages** export their TypeScript source; there is no build step. Import with the `.ts` extension inside packages, so Node can run the indexer without a build.
+- **Tests** use Node's test runner: `*.test.ts` next to the code, run by `node --test` with no build.
 - **File names** are kebab-case, `.astro` files too (`base-layout.astro`, `home.astro`).
 - **Formatting.** oxfmt doesn't read `.astro` files; the Astro VS Code extension formats them.
 - **UI components** are added from `packages/ui` with `pnpm exec shadcn add <name>`, then `pnpm fix` to match the lint rules. Apps import them as `@freemadeira/ui/components/<name>`. Each app's `src/styles/global.css` imports Tailwind, then `@freemadeira/ui/styles.css`, then overrides the tokens with its brand.
@@ -69,6 +72,7 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 - `/.well-known/nostr.json` (NIP-05) and `/.well-known/lnurlp/<name>` (Lightning addresses paid through Blink) are on-demand endpoints, not files in `public/`. The Vercel adapter ignores `vercel.json` headers, and wallets and Nostr clients need CORS. The CDN caches both for a day.
 - The newsletter runs on MailerLite. The sign-up form posts to `/api/newsletter/subscribe`. Each newsletter email links to `/newsletter/preferencias/<email>/<token>`, rendered on demand, which checks the token and keeps the subscriber in a sealed cookie for `/api/newsletter/preferences`. Both need `MAILERLITE_TOKEN` and `SESSION_PASSWORD` (see `apps/freemadeira/.env.example`), in Vercel and in a local `.env`.
 - Upcoming and recurring events are listed by hand in `src/data/events.ts` until they come from freehub. Past events drop off at the next build.
+- The blog (`/blog`, `/en/blog`, each post at `/blog/<slug>`, and an RSS feed per language) renders on demand from the database, through `packages/blog`, and Vercel caches it (ISR) until the indexer revalidates the pages a post changed. `astro.config.ts` caches only those routes: the newsletter preferences page shows one subscriber's data and must never be cached. The page looks a post up before rendering, so an old slug answers 301 and a missing post 404. Each language's blog lists only its own posts. Without `LIBSQL_URL` the blog is empty, not broken.
 
 ### bitcoinatlantis.com specifics
 
@@ -77,7 +81,7 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 
 ## Deploying
 
-- Each app is its own Vercel project in the FREE Madeira team: `website` serves freemadeira.org and `bitcoin-atlantis` serves bitcoinatlantis.com. Each has its root directory set to `apps/<name>`, the Astro framework preset, Node.js 24.x (`devEngines` refuses anything else) and `main` as its production branch.
+- Each app is its own Vercel project in the FREE Madeira team: the projects are named after their domains, `freemadeira.org` and `bitcoinatlantis.com`. Each has its root directory set to `apps/<name>`, the Astro framework preset, Node.js 24.x (`devEngines` refuses anything else) and `main` as its production branch.
 - Turn on "Skip deployments when there are no changes" in each project, and set Function Region to Frankfurt (`fra1`), next to the VPS.
-- Environment variables: freemadeira.org needs `MAILERLITE_TOKEN` and `SESSION_PASSWORD` for the newsletter; bitcoinatlantis.com needs none.
-- sqld and the indexer run on the VPS through Coolify. See `infra/README.md`.
+- Environment variables: freemadeira.org needs `MAILERLITE_TOKEN` and `SESSION_PASSWORD` for the newsletter, and `LIBSQL_URL`, a read-only `LIBSQL_AUTH_TOKEN` and `ISR_BYPASS_TOKEN` (at least 32 characters, the indexer's `REVALIDATE_TOKEN`) for the blog; bitcoinatlantis.com needs none.
+- sqld and the indexer run on the VPS through Coolify. See `infra/README.md` for both, and `services/indexer/README.md` for the indexer and the post events it reads.
