@@ -5,6 +5,7 @@
  *
  *   node src/index.ts          run
  *   node src/index.ts key      make a Nostr key for it
+ *   node src/index.ts projects list the relay's projects and their addresses, for SITES
  *   node src/index.ts rebuild  empty the tables first, then run
  */
 import { createServer } from "node:http";
@@ -16,6 +17,7 @@ import type { NostrEvent } from "applesauce-core/helpers/event";
 import type { Filter } from "applesauce-core/helpers/filter";
 import { npubEncode, nsecEncode } from "applesauce-core/helpers/pointers";
 import { PrivateKeySigner } from "applesauce-signers";
+import { noop } from "rxjs";
 
 import { loadConfig } from "./config.ts";
 import type { IndexerConfig, SiteConfig } from "./config.ts";
@@ -211,6 +213,38 @@ async function run(rebuild: boolean): Promise<void> {
   });
 }
 
+/**
+ * The projects on the relay with their addresses: what SITES and freehub's
+ * `websites` need, which freehub doesn't show. Needs RELAY_URL and INDEXER_KEY.
+ */
+async function listProjects(): Promise<void> {
+  const url = process.env.RELAY_URL?.trim();
+  const key = process.env.INDEXER_KEY?.trim();
+  if (!(url && key)) {
+    throw new Error("Set RELAY_URL and INDEXER_KEY.");
+  }
+  const signer = PrivateKeySigner.fromKey(key);
+  const relay = new TeamRelay(url, signer, await signer.getPublicKey());
+  // The subscription opens the connection, and the relay's challenge logs in.
+  relay.start([{ kinds: [PROJECT_KIND] }], noop);
+  const newest = new Map<string, NostrEvent>();
+  for (const event of await relay.fetch({ kinds: [PROJECT_KIND] })) {
+    const address = addressOf(event);
+    const current = newest.get(address);
+    if (!current || newer(event, current)) {
+      newest.set(address, event);
+    }
+  }
+  relay.close();
+  for (const [address, event] of newest) {
+    if (!event.tags.some(([name]) => name === "deleted")) {
+      const title = event.tags.find(([name]) => name === "title")?.[1];
+      console.log(`${title?.trim() || "Untitled project"}
+  ${address}`);
+    }
+  }
+}
+
 async function main(): Promise<void> {
   const [command] = process.argv.slice(2);
   if (command === "key") {
@@ -218,6 +252,10 @@ async function main(): Promise<void> {
     const signer = new PrivateKeySigner();
     console.log(`INDEXER_KEY=${nsecEncode(signer.key)}`);
     console.log(`npub: ${npubEncode(await signer.getPublicKey())}`);
+    return;
+  }
+  if (command === "projects") {
+    await listProjects();
     return;
   }
   if (command !== undefined && command !== "rebuild") {

@@ -171,7 +171,7 @@ const events: EventTemplate[] = [
     kind: PROJECT_KIND,
     tags: [
       ["d", PROJECT_D],
-      ["name", "Sample blog"],
+      ["title", "Sample blog"],
       ["alt", "Project: Sample blog"],
     ],
   },

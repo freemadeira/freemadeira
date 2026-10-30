@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node --watch --env-file-if-exists=.env src/index.ts",
     "key": "node src/index.ts key",
+    "projects": "node --env-file-if-exists=.env src/index.ts projects",
     "rebuild": "node --env-file-if-exists=.env src/index.ts rebuild",
     "seed": "node --env-file-if-exists=.env src/seed.ts",
     "start": "node src/index.ts",
