@@ -1,0 +1,23 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { postPage } from "@/lib/blog";
+import BlogPost from "@/views/blog-post.astro";
+
+// Rendered on demand and cached until the indexer revalidates it.
+export const prerender = false;
+
+const page = await postPage(
+  toLocale(Astro.currentLocale),
+  Astro.params.slug ?? ""
+);
+// An old slug moves on to the post's current one, for good.
+if (page.type === "moved") {
+  return Astro.redirect(page.path, 301);
+}
+if (page.type === "missing") {
+  Astro.response.status = 404;
+}
+---
+
+<BlogPost page={page} />

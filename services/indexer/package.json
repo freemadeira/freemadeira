@@ -4,12 +4,29 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch --env-file-if-exists=.env src/index.ts",
+    "key": "node src/index.ts key",
+    "rebuild": "node --env-file-if-exists=.env src/index.ts rebuild",
+    "seed": "node --env-file-if-exists=.env src/seed.ts",
     "start": "node src/index.ts",
+    "test": "node --test src/*.test.ts",
     "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@freemadeira/blog": "workspace:*",
+    "@freemadeira/db": "workspace:*",
+    "@freemadeira/i18n": "workspace:*",
+    "applesauce-core": "^6.2.0",
+    "applesauce-relay": "^6.2.1",
+    "applesauce-signers": "^6.2.3",
+    "drizzle-orm": "catalog:",
+    "marked": "^17.0.6",
+    "rxjs": "^7.8.2",
+    "sanitize-html": "^2.18.1"
   },
   "devDependencies": {
     "@freemadeira/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@types/sanitize-html": "^2.16.2",
     "typescript": "catalog:"
   },
   "engines": {

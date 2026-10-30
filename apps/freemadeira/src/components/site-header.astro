@@ -47,6 +47,13 @@ const newTab = { rel: "noopener noreferrer", target: "_blank" };
         items={nav.about.items}
         label={nav.about.label}
       />
+      <a
+        aria-current={current.startsWith(nav.blog.href) ? "page" : undefined}
+        class:list={[menuItemClass, "aria-[current=page]:border-b-dark"]}
+        href={nav.blog.href}
+      >
+        {nav.blog.label}
+      </a>
       <a class={menuItemClass} href={nav.bitcoinAtlantis.href} {...newTab}>
         {nav.bitcoinAtlantis.label}
       </a>
@@ -81,6 +88,7 @@ const newTab = { rel: "noopener noreferrer", target: "_blank" };
       about={nav.about}
       backLabel={m.nav_back({}, t)}
       bitcoinAtlantis={nav.bitcoinAtlantis}
+      blog={nav.blog}
       client:idle
       closeLabel={m.nav_close_menu({}, t)}
       current={current}

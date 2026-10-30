@@ -32,6 +32,7 @@ export function navigation(currentLocale: string | undefined) {
       href: links.bitcoinAtlantis,
       label: m.nav_bitcoin_atlantis({}, t),
     },
+    blog: { href: routes.blog[locale], label: m.nav_blog({}, t) },
     learn: { href: links.learn, label: m.nav_learn({}, t) },
     otherLocale: locales.find((other) => other !== locale) ?? locale,
     shop: { href: links.shop, label: m.nav_shop({}, t) },

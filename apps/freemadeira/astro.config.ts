@@ -7,11 +7,39 @@ import { defineConfig, envField } from "astro/config";
 
 import { routes } from "./src/i18n/routes";
 
+// The indexer revalidates blog pages with this token when posts change.
+// Without it, they're rendered again every five minutes instead.
+const isrBypassToken = process.env.ISR_BYPASS_TOKEN;
+
 export default defineConfig({
-  adapter: vercel(),
+  adapter: vercel({
+    // Blog pages are rendered on demand and cached until revalidated. The
+    // other on-demand routes answer per request, and the newsletter
+    // preferences page shows one subscriber's data, so none of them is cached.
+    isr: {
+      bypassToken: isrBypassToken,
+      exclude: [
+        /^\/api\//u,
+        /^\/\.well-known\//u,
+        /^\/(?:en\/)?newsletter\/prefer/u,
+      ],
+      expiration: isrBypassToken ? false : 300,
+    },
+  }),
   env: {
-    // Read at runtime by the newsletter endpoints; set them in Vercel.
+    // Read at runtime by the blog and the newsletter endpoints; set them in Vercel.
     schema: {
+      // sqld, where the indexer writes the blog, and a read-only token for it.
+      LIBSQL_AUTH_TOKEN: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
+      LIBSQL_URL: envField.string({
+        access: "secret",
+        context: "server",
+        optional: true,
+      }),
       MAILERLITE_TOKEN: envField.string({
         access: "secret",
         context: "server",

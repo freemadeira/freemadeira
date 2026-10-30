@@ -3,6 +3,7 @@ import type { LocalizedPaths } from "@freemadeira/i18n";
 /** Every page's path per locale. A new page gets its entry here first. */
 export const routes = {
   about: { en: "/en/about", pt: "/sobre" },
+  blog: { en: "/en/blog", pt: "/blog" },
   diplomaBitcoin: {
     en: "/en/education/info-diploma-bitcoin",
     pt: "/educacao/info-diploma-bitcoin",

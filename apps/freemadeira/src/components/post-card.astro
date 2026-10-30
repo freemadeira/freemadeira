@@ -1,0 +1,73 @@
+---
+import { postPath } from "@freemadeira/blog";
+import type { PostSummary } from "@freemadeira/blog";
+import { toLocale } from "@freemadeira/i18n";
+import { ArrowRight } from "lucide-react";
+
+import { postDate } from "@/lib/blog";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  post: PostSummary;
+}
+
+const { post } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+---
+
+<a
+  class="group flex h-full flex-col gap-5 border-b border-dark pb-6"
+  href={postPath(locale, post.slug)}
+>
+  <div class="relative isolate aspect-3/2 w-full overflow-hidden bg-bridal-50">
+    {
+      post.cover && (
+        <img
+          alt=""
+          class="absolute inset-0 -z-10 size-full object-cover"
+          decoding="async"
+          height={post.cover.height}
+          loading="lazy"
+          sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 100vw"
+          src={post.cover.url}
+          srcset={post.cover.srcset}
+          width={post.cover.width}
+        />
+      )
+    }
+    <div
+      class="size-full bg-linear-to-tr from-transparent via-transparent to-black/50"
+    >
+    </div>
+    <span
+      class="absolute top-4 right-3 inline-flex rounded-full border border-white p-2 text-white transition duration-75 group-hover:bg-white group-hover:text-dark group-active:scale-95"
+    >
+      <ArrowRight aria-hidden="true" />
+    </span>
+  </div>
+  <div class="flex grow flex-col gap-3">
+    <p
+      class="text-sm leading-4 tracking-[4%] text-mountain-mist-500 uppercase"
+    >
+      <time datetime={post.publishedAt.toISOString()}>
+        {postDate(post.publishedAt, locale)}
+      </time>
+      {" · "}
+      {m.blog_reading_time({ minutes: post.readingMinutes }, { locale })}
+    </p>
+    <h2 class:list={[heading.h6, "wrap-break-word"]}>{post.title}</h2>
+    {post.summary && <p class="grow">{post.summary}</p>}
+  </div>
+  {
+    post.topics.length > 0 && (
+      <ul class="flex flex-wrap gap-2.5">
+        {post.topics.map((topic) => (
+          <li class="bg-primary-400 px-2.5 py-2 text-center text-sm leading-2.5 font-medium text-dark">
+            {topic}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</a>

@@ -3,12 +3,14 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./migrate": "./src/migrate.ts"
   },
   "scripts": {
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
+    "tokens": "node src/tokens.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
