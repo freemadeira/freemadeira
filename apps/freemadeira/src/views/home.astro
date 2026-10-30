@@ -93,19 +93,19 @@ const slides = [
 
   <Container class="my-24 sm:my-22">
     <div
-      class="relative z-0 flex flex-col justify-around gap-6 overflow-hidden bg-bridal-50 p-6 pt-28 sm:flex-row sm:gap-8 sm:p-28 sm:pt-28"
+      class="relative z-0 flex flex-col justify-around gap-6 overflow-hidden bg-bridal-50 p-6 pt-28 sm:p-12 lg:flex-row lg:gap-8 lg:p-16 xl:p-28"
     >
       <Coin
         aria-hidden="true"
         class="absolute top-0 left-0 -z-10 fill-mountain-mist-200 p-8 sm:top-1/2 sm:right-0 sm:h-[140%] sm:translate-x-44 sm:-translate-y-1/2"
       />
-      <div class="flex w-full flex-col gap-4 sm:w-3/5 sm:gap-8">
+      <div class="flex w-full max-w-2xl flex-col gap-4 sm:gap-8 lg:w-3/5 lg:max-w-none">
         <p class="flex items-center text-lg leading-[150%]">
           {m.home_education_tag({}, t)}
         </p>
         <h2 class={heading.h3}>{m.home_education_title({}, t)}</h2>
       </div>
-      <div class="mb-2 flex w-full flex-col justify-end gap-8 sm:w-2/5">
+      <div class="mb-2 flex w-full max-w-xl flex-col justify-end gap-8 lg:w-2/5">
         <p>{m.home_education_text({}, t)}</p>
       </div>
     </div>
@@ -123,8 +123,10 @@ const slides = [
     <p class="flex items-center text-lg leading-[150%]">
       {m.home_about_tag({}, t)}
     </p>
-    <div class="flex flex-col-reverse items-end sm:flex-row sm:gap-48">
-      <div class="flex h-full w-full flex-col justify-end gap-12 sm:w-4/7">
+    <div
+      class="flex flex-col-reverse items-end lg:flex-row lg:gap-24 xl:gap-48"
+    >
+      <div class="flex h-full w-full flex-col justify-end gap-12 lg:w-4/7">
         <div class="grow">
           <h2 class={heading.h3}>{m.home_about_title({}, t)}</h2>
         </div>
@@ -134,14 +136,14 @@ const slides = [
       </div>
       <HandCoin
         aria-hidden="true"
-        class="mt-14 mb-10 h-auto w-full sm:my-0 sm:w-3/7"
+        class="mx-auto mt-14 mb-10 h-auto w-full max-w-md lg:my-0 lg:w-3/7 lg:max-w-none"
       />
     </div>
   </Container>
 
-  <Container class="flex-col sm:flex-row">
+  <Container class="flex-col md:flex-row">
     <div
-      class="flex w-full flex-col gap-4 bg-bridal-700 px-6 py-9 text-white sm:w-1/2 sm:px-28 sm:py-20"
+      class="flex w-full flex-col gap-4 bg-bridal-700 px-6 py-9 text-white sm:px-10 sm:py-12 md:w-1/2 lg:px-16 lg:py-20 xl:px-28"
     >
       <h2 class={heading.h5}>{m.home_merchants_title({}, t)}</h2>
       <p>{m.home_merchants_text({}, t)}</p>
@@ -152,7 +154,7 @@ const slides = [
         {m.send_email({}, t)}
       </a>
     </div>
-    <div class="relative h-64 w-full sm:h-auto sm:w-1/2">
+    <div class="relative h-64 w-full sm:h-80 md:h-auto md:w-1/2">
       <Image
         alt={m.home_merchants_map({}, t)}
         class="absolute inset-0 size-full object-cover"

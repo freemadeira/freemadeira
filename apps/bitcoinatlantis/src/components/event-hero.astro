@@ -52,8 +52,10 @@ const {
         {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
       </div>
 
+      {/* Two even columns, but never narrower than a value's longest word
+          ("Investigação"), which would otherwise spill out on small phones. */}
       <dl
-        class="mt-10 grid grid-cols-2 gap-x-10 gap-y-6 sm:mt-12 sm:gap-x-16 sm:gap-y-10 sm:text-center lg:auto-cols-auto lg:grid-flow-col lg:grid-cols-none lg:justify-start lg:text-left"
+        class="mt-10 grid grid-cols-[repeat(2,minmax(min-content,1fr))] gap-x-10 gap-y-6 sm:mt-12 sm:gap-x-16 sm:gap-y-10 sm:text-center lg:auto-cols-auto lg:grid-flow-col lg:grid-cols-none lg:justify-start lg:text-left"
       >
         {
           stats.map(([name, value]) => (

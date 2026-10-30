@@ -6,6 +6,7 @@ import DiscreetLink from "@/components/discreet-link.astro";
 import { heading } from "@/lib/typography";
 
 interface Props {
+  /** Includes the width, from the breakpoint where the cards sit side by side. */
   class?: string;
   icon: LucideIcon;
   link?: { href: string; label: string };
@@ -23,15 +24,16 @@ const guide = variant === "guide";
 
 <div
   class={cn(
-    "flex w-full min-w-0 flex-col gap-8 bg-bridal-700 text-white sm:w-1/2 sm:gap-12",
+    "flex w-full min-w-0 flex-col gap-8 bg-bridal-700 text-white sm:gap-12",
     className
   )}
 >
   <div class:list={["flex grow flex-col gap-8", !guide && "md:gap-6"]}>
     <div class:list={["flex gap-4", !guide && "items-center"]}>
       {/* The about page's icon gives way to a long word on narrow cards, and
-          a word that still doesn't fit ("Encontros", "deslocar") is
-          hyphenated. */}
+          a word that still doesn't fit ("Encontros", "deslocares") is
+          hyphenated. Only words of seven letters or more, so a short one
+          ("chegar") moves to the next line instead. */}
       <Icon
         aria-hidden="true"
         className={guide ? "size-12 shrink-0" : "size-12"}
@@ -39,7 +41,7 @@ const guide = variant === "guide";
       <h3
         class={cn(
           guide ? "text-4xl leading-none" : heading.h3,
-          "min-w-0 hyphens-auto wrap-break-word"
+          "min-w-0 hyphens-auto wrap-break-word [hyphenate-limit-chars:7_4_3]"
         )}
       >
         {title}

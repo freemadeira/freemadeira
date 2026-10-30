@@ -31,5 +31,8 @@ const { button, illustration: Illustration, title } = Astro.props;
       )
     }
   </div>
-  <Illustration aria-hidden="true" class="h-auto w-full md:w-[47%]" />
+  <Illustration
+    aria-hidden="true"
+    class="mx-auto h-auto w-full max-w-md md:w-[47%] md:max-w-none"
+  />
 </Container>

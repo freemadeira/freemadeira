@@ -13,7 +13,9 @@ import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
 const t = { locale };
-const grid = "my-12 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+// One column on phones, two once a 16rem portrait fits twice (before sm).
+const grid =
+  "my-12 grid grid-cols-[repeat(auto-fill,minmax(min(100%,16rem),1fr))] gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 ---
 
 <Layout
@@ -21,14 +23,14 @@ const grid = "my-12 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid
   paths={routes.team}
   title={m.team_page_title({}, t)}
 >
-  <Container class="mt-16">
+  <Container class="@container mt-16">
     <h1 class={heading.h1}>{m.team_title({}, t)}</h1>
     <div class={grid}>
       {teamMembers.map((person) => <PersonCard person={person} />)}
     </div>
   </Container>
 
-  <Container class="my-16">
+  <Container class="@container my-16">
     <h2 class={heading.h1}>{m.advisory_title({}, t)}</h2>
     <div class={grid}>
       {advisoryBoardMembers.map((person) => <PersonCard person={person} />)}

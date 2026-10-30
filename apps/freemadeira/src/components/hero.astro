@@ -30,7 +30,7 @@ const {
 <Container class="my-16 flex-col-reverse gap-6 sm:flex-row sm:gap-10">
   <div
     class:list={[
-      "flex w-full flex-col gap-6 sm:gap-14",
+      "@container flex w-full flex-col gap-6 sm:gap-14",
       layout === "tight" ? "sm:w-1/2" : "sm:w-3/5",
     ]}
   >
@@ -55,7 +55,7 @@ const {
   <Illustration
     aria-hidden="true"
     class={cn(
-      "h-auto w-full",
+      "mx-auto h-auto w-full max-w-md sm:max-w-none",
       layout === "tight" ? "sm:w-1/2" : "sm:w-2/5",
       illustrationClass
     )}

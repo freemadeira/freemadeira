@@ -36,8 +36,10 @@ const rowClass =
     class="py-20 sm:py-32"
   >
     <Container class="my-24">
+      {/* On phones it may use the outer Container's gutter too: between the
+          two, "Patrocinadores" is 2px too wide for a 320px screen. */}
       <h2
-        class="mx-auto mb-16 max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-yellow-900 sm:text-5xl"
+        class="-mx-4 mb-16 max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-yellow-900 sm:mx-auto sm:text-5xl"
       >
         {m.sponsors_title({}, { locale })}
       </h2>

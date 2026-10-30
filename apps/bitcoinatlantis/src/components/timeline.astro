@@ -11,22 +11,15 @@ import amberAppLogo from "@/assets/logos/sponsors/amber-app.svg";
 import { routes } from "@/i18n/routes";
 import { m } from "@/paraglide/messages.js";
 
-const locale = toLocale(Astro.currentLocale);
+import TimelineTime from "./timeline-time.astro";
 
-/** "6:30PM" in English; "18h30" in Portuguese. */
-function clock(time: string): string {
-  if (locale === "en") {
-    return time;
-  }
-  const { hours = "0", minutes = "", period } =
-    /^(?<hours>\d+)(?::(?<minutes>\d+))?(?<period>[AP]M)$/u.exec(time)
-      ?.groups ?? {};
-  const hour = (Number(hours) % 12) + (period === "PM" ? 12 : 0);
-  return `${hour}h${minutes}`;
-}
+const locale = toLocale(Astro.currentLocale);
 ---
 
 {/* The date pills are bg-gray-200: the 2024 Pill also passed bg-basalt-lighter, but Tailwind 3 let its default win. */}
+{/* Hand-placed for the English labels, as on the 2024 site. A card that later
+    cards are placed from keeps its English width (w-[…]), so a Portuguese
+    label, longer or shorter, doesn't push the rest of its day off its lines. */}
 <div
   data-timeline
   class="relative mt-16 flex cursor-grab gap-x-4 overflow-x-auto pt-[305px] pb-[25px] pl-3 whitespace-nowrap scrollbar-hide data-dragging:cursor-grabbing"
@@ -48,8 +41,8 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-basalt-medium flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[350px]">{clock("5PM")}</div>
+      <TimelineTime class="ml-[100px]" time="9AM" />
+      <TimelineTime class="ml-[350px]" time="5PM" />
     </div>
     <ol class="flex w-[600px] ml-[125px]">
       <div class="flex-start block">
@@ -83,7 +76,7 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-basalt-medium flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[450px]">{clock("4PM")}</div>
+      <TimelineTime class="ml-[450px]" time="4PM" />
     </div>
     <ol class="flex w-[250px] ml-[475px]">
       <div class="flex-start block">
@@ -107,13 +100,13 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-basalt-medium flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[75px]">{clock("9AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("10AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("11AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[90px]">{clock("3PM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[75px]">{clock("6PM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("6:30PM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[25px] mr-[15px]">{clock("9:30PM")}</div>
+      <TimelineTime class="ml-[75px]" time="9AM" />
+      <TimelineTime class="ml-[10px]" time="10AM" />
+      <TimelineTime class="ml-[10px]" time="11AM" />
+      <TimelineTime class="ml-[90px]" time="3PM" />
+      <TimelineTime class="ml-[75px]" time="6PM" />
+      <TimelineTime class="ml-[10px]" time="6:30PM" />
+      <TimelineTime class="ml-[25px] mr-[15px]" time="9:30PM" />
     </div>
     <ol class="flex w-[600px] ml-[125px]">
       <div class="flex-start block">
@@ -144,7 +137,7 @@ function clock(time: string): string {
       <div class="flex-start block">
         <div class="border-l-2 border-basalt h-14 -mt-7 ml-[115px]" />
       </div>
-      <div class="flex flex-col">
+      <div class="flex w-[241px] flex-col">
         <a href={`${routes.satelliteEvents[locale]}#mi-primer-bitcoin-unconference`} class="z-10">
           <li class="mt-[27px] -ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
             <p class="mb-1 text-2xl font-semibold leading-7">
@@ -190,17 +183,17 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-yellow flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[60px]">{clock("7:30AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[65px]">{clock("9AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[320px]">{clock("7PM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[10px]">{clock("8PM")}</div>
+      <TimelineTime class="ml-[60px]" time="7:30AM" />
+      <TimelineTime class="ml-[65px]" time="9AM" />
+      <TimelineTime class="ml-[320px]" time="7PM" />
+      <TimelineTime class="ml-[10px]" time="8PM" />
     </div>
     <ol class="flex w-[600px] ml-[125px]">
       <div class="flex-start block">
         <div class="border-l-2 border-basalt h-[60px] -mt-[100px] -ml-[305px]" />
       </div>
       <a href={`${routes.satelliteEvents[locale]}#no-bs-self-defence`} class="-ml-[315px]">
-        <li class="-mt-[197px] whitespace-nowrap p-2 hover:bg-yellow-50 rounded-lg transition-all duration-300">
+        <li class="-mt-[197px] w-[275px] whitespace-nowrap p-2 hover:bg-yellow-50 rounded-lg transition-all duration-300">
           <p class="mb-1 text-2xl font-semibold leading-7">No BS Self-Defence</p>
           <p class="font-semibold">{m.timechain_self_defence({}, { locale })}</p>
           <p>{m.timechain_santa_catarina({}, { locale })}</p>
@@ -229,7 +222,7 @@ function clock(time: string): string {
         <div class="border-l-2 border-basalt h-[165px] -mt-[10px] -ml-[380px]" />
       </div>
       <a href={`${routes.satelliteEvents[locale]}#bitcoin-bar-cafe`} class="-ml-[390px] z-0">
-        <li class="mt-[155px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300 z-20">
+        <li class="mt-[155px] w-[247px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300 z-20">
           <p class="mb-1 text-2xl font-semibold">Bitcoin Bar Café</p>
           <p class="font-semibold">{m.timechain_opening_party({}, { locale })}</p>
           <p>Barreirinha Bar Café</p>
@@ -253,15 +246,15 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-yellow flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[440px]">{clock("6PM")}</div>
+      <TimelineTime class="ml-[100px]" time="9AM" />
+      <TimelineTime class="ml-[440px]" time="6PM" />
     </div>
     <ol class="flex w-[600px] ml-[125px]">
       <div class="flex-start block">
         <div class="border-l-2 border-basalt h-[167px] -mt-[207px] -ml-[280px]" />
       </div>
       <a href={`${routes.satelliteEvents[locale]}#special-meetup-party`}>
-        <li class="-mt-[350px] whitespace-nowrap -ml-[289px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+        <li class="-mt-[350px] w-[362px] whitespace-nowrap -ml-[289px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
           <Image src={amberAppLogo} alt="Amber" class="w-36" />
           <p class="mb-1 text-2xl font-semibold">Special Meetup Party</p>
           <p class="font-semibold">{m.timechain_meetup_turns_party({}, { locale })}</p>
@@ -297,15 +290,15 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-yellow flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[500px]">{clock("7PM")}</div>
+      <TimelineTime class="ml-[100px]" time="9AM" />
+      <TimelineTime class="ml-[500px]" time="7PM" />
     </div>
     <ol class="flex w-[600px] ml-[125px]">
       <div class="flex-start block">
         <div class="border-l-2 border-basalt h-44 -mt-48 -ml-[256px]" />
       </div>
       <a href={routes.atlasMusicFestival[locale]}>
-        <li class="-mt-[389px] whitespace-nowrap -ml-[264px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+        <li class="-mt-[389px] w-[264px] whitespace-nowrap -ml-[264px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
           <Image src={atlasLogo} alt="Atlas" class="w-32" />
           <p class="mb-1 mt-3 text-2xl font-semibold">Atlas</p>
           <p class="font-semibold">{m.timechain_music_festival({}, { locale })}</p>
@@ -330,18 +323,18 @@ function clock(time: string): string {
   </div>
   <div class="mt-16 -ml-32">
     <div class="h-14 w-full bg-basalt-medium flex items-center">
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[100px]">{clock("9AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[20px]">{clock("10AM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[220px]">{clock("3PM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[20px]">{clock("4PM")}</div>
-      <div class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-basalt-medium z-10 bg-white ml-[20px]">{clock("5PM")}</div>
+      <TimelineTime class="ml-[100px]" time="9AM" />
+      <TimelineTime class="ml-[20px]" time="10AM" />
+      <TimelineTime class="ml-[220px]" time="3PM" />
+      <TimelineTime class="ml-[20px]" time="4PM" />
+      <TimelineTime class="ml-[20px]" time="5PM" />
     </div>
     <ol class="flex w-[600px] ml-[125px]">
       <div class="flex-start block">
         <div class="border-l-2 border-basalt h-40 -mt-[200px] -ml-[198px]" />
       </div>
       <a href={`${routes.satelliteEvents[locale]}#mega-pleb-dinner`}>
-        <li class="-mt-[385px] whitespace-nowrap -ml-[206px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+        <li class="-mt-[385px] w-[221px] whitespace-nowrap -ml-[206px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
           <Image src={megaPlebDinnerLogo} alt="Mega Pleb Dinner" class="w-32" />
           <p class="mb-1 mt-3 text-2xl font-semibold">Mega Pleb Dinner</p>
           <p class="font-semibold">{m.timechain_madeiran_dinner({}, { locale })}</p>
@@ -363,7 +356,7 @@ function clock(time: string): string {
         <div class="border-l-2 border-basalt h-[170px] -mt-7" />
       </div>
       <a href={`${routes.satelliteEvents[locale]}#bitcoinwalk-madeira`}>
-        <li class="mt-[142px] -ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
+        <li class="mt-[142px] w-[317px] -ml-[12px] hover:bg-yellow-50 p-2 rounded-lg transition-all duration-300">
           <p class="mb-1 text-2xl font-semibold">BitcoinWalk Madeira</p>
           <p class="font-semibold">{m.timechain_walking_meetup({}, { locale })}</p>
           <p>{m.timechain_meeting_point_stadium({}, { locale })}</p>

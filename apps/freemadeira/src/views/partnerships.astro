@@ -25,15 +25,15 @@ const t = { locale };
 >
   <Hero
     illustration={HighFive}
-    illustrationClass="mx-auto w-75 sm:w-90"
+    illustrationClass="mx-auto w-75 max-w-full sm:w-90"
     layout="tight"
     title={m.partnerships_title({}, t)}
   >
     {m.partnerships_hero_text({}, t)}
   </Hero>
 
-  <Container class="mt-22 flex-col-reverse sm:mt-28 sm:flex-row">
-    <div class="relative h-64 w-full sm:h-auto sm:w-1/2">
+  <Container class="mt-22 flex-col-reverse sm:mt-28 md:flex-row">
+    <div class="relative h-64 w-full sm:h-80 md:h-auto md:w-1/2">
       <Image
         alt={m.partnerships_cta_image({}, t)}
         class="absolute inset-0 size-full object-cover"
@@ -44,12 +44,12 @@ const t = { locale };
       />
     </div>
     <div
-      class="flex w-full flex-col gap-4 bg-bridal-700 px-6 py-9 text-white sm:w-1/2 sm:px-28 sm:py-20"
+      class="flex w-full flex-col gap-4 bg-bridal-700 px-6 py-9 text-white sm:px-10 sm:py-12 md:w-1/2 lg:px-16 lg:py-20 xl:px-28"
     >
       <h2 class={heading.h5}>{m.partnerships_cta_title({}, t)}</h2>
       <p>{m.partnerships_cta_text({}, t)}</p>
       <div
-        class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6"
+        class="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6"
       >
         <a
           class="w-fit underline decoration-1 underline-offset-6 hover:text-primary-500"

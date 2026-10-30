@@ -45,7 +45,10 @@ function linkClass(active: boolean) {
   );
 }
 
-/** Sticky below the 2028 banner; blurs the page behind it once scrolled. */
+/**
+ * Sticks with the 2028 banner (base-layout.astro); blurs the page behind it
+ * once scrolled. The open phone menu scrolls when it is taller than the screen.
+ */
 export function SiteHeader({
   compactNav = false,
   currentPath,
@@ -71,14 +74,17 @@ export function SiteHeader({
   return (
     <header
       className={cn(
-        "sticky top-[67px] z-50 mb-4 pb-2 transition-all sm:top-11 xl:pt-2",
-        scrolled && "mt-0 bg-white/70 backdrop-blur-md"
+        "flex min-h-0 flex-col pb-2 transition-all xl:pt-2",
+        scrolled && "bg-white/70 backdrop-blur-md"
       )}
     >
-      <Collapsible render={<nav aria-label="Main" />}>
+      <Collapsible
+        className="flex min-h-0 flex-col"
+        render={<nav aria-label="Main" />}
+      >
         {/* Full width, as before: the old header's class replaced Container's max-w-7xl. */}
-        <div className="mx-auto flex-wrap px-4 sm:px-6 lg:px-8">
-          <div className="relative flex min-h-fit items-center justify-between">
+        <div className="flex min-h-0 flex-col px-4 sm:px-6 lg:px-8">
+          <div className="relative flex min-h-fit shrink-0 items-center justify-between">
             <a href={logoHref} className="hidden min-w-fit pt-3 sm:flex">
               <img
                 {...logo.horizontal}
@@ -86,7 +92,8 @@ export function SiteHeader({
                 className="w-72"
               />
             </a>
-            <a href={logoHref} className="flex min-w-fit pt-3 sm:hidden">
+            {/* Shrinks on the narrowest phones, where the button and menu need the room. */}
+            <a href={logoHref} className="block min-w-0 pt-3 sm:hidden">
               <img {...logo.vertical} alt="Bitcoin Atlantis" className="w-24" />
             </a>
 
@@ -191,7 +198,7 @@ export function SiteHeader({
             </div>
           </div>
 
-          <CollapsibleContent className="xl:hidden">
+          <CollapsibleContent className="min-h-0 overflow-y-auto overscroll-contain xl:hidden">
             <div className="flex flex-col justify-end space-y-1 pt-2 pb-4">
               {links.map((link) => (
                 <a

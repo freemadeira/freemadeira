@@ -28,8 +28,9 @@ const hrefOf = (event: EventCard) =>
         events.map((event) => {
           const href = hrefOf(event);
           const Tag = href ? "a" : "div";
+          // A swipeable row of 18rem cards until lg, where they share it.
           return (
-            <li class="flex w-[70vw] flex-1 sm:w-auto">
+            <li class="flex w-[70vw] flex-1 sm:w-72 sm:flex-none lg:w-auto lg:flex-1">
               <Tag
                 class="group flex w-full flex-col gap-5 border-b border-dark pb-6"
                 href={href}
@@ -39,7 +40,7 @@ const hrefOf = (event: EventCard) =>
                   <Image
                     alt=""
                     class="absolute inset-0 -z-10 size-full object-cover"
-                    sizes="(max-width: 640px) 70vw, 25vw"
+                    sizes="(max-width: 640px) 70vw, (max-width: 1024px) 18rem, 25vw"
                     src={event.image}
                     width={960}
                     widths={[320, 480, 640, 960]}

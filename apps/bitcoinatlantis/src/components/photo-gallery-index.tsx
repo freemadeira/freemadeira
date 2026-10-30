@@ -28,7 +28,7 @@ export function PhotoGalleryIndex({ sections }: PhotoGalleryIndexProps) {
               <li key={pill.id}>
                 <a
                   href={`#${pill.id}`}
-                  className="text-basalt-medium inline-flex items-center rounded-full bg-gray-200 px-3 py-1.5 text-sm font-medium whitespace-nowrap hover:bg-yellow-200 hover:text-yellow-800"
+                  className="text-basalt-medium inline-flex items-center rounded-full bg-gray-200 px-3 py-1.5 text-center text-sm font-medium hover:bg-yellow-200 hover:text-yellow-800"
                 >
                   {pill.label}
                 </a>

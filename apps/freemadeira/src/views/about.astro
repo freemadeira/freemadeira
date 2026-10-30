@@ -51,6 +51,10 @@ const tag = "flex items-center text-lg leading-[150%]";
 // columns, and keeps its bottom margin at the end of the first one.
 const donationColumns =
   "-mb-6 columns-1 gap-8 space-y-6 text-lg *:inline-block lg:columns-2";
+// 80px of padding from 390px up, as on the old site, down to 24px at 320px so
+// a long word still fits.
+const aboutCard =
+  "px-[clamp(1.5rem,100vw_-_19.375rem,5rem)] py-12 lg:px-30 xl:w-1/2";
 ---
 
 <Layout
@@ -73,7 +77,8 @@ const donationColumns =
           <SentenceList sentences={who} />
         </div>
       </div>
-      <div class="flex h-56 w-full flex-col gap-5 lg:w-1/2 lg:flex-row lg:gap-8">
+      {/* Half the width from xl: narrower, the title runs into the file. */}
+      <div class="flex h-56 w-full flex-col gap-5 lg:flex-row lg:gap-8 xl:w-1/2">
         <a
           class="group relative w-full flex-1 overflow-clip bg-white p-7"
           href={mediaKit}
@@ -86,9 +91,10 @@ const donationColumns =
               <ArrowDownToLine aria-hidden="true" size={34} strokeWidth={0.7} />
             </span>
           </div>
+          {/* 162px tall from 390px up, smaller below so it clears the title. */}
           <OrangeFile
             aria-hidden="true"
-            class="absolute right-4 bottom-0 h-[162px] w-auto lg:right-12 lg:h-full"
+            class="absolute right-4 bottom-0 h-[clamp(100px,100vw_-_228px,162px)] w-auto sm:h-[162px] lg:right-12 lg:h-full"
           />
         </a>
       </div>
@@ -106,8 +112,8 @@ const donationColumns =
   </Container>
 
   <section class="bg-bridal-50">
-    <Container class="gap-12 py-16 sm:flex-row lg:gap-20" size="tight">
-      <div class="relative h-[95vw] w-full md:h-[550px] md:w-1/2">
+    <Container class="gap-12 py-16 md:flex-row lg:gap-20" size="tight">
+      <div class="relative h-[95vw] max-h-[550px] w-full md:h-[550px] md:w-1/2">
         <Image
           alt={m.about_goals_image({}, t)}
           class="absolute inset-0 size-full object-cover"
@@ -117,7 +123,7 @@ const donationColumns =
           widths={[640, 960, 1280]}
         />
       </div>
-      <div class="flex w-full flex-col justify-center gap-10 sm:w-2/5 lg:gap-12">
+      <div class="flex w-full flex-col justify-center gap-10 md:w-2/5 lg:gap-12">
         <h2 class={heading.h4}>{m.about_goals_title({}, t)}</h2>
         <SentenceList sentences={goals} />
       </div>
@@ -126,7 +132,7 @@ const donationColumns =
 
   <Container class="my-20 gap-7 sm:my-28 xl:flex-row xl:gap-9">
     <BrownCard
-      class="px-20 py-12 sm:w-full lg:px-30 xl:w-1/2"
+      class={aboutCard}
       icon={Zap}
       link={{ href: links.energySummit, label: m.about_energy_button({}, t) }}
       title={m.about_energy_title({}, t)}
@@ -135,7 +141,7 @@ const donationColumns =
       <p class="text-lg">{m.about_energy_text({}, t)}</p>
     </BrownCard>
     <BrownCard
-      class="px-20 py-12 sm:w-full lg:px-30 xl:w-1/2"
+      class={aboutCard}
       icon={MessagesSquare}
       link={{ href: links.meetups, label: m.attend_next_meetup({}, t) }}
       title={m.about_meetups_title({}, t)}
@@ -174,7 +180,7 @@ const donationColumns =
           <dt class="font-bold">{m.about_organisation_contact({}, t)}</dt>
           <dd>
             <a
-              class="underline decoration-1 underline-offset-7 hover:text-dark"
+              class="inline-block underline decoration-1 underline-offset-7 hover:text-dark"
               href={`mailto:${organisation.email}`}
             >
               {organisation.email}

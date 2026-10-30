@@ -11,27 +11,40 @@ interface Props {
 
 const { class: className = "mt-10 max-w-max", partners } = Astro.props;
 const locale = toLocale(Astro.currentLocale);
+const logoWidth = (partner: TravelPartner) =>
+  Math.round(180 * (partner.sizeMultiplier ?? 1));
+const logoHeight = (partner: TravelPartner) =>
+  (logoWidth(partner) * partner.logo.height) / partner.logo.width;
+// Every logo is centred on the line through the middle of the tallest one, as
+// if centred in its row, while a note stays in the flow under its logo: when
+// the logos wrap, the next row clears it instead of running into it.
+const tallest = Math.max(...partners.map(logoHeight));
 ---
 
 <div
   class:list={[
-    "mx-auto flex flex-wrap place-content-center gap-x-32 gap-y-16 md:gap-x-16 lg:gap-x-32",
+    "mx-auto flex flex-wrap place-content-center items-start gap-x-32 gap-y-16 md:gap-x-16 lg:gap-x-32",
     className,
   ]}
 >
   {
     partners.map((partner) => (
-      <div class="relative flex flex-col items-center justify-center">
+      <div
+        class="flex max-w-full flex-col items-center"
+        style={`width: ${logoWidth(partner)}px; padding-top: ${(tallest - logoHeight(partner)) / 2}px`}
+      >
         <a href={partner.url} target="_blank" rel="noreferrer">
           <Image
             src={partner.logo}
             alt={partner.name}
-            width={Math.round(180 * (partner.sizeMultiplier ?? 1))}
+            width={logoWidth(partner)}
           />
         </a>
-        <div class="absolute top-[calc(80%+20px)] w-full text-left text-xs text-basalt-medium">
-          {partner.note?.[locale]}
-        </div>
+        {partner.note && (
+          <p class="mt-1.5 w-full text-left text-xs text-basalt-medium">
+            {partner.note[locale]}
+          </p>
+        )}
       </div>
     ))
   }
