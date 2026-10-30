@@ -30,6 +30,8 @@ Each language version of a post is a NIP-23 event. freehub's GUIDE.md and `src/l
 | `["imeta", "url …", "dim WxH", "alt …", "srcset …"]` | One per uploaded image. Each Markdown image with that URL gets its sizes, `width` and `height`. |
 | `["deleted"]` | The post is unpublished. |
 
+Only current members' versions count, as in freehub. So if the member who unpublished a post later leaves the project, the version before their unpublish shows again.
+
 Markdown follows freehub's editor: GFM, where a single newline is a line break and raw HTML stays as text. An image on its own line becomes a `<figure>`, with its Markdown title as the caption.
 
 ## Commands
