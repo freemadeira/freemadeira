@@ -2,14 +2,16 @@ import { feed, listPosts } from "@freemadeira/blog";
 import { toLocale } from "@freemadeira/i18n";
 import type { APIRoute } from "astro";
 
-import { blogDb, SITE } from "@/lib/blog";
+import { readBlog, SITE } from "@/lib/blog";
 import { m } from "@/paraglide/messages.js";
 
 /** The blog's RSS feed, in the locale of the path it's served at. */
 export const blogFeed: APIRoute = async ({ currentLocale, site, url }) => {
   const locale = toLocale(currentLocale);
-  const db = blogDb();
-  const posts = db ? await listPosts(db, SITE, locale, { limit: 50 }) : [];
+  const posts = await readBlog(
+    (db) => listPosts(db, SITE, locale, { limit: 50 }),
+    []
+  );
   const xml = feed({
     description: m.blog_description({}, { locale }),
     locale,
