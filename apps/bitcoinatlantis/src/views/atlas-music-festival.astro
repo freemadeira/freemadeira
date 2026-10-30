@@ -100,7 +100,7 @@ const locale = toLocale(Astro.currentLocale);
       >
         {
           atlasArtists.map((artist) => (
-            <div class="my-16 flex w-full space-x-16 sm:my-28">
+            <div class="my-16 flex w-full gap-x-16 sm:my-28">
               <div class="w-full md:w-3/5">
                 <h2 class="mb-5 text-2xl font-medium tracking-tight text-purple sm:text-4xl">
                   {artist.name}
@@ -137,7 +137,7 @@ const locale = toLocale(Astro.currentLocale);
                 height={400}
                 fit="cover"
                 densities={[1, 2]}
-                class="hidden size-100 rounded-lg object-cover md:block md:rounded-2xl"
+                class="hidden size-100 min-w-0 rounded-lg object-cover md:block md:rounded-2xl"
               />
             </div>
           ))

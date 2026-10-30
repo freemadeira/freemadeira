@@ -3,29 +3,47 @@ import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
 
 import DiscreetLink from "@/components/discreet-link.astro";
+import { heading } from "@/lib/typography";
 
 interface Props {
   class?: string;
   icon: LucideIcon;
   link?: { href: string; label: string };
   title: string;
-  /** The about page's large heading, or the Madeira guide's smaller title. */
-  titleClass: string;
+  /**
+   * The about page's large heading, centred on the icon, or the Madeira
+   * guide's smaller title, level with the icon's top and further from the list.
+   */
+  variant: "about" | "guide";
 }
 
-const { class: className, icon: Icon, link, title, titleClass } = Astro.props;
+const { class: className, icon: Icon, link, title, variant } = Astro.props;
+const guide = variant === "guide";
 ---
 
 <div
   class={cn(
-    "flex w-full flex-col gap-8 bg-bridal-700 text-white sm:w-1/2 sm:gap-12",
+    "flex w-full min-w-0 flex-col gap-8 bg-bridal-700 text-white sm:w-1/2 sm:gap-12",
     className
   )}
 >
-  <div class="flex grow flex-col gap-8 md:gap-6">
-    <div class="flex items-center gap-4">
-      <Icon aria-hidden="true" className="size-12 shrink-0" />
-      <h3 class={titleClass}>{title}</h3>
+  <div class:list={["flex grow flex-col gap-8", !guide && "md:gap-6"]}>
+    <div class:list={["flex gap-4", !guide && "items-center"]}>
+      {/* The about page's icon gives way to a long word on narrow cards, and
+          a word that still doesn't fit ("Encontros", "deslocar") is
+          hyphenated. */}
+      <Icon
+        aria-hidden="true"
+        className={guide ? "size-12 shrink-0" : "size-12"}
+      />
+      <h3
+        class={cn(
+          guide ? "text-4xl leading-none" : heading.h3,
+          "min-w-0 hyphens-auto wrap-break-word"
+        )}
+      >
+        {title}
+      </h3>
     </div>
     <slot />
   </div>

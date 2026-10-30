@@ -1,5 +1,5 @@
 ---
-import { toLocale } from "@freemadeira/i18n";
+import { htmlLang, toLocale } from "@freemadeira/i18n";
 import { Image } from "astro:assets";
 import { ExternalLinkIcon } from "lucide-react";
 
@@ -10,11 +10,15 @@ import { socialProfiles } from "@/data/socials";
 import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
+// "8,750" in English is "8750" in Portuguese, and "2.029416" is "2,029416".
+const number = new Intl.NumberFormat(htmlLang[locale], {
+  maximumFractionDigits: 6,
+}).format;
 const stats = [
-  [m.home_stat_attendees({}, { locale }), "3,000+"],
-  [m.home_stat_points_of_sale({}, { locale }), "60"],
-  [m.home_stat_ln_payments({}, { locale }), "8,750"],
-  [m.home_stat_ln_volume({}, { locale }), "2.029416 BTC"],
+  [m.home_stat_attendees({}, { locale }), `${number(3000)}+`],
+  [m.home_stat_points_of_sale({}, { locale }), number(60)],
+  [m.home_stat_ln_payments({}, { locale }), number(8750)],
+  [m.home_stat_ln_volume({}, { locale }), `${number(2.029416)} BTC`],
 ];
 ---
 
@@ -23,7 +27,7 @@ const stats = [
     class="absolute inset-x-0 -top-48 -bottom-14 overflow-hidden bg-basalt-light"
   >
     <Image
-      class="absolute top-0 left-0 max-w-none translate-x-[-55%] translate-y-[-10%] -scale-x-100 sm:left-1/2 sm:translate-x-[-98%] sm:translate-y-[-6%] lg:translate-x-[-106%] xl:translate-x-[-122%]"
+      class="absolute top-0 left-0 translate-x-[-55%] translate-y-[-10%] -scale-x-100 sm:left-1/2 sm:translate-x-[-98%] sm:translate-y-[-6%] lg:translate-x-[-106%] xl:translate-x-[-122%]"
       src={backgroundImage}
       alt=""
       width={918}
@@ -83,14 +87,15 @@ const stats = [
         class="my-6 space-y-6 font-display text-xl tracking-tight text-basalt"
       >
         <p>{m.home_hero_case_study({}, { locale })}</p>
+        {/* font-bold: the 2024 site loaded DM Sans without 600, so its semibold drew as bold. */}
         <a
           href="https://blog.btcpayserver.org/case-study-bitcoin-atlantis/"
-          class="inline-block rounded-full border border-yellow px-5 py-2 text-lg font-semibold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
+          class="inline-block rounded-full border border-yellow px-5 py-2 text-lg font-bold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
           target="_blank"
           rel="noreferrer"
         >
-          {m.home_hero_read_case_study({}, { locale })}
-          <ExternalLinkIcon className="inline size-4" />
+          {m.home_hero_read_case_study({}, { locale })}{" "}
+          <ExternalLinkIcon className="inline size-4" strokeWidth={1.5} />
         </a>
       </div>
     </div>

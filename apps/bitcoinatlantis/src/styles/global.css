@@ -8,8 +8,13 @@
  * named its own colours (yellow, basalt, purple…) instead of Tailwind's.
  */
 @theme {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Tailwind's default fallbacks, emoji fonts included, as on the 2024 site. */
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display:
+    "DM Sans Variable", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --color-yellow: #ffc700;
   --color-yellow-50: #fff9e5;

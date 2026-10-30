@@ -980,7 +980,6 @@ export const recapClips: RecapClip[] = [
 export const recapStages = ["Satoshi Stage", "Open Source Stage"];
 export const recapDays = ["1", "2", "3"];
 export const recapSpeakers = [
-  "All",
   "Abubakar Nur Khalil",
   "actionslave",
   "Adem Bilican",

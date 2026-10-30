@@ -47,15 +47,15 @@ export default function NewsletterForm({ labels, locale, variant }: Props) {
   const footer = variant === "footer";
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={subscribe}>
+    <form className="relative" onSubmit={subscribe}>
       <div className="flex gap-2">
         <input
           aria-label={labels.email}
           autoComplete="email"
           className={cn(
-            "text-dark placeholder:text-dark/40 rounded-full bg-white px-6 py-2.5 text-sm",
+            "text-dark placeholder:text-dark/40 min-w-0 rounded-full bg-white px-6 py-2.5 text-sm",
             footer
-              ? "min-w-0 grow focus:outline-none"
+              ? "grow focus:outline-none"
               : "focus:outline-primary-400 border-dark border"
           )}
           name="email"
@@ -65,7 +65,7 @@ export default function NewsletterForm({ labels, locale, variant }: Props) {
         />
         {footer ? (
           <button
-            className="border-dark hover:bg-dark inline-flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition duration-75 hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
+            className="border-dark hover:bg-dark inline-flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] p-2 transition duration-75 hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
             disabled={status === "sending"}
             type="submit"
           >
@@ -82,7 +82,11 @@ export default function NewsletterForm({ labels, locale, variant }: Props) {
           </button>
         )}
       </div>
-      <p aria-live="polite" className="min-h-5 px-6 text-sm">
+      {/* Below the form, out of the flow, so the layout doesn't move. */}
+      <p
+        aria-live="polite"
+        className="absolute inset-x-0 top-full mt-2 pl-6 text-sm"
+      >
         {status === "success" && labels.success}
         {status === "error" && labels.error}
       </p>

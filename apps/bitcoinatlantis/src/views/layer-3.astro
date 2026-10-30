@@ -13,7 +13,11 @@ import Layout from "@/layouts/base-layout.astro";
 import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
-const outline = buttonVariants({ variant: "atlantis-outline" });
+// The 2024 secondary button: darker text, lighter border on hover.
+const outline = buttonVariants({
+  className: "text-yellow-500 hover:border-yellow-300 hover:text-yellow-700",
+  variant: "atlantis-outline",
+});
 const linkClass =
   "[&_a:not([data-slot])]:text-yellow-500 [&_a:not([data-slot])]:hover:text-yellow";
 const perks = [

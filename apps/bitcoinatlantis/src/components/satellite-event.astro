@@ -32,6 +32,9 @@ const external = logoHref.startsWith("http");
 
 const rowClass =
   "flex flex-col gap-x-2 border-b pb-2 sm:flex-row sm:border-b-0 sm:pb-0";
+// Location and route rows: a narrower gap, as on the 2024 site.
+const placeRowClass =
+  "flex flex-col items-start gap-x-1 border-b pb-2 sm:flex-row sm:items-center sm:border-b-0 sm:pb-0";
 const mapLinkClass =
   "ml-0 flex items-center space-x-1 rounded-md p-1 pl-2 text-sm text-yellow-500 hover:bg-basalt-lighter active:text-yellow-600 sm:ml-2";
 ---
@@ -121,7 +124,7 @@ const mapLinkClass =
                 </strong>
                 {event.time[locale]}
               </li>
-              <li class:list={[rowClass, "items-start gap-x-1 sm:items-center"]}>
+              <li class={placeRowClass}>
                 <strong class="font-semibold text-basalt">
                   {m.event_location({}, { locale })}
                 </strong>
@@ -144,7 +147,7 @@ const mapLinkClass =
               </li>
               {
                 event.route && (
-                  <li class:list={[rowClass, "items-start gap-x-1 sm:items-center"]}>
+                  <li class={placeRowClass}>
                     <strong class="font-semibold text-basalt">
                       {m.event_route({}, { locale })}
                     </strong>
@@ -199,23 +202,28 @@ const mapLinkClass =
               )
             }
 
-            {
-              moreInfo && (
-                <div class="mt-10 flex flex-col items-center justify-start gap-4 whitespace-nowrap sm:flex-row-reverse sm:justify-end">
+            {/* Kept when empty, as on the 2024 site: its margin spaces the event. */}
+            <div
+              class="mt-10 flex flex-col items-center justify-start gap-4 whitespace-nowrap sm:flex-row-reverse sm:justify-end"
+            >
+              {
+                moreInfo && (
                   <a
                     href={resolve(moreInfo.href)}
                     target={moreInfo.newTab ? "_blank" : undefined}
                     rel={moreInfo.newTab ? "noreferrer" : undefined}
                     class={buttonVariants({
-                      className: "min-w-full sm:min-w-fit",
+                      // The 2024 secondary button: darker text, lighter border on hover.
+                      className:
+                        "min-w-full text-yellow-500 hover:border-yellow-300 hover:text-yellow-700 sm:min-w-fit",
                       variant: "atlantis-outline",
                     })}
                   >
                     {moreInfo.text[locale]}
                   </a>
-                </div>
-              )
-            }
+                )
+              }
+            </div>
           </div>
         </div>
       </div>

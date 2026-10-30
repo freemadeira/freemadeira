@@ -21,7 +21,9 @@ const copies = [0, 1, 2, 3];
 ---
 
 <section class="my-20 flex flex-col gap-12 sm:my-28">
-  <h2 class:list={[heading.h6, "text-center"]}>{m.partners_title({}, { locale })}</h2>
+  <h2 class:list={[heading.h6, "px-4 text-center"]}>
+    {m.partners_title({}, { locale })}
+  </h2>
   {
     layout === "marquee" ? (
       <div class="group flex overflow-hidden">

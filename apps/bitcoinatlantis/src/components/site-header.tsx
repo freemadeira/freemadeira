@@ -27,6 +27,8 @@ interface Picture {
 }
 
 interface SiteHeaderProps {
+  /** Tighter nav between xl and 2xl, for labels too long to fit (Portuguese). */
+  compactNav?: boolean;
   currentPath: string;
   labels: { menu: string; more: string };
   language: { href: string; hreflang: string; label: string; lang: string };
@@ -45,6 +47,7 @@ function linkClass(active: boolean) {
 
 /** Sticky below the 2028 banner; blurs the page behind it once scrolled. */
 export function SiteHeader({
+  compactNav = false,
   currentPath,
   labels,
   language,
@@ -87,9 +90,18 @@ export function SiteHeader({
               <img {...logo.vertical} alt="Bitcoin Atlantis" className="w-24" />
             </a>
 
-            <div className="hidden space-x-8 xl:flex">
+            <div
+              className={cn(
+                "hidden xl:flex",
+                compactNav ? "space-x-4 2xl:space-x-8" : "space-x-8"
+              )}
+            >
               <div className="flex items-center justify-center overflow-hidden whitespace-nowrap">
-                <div className="xl:space-x-8">
+                <div
+                  className={
+                    compactNav ? "xl:space-x-4 2xl:space-x-8" : "xl:space-x-8"
+                  }
+                >
                   {navbarLinks.map((link) => (
                     <a
                       key={link.href}
@@ -108,11 +120,15 @@ export function SiteHeader({
               <Popover>
                 <PopoverTrigger className="text-basalt hover:text-yellow inline-flex items-center gap-x-1 outline-hidden">
                   <span className="px-1 py-1 font-bold">{labels.more}</span>
-                  <ChevronDownIcon className="size-5" aria-hidden="true" />
+                  <ChevronDownIcon
+                    className="size-5"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
                 </PopoverTrigger>
                 <PopoverContent
                   sideOffset={12}
-                  className="w-48 gap-0 rounded-xl p-4 shadow-lg ring-gray-900/5"
+                  className="w-max min-w-48 gap-0 rounded-xl p-4 shadow-lg ring-gray-900/5"
                 >
                   {moreLinks.map((link) => (
                     <a
@@ -126,16 +142,29 @@ export function SiteHeader({
                       {link.label}
                     </a>
                   ))}
+                  <a
+                    href={language.href}
+                    hrefLang={language.hreflang}
+                    lang={language.lang}
+                    className={cn(
+                      "mt-2 block border-t border-gray-900/10 px-1 pt-3 pb-1 uppercase",
+                      linkClass(false)
+                    )}
+                  >
+                    {language.label}
+                  </a>
                 </PopoverContent>
               </Popover>
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Only where the bar has room: on phones it is in the menu, and
+                  from xl, where the nav fills the bar, under "More". */}
               <a
                 href={language.href}
                 hrefLang={language.hreflang}
                 lang={language.lang}
-                className="text-basalt hover:text-yellow px-2 py-1 text-sm font-semibold"
+                className="text-basalt hover:text-yellow hidden px-2 py-1 text-sm font-semibold sm:inline xl:hidden"
               >
                 {language.label}
               </a>
@@ -150,10 +179,12 @@ export function SiteHeader({
                 <span className="sr-only">{labels.menu}</span>
                 <MenuIcon
                   className="block size-6 group-data-panel-open:hidden"
+                  strokeWidth={1.5}
                   aria-hidden="true"
                 />
                 <XIcon
                   className="hidden size-6 group-data-panel-open:block"
+                  strokeWidth={1.5}
                   aria-hidden="true"
                 />
               </CollapsibleTrigger>
@@ -174,6 +205,17 @@ export function SiteHeader({
                   {link.label}
                 </a>
               ))}
+              <a
+                href={language.href}
+                hrefLang={language.hreflang}
+                lang={language.lang}
+                className={cn(
+                  "block px-3 py-2 text-right uppercase sm:hidden",
+                  linkClass(false)
+                )}
+              >
+                {language.label}
+              </a>
             </div>
           </CollapsibleContent>
         </div>

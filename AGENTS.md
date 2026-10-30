@@ -77,6 +77,7 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 
 ## Deploying
 
-- Each app is its own Vercel project, with its root directory set to `apps/<name>`.
+- Each app is its own Vercel project in the FREE Madeira team: `website` serves freemadeira.org and `bitcoin-atlantis` serves bitcoinatlantis.com. Each has its root directory set to `apps/<name>`, the Astro framework preset, Node.js 24.x (`devEngines` refuses anything else) and `main` as its production branch.
 - Turn on "Skip deployments when there are no changes" in each project, and set Function Region to Frankfurt (`fra1`), next to the VPS.
+- Environment variables: freemadeira.org needs `MAILERLITE_TOKEN` and `SESSION_PASSWORD` for the newsletter; bitcoinatlantis.com needs none.
 - sqld and the indexer run on the VPS through Coolify. See `infra/README.md`.

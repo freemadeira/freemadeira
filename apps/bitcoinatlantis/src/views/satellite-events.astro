@@ -25,7 +25,7 @@ const locale = toLocale(Astro.currentLocale);
         title={m.satellite_events_title({}, { locale })}
         subtitle={m.satellite_events_subtitle({}, { locale })}
       />
-      <Container class="-mb-10 max-w-7xl">
+      <Container class="-mb-10">
         <SectionPills topics={satelliteEvents.map((event) => event.name)} />
         {satelliteEvents.map((event) => <SatelliteEvent event={event} />)}
       </Container>

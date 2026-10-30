@@ -1,5 +1,6 @@
 ---
 import { toLocale } from "@freemadeira/i18n";
+import { ArrowRightIcon } from "lucide-react";
 
 import Container from "@/components/container.astro";
 import Seal from "@/components/seal.astro";
@@ -45,8 +46,14 @@ const locale = toLocale(Astro.currentLocale);
         href={routes.speakers[locale]}
         class="rounded-full border border-yellow px-3.5 py-1 text-lg font-semibold whitespace-nowrap text-basalt shadow-xs hover:bg-yellow-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
       >
-        {m.home_see_all_speakers({}, { locale })}
-        <span aria-hidden="true">&rarr;</span>
+        {m.home_see_all_speakers({}, { locale })}{" "}
+        {/* An icon, not "→": the subset Inter we load has no arrow, and the
+            fallback font's is thin. */}
+        <ArrowRightIcon
+          className="inline size-4.5 align-[-0.2em]"
+          strokeWidth={2.5}
+          aria-hidden="true"
+        />
       </a>
     </div>
   </Container>

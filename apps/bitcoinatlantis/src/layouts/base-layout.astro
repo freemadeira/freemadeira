@@ -98,6 +98,7 @@ const links = [
     <Banner />
     <SiteHeader
       client:idle
+      compactNav={locale === "pt"}
       currentPath={paths[locale]}
       labels={{
         menu: m.nav_open_menu({}, { locale }),

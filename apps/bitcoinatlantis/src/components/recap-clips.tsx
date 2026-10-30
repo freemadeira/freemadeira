@@ -18,9 +18,10 @@ import {
 import { Disclosure } from "./disclosure";
 
 interface RecapClipsProps {
+  /** BCP 47 tag, for joining speaker names ("A, B, and C" / "A, B e C"). */
+  lang: string;
   labels: {
     all: string;
-    and: string;
     day: string;
     noMatches: string;
     speaker: string;
@@ -56,7 +57,11 @@ function Filter({
         value={value}
         onValueChange={(next) => onChange(next ?? all)}
       >
-        <ComboboxInput id={id} className="mt-1 w-full bg-white shadow-xs" />
+        {/* The 2024 filter's size: 42px tall, rounded-md, text-sm from sm. */}
+        <ComboboxInput
+          id={id}
+          className="mt-1 h-auto w-full rounded-md bg-white shadow-xs [&_input]:h-10 [&_input]:pl-3 sm:[&_input]:text-sm"
+        />
         <ComboboxContent>
           <ComboboxEmpty>{noMatches}</ComboboxEmpty>
           <ComboboxList>
@@ -73,7 +78,7 @@ function Filter({
 }
 
 /** The 2024 talks, filterable by speaker, stage and day. */
-export function RecapClips({ labels }: RecapClipsProps) {
+export function RecapClips({ labels, lang }: RecapClipsProps) {
   const [speaker, setSpeaker] = useState(labels.all);
   const [stage, setStage] = useState(labels.all);
   const [day, setDay] = useState(labels.all);
@@ -85,12 +90,7 @@ export function RecapClips({ labels }: RecapClipsProps) {
       (speaker === labels.all || clip.speakers.includes(speaker))
   );
 
-  const formatSpeakers = (names: string[]) => {
-    if (names.length <= 2) {
-      return names.join(` ${labels.and} `);
-    }
-    return `${names.slice(0, -1).join(", ")} ${labels.and} ${names.at(-1)}`;
-  };
+  const speakerList = new Intl.ListFormat(lang, { type: "conjunction" });
 
   return (
     <div className="mx-auto flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -121,11 +121,14 @@ export function RecapClips({ labels }: RecapClipsProps) {
         />
       </div>
       {clips.length > 0 ? (
-        <div className="w-full max-w-4xl divide-y divide-gray-900/10">
+        // Tailwind 3's divide-y: the line above each row, after its margin.
+        <div className="w-full max-w-4xl [&>*+*]:border-t [&>*+*]:border-gray-900/10">
           {clips.map((clip) => (
             <div key={clip.youtube} className="mt-4">
               <Disclosure
-                panelClassName="mt-6"
+                iconClassName="ml-12 h-auto"
+                panelClassName="data-open:mt-6"
+                triggerClassName="items-center"
                 summary={
                   <span className="flex grow flex-col">
                     <span className="text-base leading-7 font-semibold">
@@ -133,7 +136,7 @@ export function RecapClips({ labels }: RecapClipsProps) {
                     </span>
                     <span className="flex flex-col sm:w-full sm:flex-row sm:justify-between">
                       <span className="text-base leading-7 font-light">
-                        {formatSpeakers(clip.speakers)}
+                        {speakerList.format(clip.speakers)}
                       </span>
                       <span className="text-base leading-7 font-light sm:ml-6">
                         {clip.stage}

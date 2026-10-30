@@ -54,7 +54,8 @@ const afternoon = [
       image={bannerImage}
       class="relative mt-10 mb-20 flex h-[200px] items-end justify-end overflow-hidden bg-center sm:h-[500px]"
     />
-    <Container class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+    {/* No lg:px-12: Tailwind 3 let Container's lg:px-8 win, so the 2024 site padded 2rem. */}
+    <Container class="mx-auto max-w-2xl lg:max-w-4xl">
       <div class="mt-20 space-y-10">
         <p>{m.bem_vindo_info_1({}, { locale })}</p>
         <p class="pb-6">{m.bem_vindo_info_2({}, { locale })}</p>

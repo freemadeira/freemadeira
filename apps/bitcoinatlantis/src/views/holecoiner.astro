@@ -61,7 +61,8 @@ const greenLink =
         alt="Holecoiner"
       />
     </BackgroundBanner>
-    <Container class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+    {/* No lg:px-12: Tailwind 3 let Container's lg:px-8 win, so the 2024 site padded 2rem. */}
+    <Container class="mx-auto max-w-2xl lg:max-w-4xl">
       <p class="mt-16">{m.holecoiner_prizes({}, { locale })}</p>
 
       <div class="mt-10">
@@ -96,7 +97,7 @@ const greenLink =
               class="flex items-center space-x-1 rounded-md p-1 pl-2 text-sm text-green-medium hover:bg-basalt-lighter active:text-green"
             >
               <span>{m.holecoiner_menu({}, { locale })}</span>
-              <ExternalLinkIcon className="inline size-4" />
+              <ExternalLinkIcon className="inline size-4" strokeWidth={1.5} />
             </a>
           </li>
           <li class="flex gap-x-2">
@@ -118,7 +119,7 @@ const greenLink =
         </p>
         <a href={rulesUrl} target="_blank" rel="noreferrer" class={greenLink}>
           <span>{m.holecoiner_terms({}, { locale })}</span>
-          <ExternalLinkIcon className="inline size-4" />
+          <ExternalLinkIcon className="inline size-4" strokeWidth={1.5} />
         </a>
         <p class="mt-4">{m.holecoiner_enrolment({}, { locale })}</p>
       </div>

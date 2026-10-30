@@ -12,7 +12,8 @@ interface PhotoGalleryIndexProps {
 /** Conference and satellite events, each opening onto links to its albums. */
 export function PhotoGalleryIndex({ sections }: PhotoGalleryIndexProps) {
   return (
-    <div className="mt-10 space-y-6 divide-y divide-gray-900/10">
+    // Tailwind 3's space-y and divide-y: the line above each row, after the gap.
+    <div className="mt-10 [&>*+*]:mt-6 [&>*+*]:border-t [&>*+*]:border-gray-900/10">
       {sections.map(({ pills, title }) => (
         <Disclosure
           key={title}

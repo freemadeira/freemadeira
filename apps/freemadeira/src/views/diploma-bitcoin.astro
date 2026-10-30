@@ -91,7 +91,7 @@ const newTab = { rel: "noopener noreferrer", target: "_blank" };
     {
       content.faq.map((item) => (
         <details class="group border-b border-mountain-mist-200 py-4">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium [&::-webkit-details-marker]:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between text-lg font-medium [&::-webkit-details-marker]:hidden">
             {item.question}
             <ChevronDown
               aria-hidden="true"
@@ -100,8 +100,8 @@ const newTab = { rel: "noopener noreferrer", target: "_blank" };
           </summary>
           <div class="mt-2">
             {item.answer === CALENDAR ? (
-              <div class="overflow-x-auto">
-                <table class="my-8 w-full">
+              <div class="my-8 overflow-x-auto">
+                <table class="w-full">
                   <thead class="text-left">
                     <tr class="h-8">
                       <th>{content.calendarHeadings.chapter}</th>

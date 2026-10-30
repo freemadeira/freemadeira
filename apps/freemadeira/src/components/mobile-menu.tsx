@@ -60,7 +60,7 @@ export default function MobileMenu(props: Props) {
 
   return (
     <Sheet onOpenChange={(open) => !open && setAboutOpen(false)}>
-      <SheetTrigger className="hover:bg-mountain-mist-50 flex aspect-square cursor-pointer items-center justify-center rounded-full p-2 lg:hidden">
+      <SheetTrigger className="hover:bg-mountain-mist-50 -me-4 flex size-18 cursor-pointer items-center justify-center rounded-full lg:hidden">
         <span className="sr-only">{props.openLabel}</span>
         <MenuIcon aria-hidden="true" size={40} />
       </SheetTrigger>
@@ -169,7 +169,7 @@ export default function MobileMenu(props: Props) {
               <a
                 className={cn(
                   buttonVariants({ variant: "fm-outline" }),
-                  "w-full bg-white"
+                  "w-full border-0 bg-white"
                 )}
                 href={props.learn.href}
                 rel="noopener noreferrer"
@@ -180,7 +180,7 @@ export default function MobileMenu(props: Props) {
               <a
                 className={cn(
                   buttonVariants({ variant: "fm-outline-light" }),
-                  "bg-dark w-full"
+                  "bg-dark w-full border-0"
                 )}
                 href={props.shop.href}
                 rel="noopener noreferrer"

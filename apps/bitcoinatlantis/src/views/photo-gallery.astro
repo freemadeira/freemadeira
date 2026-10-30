@@ -68,7 +68,9 @@ const sections = [...conference, ...satelliteEvents];
             <h2 class="pb-8 text-2xl leading-10 font-bold tracking-tight text-gray-900">
               {topic}
             </h2>
-            <GalleryGrid client:visible photos={photos} />
+            {/* Idle, not visible: the server lays the rows out for 800px, so on
+                phones each album grows when it hydrates, shifting the page. */}
+            <GalleryGrid client:idle photos={photos} />
           </div>
         ))
       }

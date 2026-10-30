@@ -97,18 +97,6 @@
     @apply bg-background text-foreground antialiased;
   }
 
-  /* text-wrap-style, not text-wrap: the shorthand would also undo an
-     inherited whitespace-nowrap. */
-  h1,
-  h2,
-  h3 {
-    text-wrap-style: balance;
-  }
-
-  p {
-    text-wrap-style: pretty;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,

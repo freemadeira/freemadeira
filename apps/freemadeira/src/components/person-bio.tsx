@@ -5,6 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@freemadeira/ui/components/dialog";
+import { cn } from "cn";
 import { ArrowRight, XIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -33,11 +34,12 @@ export default function PersonBio(props: Props) {
           <ArrowRight aria-hidden="true" size={22} strokeWidth={1.2} />
         </span>
       </DialogTrigger>
+      {/* A sheet along the bottom on phones, a centred panel from sm up. */}
       <DialogContent
-        className="no-scrollbar bg-bridal-50 text-dark max-h-[80vh] overflow-auto rounded-none px-4 pt-0 pb-16 text-base ring-0 sm:max-w-5xl sm:py-8 sm:pl-8"
+        className="no-scrollbar bg-bridal-50 text-dark top-auto bottom-0 block max-h-[80vh] max-w-full translate-y-0 overflow-auto rounded-none px-4 pt-0 pb-16 text-left text-base ring-0 sm:top-1/2 sm:bottom-auto sm:max-w-[min(64rem,calc(100%-4rem))] sm:-translate-y-1/2 sm:py-8 sm:pl-8"
         showCloseButton={false}
       >
-        <div className="bg-bridal-50 sticky top-0 z-20 pt-4 pb-3 text-right sm:absolute sm:top-4 sm:right-4 sm:bg-transparent sm:p-1">
+        <div className="bg-bridal-50 sticky top-0 z-20 pt-4 pb-3 text-right sm:absolute sm:top-4 sm:right-4 sm:bg-transparent sm:py-1">
           <DialogClose className="hover:bg-mountain-mist-50 inline-flex cursor-pointer items-center justify-center rounded-full p-2">
             <XIcon aria-hidden="true" className="size-8" strokeWidth={1.5} />
             <span className="sr-only">{props.closeLabel}</span>
@@ -47,16 +49,27 @@ export default function PersonBio(props: Props) {
           {props.picture && (
             <img
               alt=""
-              className="aspect-square w-full object-cover sm:w-1/3"
+              className="aspect-square w-full min-w-0 object-cover sm:w-1/3"
               sizes="(max-width: 640px) 100vw, 33vw"
               src={props.picture.src}
               srcSet={props.picture.srcset}
             />
           )}
-          <div className="flex flex-col gap-8 sm:max-w-2/3 sm:pr-8">
-            <DialogTitle className={heading.h4}>{props.name}</DialogTitle>
-            <p className="text-lg sm:max-h-96 sm:overflow-auto">{props.bio}</p>
-            {props.socials}
+          <div className={props.picture ? "sm:max-w-2/3" : undefined}>
+            {/* Pinned under the close button while the bio scrolls on phones;
+                from sm up, the bio and links scroll beneath it. */}
+            <DialogTitle
+              className={cn(
+                heading.h4,
+                "bg-bridal-50 sticky top-12 z-10 w-full sm:absolute sm:w-auto sm:pb-10"
+              )}
+            >
+              {props.name}
+            </DialogTitle>
+            <div className="sm:mt-27 sm:max-h-96 sm:overflow-auto sm:pr-8">
+              <p className="py-8 text-lg sm:pt-0 sm:pb-10">{props.bio}</p>
+              {props.socials}
+            </div>
           </div>
         </div>
       </DialogContent>

@@ -90,3 +90,16 @@
 @utility paused {
   animation-play-state: paused;
 }
+
+/* The old site's backdrops: grey, multiplied over the page behind the bio
+   dialogs, and none behind the mobile menu. */
+[data-slot="dialog-overlay"] {
+  background-color: var(--color-mountain-mist-600);
+  mix-blend-mode: multiply;
+  backdrop-filter: none;
+}
+
+[data-slot="sheet-overlay"] {
+  background-color: transparent;
+  backdrop-filter: none;
+}

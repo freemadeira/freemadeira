@@ -35,7 +35,7 @@ export function ScrollUp({ label }: ScrollUpProps) {
         aria-label={label}
         className="text-basalt-medium inline-flex aspect-square items-center rounded-full bg-gray-200 px-3 py-1.5 text-sm font-medium opacity-50 hover:bg-yellow-200 hover:text-yellow-800"
       >
-        <ChevronUpIcon className="inline size-3 md:size-6" />
+        <ChevronUpIcon className="inline size-3 md:size-6" strokeWidth={1.5} />
       </a>
     </div>
   );

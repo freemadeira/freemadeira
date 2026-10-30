@@ -19,7 +19,11 @@ interface Props {
 const { person } = Astro.props;
 const locale = toLocale(Astro.currentLocale);
 const name = [person.firstName, person.lastName].filter(Boolean).join(" ");
-const socials = Object.entries(person.socials ?? {}) as [Social, string][];
+// The order the cards have always shown, whatever the order of the keys.
+const socialOrder: Social[] = ["x", "nostr", "linkedin", "youtube"];
+const socials = (
+  Object.entries(person.socials ?? {}) as [Social, string][]
+).toSorted(([a], [b]) => socialOrder.indexOf(a) - socialOrder.indexOf(b));
 const role = "role" in person ? person.role : undefined;
 const category = "category" in person ? person.category : undefined;
 const portrait = person.picture
@@ -61,7 +65,7 @@ const possessive = `${person.firstName}${person.firstName.toLowerCase().endsWith
     {role && <p class="text-lg">{role[locale]}</p>}
     {
       category && (
-        <span class="bg-primary-400 px-2.5 py-2 text-center text-sm leading-2.5 font-medium text-dark">
+        <span class="inline-block bg-primary-400 px-2.5 py-2 text-center text-sm leading-2.5 font-medium text-dark">
           {category[locale]}
         </span>
       )
