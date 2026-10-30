@@ -97,7 +97,7 @@ const community = [
     href: "https://t.me/freemadeira",
     illustration: TelegramLady,
     illustrationClass:
-      "absolute right-4 bottom-0 h-[200px] w-auto lg:right-4 lg:h-2/3 xl:h-5/6",
+      "-me-3 -mb-7 h-[180px] w-auto self-end sm:absolute sm:right-4 sm:bottom-0 sm:m-0 sm:h-[200px] xl:h-5/6",
     text: m.madeira_telegram_text({}, t),
     title: "Telegram — FREE Madeira",
   },
@@ -106,12 +106,15 @@ const community = [
     href: `https://njump.me/${freeMadeiraNpub}`,
     illustration: NostrMobile,
     illustrationClass:
-      "absolute -right-8 -bottom-4 h-[200px] w-auto lg:-right-10 lg:h-2/3 xl:h-5/6",
+      "-me-15 -mb-11 h-[180px] w-auto self-end sm:absolute sm:-right-8 sm:-bottom-4 sm:m-0 sm:h-[200px] xl:-right-10 xl:h-5/6",
     text: m.madeira_nostr_text({}, t),
     title: "Nostr",
   },
 ];
 const tag = "flex items-center text-lg leading-[150%]";
+// 48px of padding from 390px up, down to 24px at 320px for the titles.
+const guideCard =
+  "px-[clamp(1.5rem,100vw_-_21.375rem,3rem)] py-10 lg:px-22 lg:py-12 xl:w-1/2";
 ---
 
 <Layout
@@ -153,9 +156,10 @@ const tag = "flex items-center text-lg leading-[150%]";
       <h2 class={heading.h3}>{m.madeira_guide_title({}, t)}</h2>
       <p>{m.madeira_guide_text({}, t)}</p>
     </div>
-    <div class="my-16 flex flex-col gap-7 sm:my-20 sm:flex-row sm:gap-9">
+    {/* Side by side from xl: narrower, the titles take four lines. */}
+    <div class="my-16 flex flex-col gap-7 sm:my-20 xl:flex-row xl:gap-9">
       <BrownCard
-        class="px-12 py-10 lg:px-22 lg:py-12"
+        class={guideCard}
         icon={Zap}
         title={m.madeira_wallet_title({}, t)}
         variant="guide"
@@ -167,7 +171,7 @@ const tag = "flex items-center text-lg leading-[150%]";
         </ul>
       </BrownCard>
       <BrownCard
-        class="px-12 py-10 lg:px-22 lg:py-12"
+        class={guideCard}
         icon={MapPinned}
         title={m.madeira_travel_title({}, t)}
         variant="guide"
@@ -211,16 +215,21 @@ const tag = "flex items-center text-lg leading-[150%]";
       <h2 class={heading.h3}>{m.madeira_community_title({}, t)}</h2>
       <p>{m.madeira_community_text({}, t)}</p>
     </div>
-    <div class="flex w-full flex-col gap-5 lg:flex-row lg:gap-8">
+    {/* Side by side from xl. From sm, the illustration sits in the card's
+        corner beside the text; narrower, the text would run under it, so it
+        gets a row of its own under the link. */}
+    <div class="flex w-full flex-col gap-5 xl:flex-row xl:gap-8">
       {
         community.map((card) => (
           <a
-            class="group relative w-full flex-1 overflow-clip bg-bridal-50 p-7"
+            class="group relative flex w-full flex-1 flex-col gap-6 overflow-clip bg-bridal-50 p-7 sm:block"
             href={card.href}
             rel="noopener noreferrer"
             target="_blank"
           >
-            <div class="flex h-full w-2/3 flex-col justify-between space-y-6">
+            <div
+              class="contents sm:flex sm:h-full sm:w-2/3 sm:flex-col sm:justify-between sm:space-y-6"
+            >
               <h3 class:list={[heading.h6, "z-10"]}>{card.title}</h3>
               <p class="text-lg">{card.text}</p>
               <span class="flex w-fit items-center gap-4">

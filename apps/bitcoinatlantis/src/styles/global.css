@@ -171,6 +171,18 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* In-page links land just below the sticky banner and header, whose
+       height base-layout.astro keeps up to date. */
+    scroll-padding-top: calc(var(--sticky-top-height, 0px) + 1rem);
+  }
+
+  /* Headings break into even lines, so none ends on a word alone.
+     text-wrap-style, not text-wrap: the shorthand would also undo an
+     inherited whitespace-nowrap. */
+  h1,
+  h2,
+  h3 {
+    text-wrap-style: balance;
   }
 
   /* Tailwind 3 gave buttons a pointer, which the 2024 site relied on. */

@@ -39,10 +39,11 @@ const mapLinkClass =
   "ml-0 flex items-center space-x-1 rounded-md p-1 pl-2 text-sm text-yellow-500 hover:bg-basalt-lighter active:text-yellow-600 sm:ml-2";
 ---
 
+{/* A link to the event lands on its name, not on the padding above it. */}
 <section
   id={slug}
   aria-label={event.name}
-  class="scroll-mt-20 sm:scroll-mt-10"
+  class="-scroll-mt-14 sm:-scroll-mt-24"
 >
   <div
     class="relative isolate overflow-hidden px-6 py-14 sm:py-24 lg:overflow-visible lg:px-0"
@@ -77,8 +78,9 @@ const mapLinkClass =
           </div>
         </div>
       </div>
+      {/* Sticks below the banner and header (base-layout.astro), not under them. */}
       <div
-        class="p-8 sm:-mt-12 sm:-ml-12 lg:sticky lg:top-20 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden"
+        class="p-8 sm:-mt-12 sm:-ml-12 lg:sticky lg:top-(--sticky-top-height,5rem) lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden"
       >
         <a
           href={logoHref}
@@ -215,7 +217,7 @@ const mapLinkClass =
                     class={buttonVariants({
                       // The 2024 secondary button: darker text, lighter border on hover.
                       className:
-                        "min-w-full text-yellow-500 hover:border-yellow-300 hover:text-yellow-700 sm:min-w-fit",
+                        "min-w-full text-center whitespace-normal text-yellow-500 hover:border-yellow-300 hover:text-yellow-700 sm:min-w-fit",
                       variant: "atlantis-outline",
                     })}
                   >

@@ -95,40 +95,61 @@ const links = [
     <meta name="twitter:image" content={ogImage} />
   </head>
   <body class="flex min-h-dvh flex-col">
-    <Banner />
-    <SiteHeader
-      client:idle
-      compactNav={locale === "pt"}
-      currentPath={paths[locale]}
-      labels={{
-        menu: m.nav_open_menu({}, { locale }),
-        more: m.nav_more({}, { locale }),
-      }}
-      language={{
-        href: paths[other],
-        hreflang: other,
-        label: localeNames[other],
-        lang: htmlLang[other],
-      }}
-      links={links}
-      logo={{
-        horizontal: {
-          height: logo.height,
-          src: logo.src,
-          width: logo.width,
-        },
-        vertical: {
-          height: logoVertical.height,
-          src: logoVertical.src,
-          width: logoVertical.width,
-        },
-      }}
-      logoHref={routes.home[locale]}
-      recap={{
-        href: routes.recap[locale],
-        label: m.nav_watch_recap({}, { locale }),
-      }}
-    />
+    {/* The banner and header stick together, so the header sits right under
+        the banner however many lines it takes. At most a screen tall: an open
+        phone menu scrolls inside it. */}
+    <div data-sticky-top class="sticky top-0 z-50 mb-4 flex max-h-dvh flex-col">
+      <Banner />
+      <SiteHeader
+        client:idle
+        compactNav={locale === "pt"}
+        currentPath={paths[locale]}
+        labels={{
+          menu: m.nav_open_menu({}, { locale }),
+          more: m.nav_more({}, { locale }),
+        }}
+        language={{
+          href: paths[other],
+          hreflang: other,
+          label: localeNames[other],
+          lang: htmlLang[other],
+        }}
+        links={links}
+        logo={{
+          horizontal: {
+            height: logo.height,
+            src: logo.src,
+            width: logo.width,
+          },
+          vertical: {
+            height: logoVertical.height,
+            src: logoVertical.src,
+            width: logoVertical.width,
+          },
+        }}
+        logoHref={routes.home[locale]}
+        recap={{
+          href: routes.recap[locale],
+          label: m.nav_watch_recap({}, { locale }),
+        }}
+      />
+    </div>
+    <script is:inline>
+      // In-page links land below the banner and header (scroll-padding-top in
+      // global.css), and sticky content sticks below them: keep their height,
+      // menu closed, in --sticky-top-height.
+      {
+        const stickyTop = document.querySelector("[data-sticky-top]");
+        new ResizeObserver(() => {
+          if (!stickyTop.querySelector("[data-panel-open]")) {
+            document.documentElement.style.setProperty(
+              "--sticky-top-height",
+              `${stickyTop.offsetHeight}px`
+            );
+          }
+        }).observe(stickyTop);
+      }
+    </script>
     <div class="grow">
       <slot />
     </div>

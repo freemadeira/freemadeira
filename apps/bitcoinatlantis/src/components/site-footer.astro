@@ -22,7 +22,7 @@ const links: [Route, string][] = [
 <footer class="bg-white">
   <div class="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
     <nav
-      class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12"
+      class="-mb-6 columns-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-12"
       aria-label={m.footer_nav_label({}, { locale })}
     >
       {
@@ -38,7 +38,8 @@ const links: [Route, string][] = [
         ))
       }
     </nav>
-    <div class="mt-10 flex justify-center space-x-10">
+    {/* Spread over at most 280px: 40px apart, closer on the narrowest phones. */}
+    <div class="mx-auto mt-10 flex max-w-70 justify-between">
       <a href="https://njump.me/npub1etgqcj9gc6yaxttuwu9eqgs3ynt2dzaudvwnrssrn2zdt2useaasfj8n6e" class="text-gray-400 hover:text-gray-500">
         <span class="sr-only">Nostr</span>
         <svg fill="currentColor" viewBox="0 0 27.87 30" class="size-6" aria-hidden="true">

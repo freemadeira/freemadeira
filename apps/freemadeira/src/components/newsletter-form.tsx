@@ -48,7 +48,9 @@ export default function NewsletterForm({ labels, locale, variant }: Props) {
 
   return (
     <form className="relative" onSubmit={subscribe}>
-      <div className="flex gap-2">
+      {/* The page's text button drops under the field when they don't both
+          fit (320px), rather than squeezing the field. */}
+      <div className={cn("flex gap-2", !footer && "flex-wrap")}>
         <input
           aria-label={labels.email}
           autoComplete="email"

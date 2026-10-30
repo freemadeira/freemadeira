@@ -57,7 +57,9 @@ export default function PersonBio(props: Props) {
           )}
           <div className={props.picture ? "sm:max-w-2/3" : undefined}>
             {/* Pinned under the close button while the bio scrolls on phones;
-                from sm up, the bio and links scroll beneath it. */}
+                from sm up, the bio and links scroll beneath it, in a box that
+                leaves the dialog (80vh) room for its padding and the title,
+                so on a short screen only the bio scrolls. */}
             <DialogTitle
               className={cn(
                 heading.h4,
@@ -66,7 +68,7 @@ export default function PersonBio(props: Props) {
             >
               {props.name}
             </DialogTitle>
-            <div className="sm:mt-27 sm:max-h-96 sm:overflow-auto sm:pr-8">
+            <div className="sm:mt-27 sm:max-h-[min(24rem,80vh_-_10.75rem)] sm:overflow-auto sm:pr-8">
               <p className="py-8 text-lg sm:pt-0 sm:pb-10">{props.bio}</p>
               {props.socials}
             </div>

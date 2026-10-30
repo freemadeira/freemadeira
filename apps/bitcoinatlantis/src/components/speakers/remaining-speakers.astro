@@ -5,7 +5,7 @@ import SocialLinks from "@/components/social-links.astro";
 import { remainingSpeakers } from "@/data/speakers";
 ---
 
-<section id="all" class="mt-4 scroll-mt-36 sm:-mt-4">
+<section id="all" class="mt-4 sm:-mt-4">
   <div
     class="mt-10 grid grid-cols-1 items-start gap-x-4 gap-y-4 sm:mt-12 sm:gap-y-8 lg:mt-16 lg:grid-cols-4"
   >
@@ -26,7 +26,8 @@ import { remainingSpeakers } from "@/data/speakers";
                 />
               </div>
             </div>
-            <div class="ml-4 w-[70%] md:w-[50%]">
+            {/* Long single-word roles ("Cryptosovereignty") break rather than spill. */}
+            <div class="ml-4 w-[70%] wrap-break-word md:w-[50%]">
               <h3 class="font-display font-bold tracking-tight text-slate-900">
                 {speaker.name}
               </h3>

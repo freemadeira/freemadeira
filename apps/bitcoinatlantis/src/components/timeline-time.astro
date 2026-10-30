@@ -1,0 +1,36 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+interface Props {
+  class?: string;
+  /** In English: "9AM", "6:30PM". */
+  time: string;
+}
+
+const { class: className, time } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+
+/** "6:30PM" in English; "18h30" in Portuguese. */
+function clock(english: string): string {
+  if (locale === "en") {
+    return english;
+  }
+  const { hours = "0", minutes = "", period } =
+    /^(?<hours>\d+)(?::(?<minutes>\d+))?(?<period>[AP]M)$/u.exec(english)
+      ?.groups ?? {};
+  const hour = (Number(hours) % 12) + (period === "PM" ? 12 : 0);
+  return `${hour}h${minutes}`;
+}
+---
+
+{/* As wide as the English time, which the timeline's lines were placed by, so
+    the pill stays on its line in Portuguese too. */}
+<div
+  class:list={[
+    "z-10 inline-grid rounded-full bg-white px-3 py-1.5 text-sm font-medium text-basalt-medium",
+    className,
+  ]}
+>
+  <span class="invisible col-start-1 row-start-1" aria-hidden="true">{time}</span>
+  <span class="col-start-1 row-start-1 text-center">{clock(time)}</span>
+</div>

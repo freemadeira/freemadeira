@@ -122,8 +122,11 @@ export default function SlideCarousel({
     >
       <CarouselContent className="ml-0">
         {slides.map((slide) => (
-          <CarouselItem className="pl-0" key={slide.title}>
-            <div className="relative isolate h-screen w-full pt-14 pb-10 text-white select-none sm:pt-16 sm:pb-14">
+          <CarouselItem className="flex pl-0" key={slide.title}>
+            {/* At least the screen's height, and taller when the text needs
+                it, so it never runs under the arrows. Every slide stretches
+                to the tallest. */}
+            <div className="relative isolate flex min-h-screen w-full flex-col pt-14 pb-10 text-white select-none sm:pt-16 sm:pb-14">
               <img
                 alt=""
                 className="absolute inset-0 -z-10 size-full object-cover"
@@ -135,18 +138,23 @@ export default function SlideCarousel({
                 srcSet={slide.image.srcset}
               />
               <div className="absolute inset-0 -z-10 bg-black/60 md:bg-transparent md:bg-linear-to-r md:from-black/60 md:via-black/50 md:to-black/20" />
-              <div className={cn(containerWrapper, "h-full")}>
-                <div className="relative z-10 flex h-full flex-col gap-8">
+              <div className={cn(containerWrapper, "flex grow flex-col")}>
+                <div className="relative z-10 flex grow flex-col gap-8">
                   <p className="flex items-center text-lg leading-[150%]">
                     {slide.title}
                   </p>
-                  <div className="flex w-full grow flex-col justify-center gap-6 md:w-4/5 lg:w-3/5">
+                  {/* Even padding above and below keeps the text clear of
+                      the arrows, 56px from the bottom, without moving it off
+                      centre. */}
+                  <div className="flex w-full grow flex-col justify-center gap-6 py-20 sm:py-17 md:w-4/5 lg:w-3/5">
                     {slide.subtitle ? (
                       <>
                         <h2 className={cn(heading.h4, "font-semibold")}>
                           {slide.subtitle}
                         </h2>
-                        <p className="text-3xl">{slide.text}</p>
+                        <p className="text-[length:clamp(1.5rem,7.7vw,1.875rem)] leading-[1.2] text-pretty">
+                          {slide.text}
+                        </p>
                       </>
                     ) : (
                       <h2 className={heading.h4}>{slide.text}</h2>

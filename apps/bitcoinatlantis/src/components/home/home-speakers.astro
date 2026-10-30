@@ -14,7 +14,7 @@ const locale = toLocale(Astro.currentLocale);
 <section
   id="speakers"
   aria-labelledby="speakers-title"
-  class="mt-4 scroll-mt-32"
+  class="mt-4"
 >
   <Container class="relative max-w-7xl">
     <div
@@ -25,7 +25,9 @@ const locale = toLocale(Astro.currentLocale);
       />
     </div>
 
-    <div class="mx-auto max-w-2xl lg:mx-0">
+    {/* From sm the subtitle shows and the seal moves beside it; until lg the
+        column reaches under the seal, so it keeps clear of it. */}
+    <div class="mx-auto max-w-2xl sm:pr-40 lg:mx-0 lg:pr-0">
       <h2
         id="speakers-title"
         class="font-display text-4xl font-medium tracking-tighter text-yellow sm:text-5xl"

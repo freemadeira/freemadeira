@@ -24,8 +24,9 @@ const locale = toLocale(Astro.currentLocale);
       subtitle={m.speakers_subtitle({}, { locale })}
     />
     <Container>
+      {/* Above the title until xl: lower down it would cover the centred subtitle. */}
       <div
-        class="absolute -top-4 right-4 z-10 overflow-hidden sm:top-16 sm:right-20"
+        class="absolute -top-4 right-4 z-10 overflow-hidden xl:top-16 xl:right-20"
       >
         <Seal
           class="relative size-28 overflow-visible fill-red-600 stroke-red-800 sm:size-32"
