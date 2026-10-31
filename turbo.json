@@ -4,6 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["ISR_BYPASS_TOKEN"],
       "outputs": ["dist/**", ".vercel/output/**"]
     },
     "dev": {
