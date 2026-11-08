@@ -276,32 +276,39 @@ const themes = [
     }
   }
 
+  /* Collapsed, the hint takes no room at all, or the button isn't a circle:
+     the gap before the icon is a margin that closes with it, not padding. */
   .reader-hint {
     display: grid;
     grid-template-columns: 0fr;
+    margin-inline-end: 0;
     opacity: 0;
     transition:
       grid-template-columns 320ms var(--ease-out),
+      margin-inline-end 320ms var(--ease-out),
       opacity 200ms ease-out;
 
     & > span {
-      @apply overflow-hidden pr-2 text-sm whitespace-nowrap;
+      @apply overflow-hidden text-sm whitespace-nowrap;
     }
   }
 
   @media (hover: hover) {
     .reader-button:hover .reader-hint {
       grid-template-columns: 1fr;
+      margin-inline-end: 0.5rem;
       opacity: 1;
       transition-delay: 120ms;
     }
   }
   .reader-button:focus-visible .reader-hint {
     grid-template-columns: 1fr;
+    margin-inline-end: 0.5rem;
     opacity: 1;
   }
   .reader-toggle:has(:popover-open) .reader-hint {
     grid-template-columns: 0fr;
+    margin-inline-end: 0;
     opacity: 0;
     transition-delay: 0ms;
   }
