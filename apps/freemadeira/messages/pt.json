@@ -175,5 +175,10 @@
   "blog_all_posts": "Todos os artigos",
   "blog_by": "Por {names}",
   "blog_read_translation": "Ler em inglês",
-  "blog_not_found": "Este artigo não existe ou já não está publicado."
+  "blog_not_found": "Este artigo não existe ou já não está publicado.",
+  "blog_reader_open": "Modo de leitura",
+  "blog_reader_theme": "Tema de leitura",
+  "blog_reader_default": "Padrão",
+  "blog_reader_paper": "Papel",
+  "blog_reader_night": "Noite"
 }

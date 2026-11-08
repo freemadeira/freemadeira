@@ -1,0 +1,499 @@
+---
+// A blog post's reading themes: Paper, a warm e-reader page, and Night, its
+// dark twin, both set in Literata. Only the post page changes, never the rest
+// of the site. The choice is kept in localStorage, and blog-post.astro applies
+// it before the first paint.
+import "@fontsource-variable/literata";
+import "@fontsource-variable/literata/wght-italic.css";
+import { toLocale } from "@freemadeira/i18n";
+import { BookOpenText } from "lucide-react";
+
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const themes = [
+  { label: m.blog_reader_default({}, t), value: "default" },
+  { label: m.blog_reader_paper({}, t), value: "paper" },
+  { label: m.blog_reader_night({}, t), value: "night" },
+];
+---
+
+<div class="reader-toggle" data-reader-toggle>
+  <button class="reader-button" popovertarget="reader-themes" type="button">
+    <BookOpenText aria-hidden="true" size={20} strokeWidth={1.75} />
+    <span class="reader-hint">
+      <span>{m.blog_reader_open({}, t)}</span>
+    </span>
+  </button>
+  <div class="reader-panel" id="reader-themes" popover>
+    <fieldset>
+      <legend>{m.blog_reader_theme({}, t)}</legend>
+      <div class="reader-options">
+        {
+          themes.map((theme) => (
+            <label class="reader-option" data-theme={theme.value}>
+              <input
+                checked={theme.value === "default"}
+                class="sr-only"
+                name="reader-theme"
+                type="radio"
+                value={theme.value}
+              />
+              <span aria-hidden="true" class="reader-swatch">
+                Aa
+              </span>
+              {theme.label}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+  </div>
+</div>
+
+<script>
+  type Theme = "default" | "paper" | "night";
+
+  // blog-post.astro's inline script reads the same key before the first paint.
+  const key = "fm-reader";
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLElement>("[data-reader-toggle]");
+  const panel = toggle?.querySelector<HTMLElement>("[popover]");
+
+  /** Literata, so the new page is revealed already set in it. */
+  const loadSerif = () => {
+    const faces = [document.fonts.load('1em "Literata Variable"', "Aa")];
+    if (document.querySelector(".article :is(em, i, blockquote)")) {
+      faces.push(document.fonts.load('italic 1em "Literata Variable"', "Aa"));
+    }
+    return Promise.race([
+      Promise.all(faces),
+      // oxlint-disable-next-line promise/avoid-new -- a slow font mustn't hold the switch
+      new Promise((resolve) => {
+        setTimeout(resolve, 500);
+      }),
+    ]);
+  };
+
+  /** Keeps the paragraph being read in place while the text reflows. */
+  const holdPosition = () => {
+    const block =
+      window.scrollY > 0
+        ? [...document.querySelectorAll(".article > *")].find(
+            (element) => element.getBoundingClientRect().bottom > 0
+          )
+        : undefined;
+    const before = block?.getBoundingClientRect().top ?? 0;
+    return () => {
+      if (block) {
+        window.scrollBy(0, block.getBoundingClientRect().top - before);
+      }
+    };
+  };
+
+  if (toggle && panel) {
+    const current = (): Theme => {
+      const theme = root.dataset.reader;
+      return theme === "paper" || theme === "night" ? theme : "default";
+    };
+
+    const save = (theme: Theme) => {
+      try {
+        if (theme === "default") {
+          localStorage.removeItem(key);
+        } else {
+          localStorage.setItem(key, theme);
+        }
+      } catch {
+        // Private windows may refuse; the theme still applies to this page.
+      }
+    };
+
+    const apply = async (theme: Theme) => {
+      if (theme !== "default") {
+        await loadSerif();
+      }
+      const restore = holdPosition();
+      if (theme === "default") {
+        delete root.dataset.reader;
+      } else {
+        root.dataset.reader = theme;
+      }
+      restore();
+    };
+
+    /**
+     * The new theme spreads out from the swatch like ink into paper, and going
+     * back to the default draws it in again.
+     */
+    const choose = async (theme: Theme, origin: Element) => {
+      save(theme);
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!document.startViewTransition || still) {
+        await apply(theme);
+        return;
+      }
+      const box = origin.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
+      const radius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y)
+      );
+      const closing = theme === "default";
+      root.dataset.readerSwitch = closing ? "close" : "open";
+      const transition = document.startViewTransition(() => apply(theme));
+      void transition.finished.finally(() => {
+        delete root.dataset.readerSwitch;
+      });
+      try {
+        await transition.ready;
+      } catch {
+        // Skipped, as when another switch starts first: the theme still applies.
+        return;
+      }
+      const circle = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${radius}px at ${x}px ${y}px)`,
+      ];
+      root.animate(
+        { clipPath: closing ? circle.toReversed() : circle },
+        {
+          duration: closing ? 520 : 680,
+          easing: closing
+            ? "cubic-bezier(0.55, 0, 0.75, 0.25)"
+            : "cubic-bezier(0.22, 1, 0.36, 1)",
+          pseudoElement: closing
+            ? "::view-transition-old(root)"
+            : "::view-transition-new(root)",
+        }
+      );
+    };
+
+    const radios = panel.querySelectorAll<HTMLInputElement>("input");
+    for (const radio of radios) {
+      radio.checked = radio.value === current();
+      radio.addEventListener("change", () => {
+        const origin = radio.parentElement?.querySelector(".reader-swatch");
+        void choose(radio.value as Theme, origin ?? radio);
+      });
+    }
+
+    // Opening the panel fetches Literata, before a theme needs it, and puts
+    // focus on the current theme, so the arrow keys switch between them.
+    panel.addEventListener("toggle", (event) => {
+      if ((event as ToggleEvent).newState === "open") {
+        void loadSerif();
+        panel.querySelector<HTMLInputElement>("input:checked")?.focus();
+      }
+    });
+
+    // On narrow screens the button covers the text's corner, so it steps
+    // aside while the reader scrolls down, and comes back on the way up.
+    let lastY = window.scrollY;
+    window.addEventListener(
+      "scroll",
+      () => {
+        const y = window.scrollY;
+        if (Math.abs(y - lastY) < 12) {
+          return;
+        }
+        const atEnd =
+          y + window.innerHeight >= document.documentElement.scrollHeight - 48;
+        const reading = y > lastY && y > 160 && !atEnd;
+        toggle.toggleAttribute(
+          "data-hidden",
+          reading && !panel.matches(":popover-open")
+        );
+        lastY = y;
+      },
+      { passive: true }
+    );
+  }
+</script>
+
+<style>
+  @reference "../styles/global.css";
+
+  .reader-toggle {
+    --inset-x: max(1rem, env(safe-area-inset-right));
+    --inset-y: max(1rem, env(safe-area-inset-bottom));
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+    position: fixed;
+    right: var(--inset-x);
+    bottom: var(--inset-y);
+    z-index: 40;
+    transition:
+      translate 320ms var(--ease-out),
+      opacity 200ms ease-out;
+
+    @variant sm {
+      --inset-x: 1.5rem;
+      --inset-y: 1.5rem;
+    }
+
+    @media (width < 64rem) {
+      &[data-hidden] {
+        translate: 0 calc(100% + var(--inset-y));
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .reader-button,
+  .reader-panel {
+    color: var(--reader-ink);
+    background-color: color-mix(in oklab, var(--reader-raised) 88%, transparent);
+    border: 1px solid color-mix(in oklab, var(--reader-ink) 12%, transparent);
+    box-shadow:
+      0 1px 2px rgb(9 5 6 / 0.06),
+      0 12px 32px -12px rgb(9 5 6 / 0.28);
+    backdrop-filter: blur(12px) saturate(1.4);
+  }
+
+  /* An icon that says what it is on hover, growing to the left. */
+  .reader-button {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    height: 3rem;
+    padding-inline: 0.8125rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition:
+      scale 160ms var(--ease-out),
+      background-color 200ms ease-out;
+
+    &:active {
+      scale: 0.94;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-500);
+      outline-offset: 3px;
+    }
+  }
+
+  .reader-hint {
+    display: grid;
+    grid-template-columns: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-columns 320ms var(--ease-out),
+      opacity 200ms ease-out;
+
+    & > span {
+      @apply overflow-hidden pr-2 text-sm whitespace-nowrap;
+    }
+  }
+
+  @media (hover: hover) {
+    .reader-button:hover .reader-hint {
+      grid-template-columns: 1fr;
+      opacity: 1;
+      transition-delay: 120ms;
+    }
+  }
+  .reader-button:focus-visible .reader-hint {
+    grid-template-columns: 1fr;
+    opacity: 1;
+  }
+  .reader-toggle:has(:popover-open) .reader-hint {
+    grid-template-columns: 0fr;
+    opacity: 0;
+    transition-delay: 0ms;
+  }
+
+  /* Rises out of the button it belongs to. */
+  .reader-panel {
+    position: fixed;
+    inset: auto var(--inset-x) calc(var(--inset-y) + 3.75rem) auto;
+    margin: 0;
+    padding: 1rem 1.125rem 1.125rem;
+    border-radius: 1.5rem;
+    transform-origin: bottom right;
+    opacity: 0;
+    scale: 0.94;
+    translate: 0 0.5rem;
+    transition:
+      opacity 140ms ease-out,
+      scale 140ms ease-out,
+      translate 140ms ease-out,
+      display 140ms allow-discrete,
+      overlay 140ms allow-discrete;
+
+    &:popover-open {
+      opacity: 1;
+      scale: 1;
+      translate: 0;
+      transition-duration: 240ms;
+      transition-timing-function: var(--ease-out);
+    }
+
+    @starting-style {
+      &:popover-open {
+        opacity: 0;
+        scale: 0.94;
+        translate: 0 0.5rem;
+      }
+    }
+
+    & legend {
+      @apply mb-3 text-xs font-medium tracking-[0.08em] uppercase;
+      color: var(--reader-muted);
+    }
+  }
+
+  .reader-options {
+    @apply flex gap-4;
+  }
+
+  .reader-option {
+    @apply flex w-14 cursor-pointer flex-col items-center gap-2 text-sm;
+    color: var(--reader-muted);
+    transition: color 160ms ease-out;
+
+    &:hover,
+    &:has(:checked) {
+      color: var(--reader-ink);
+    }
+    &:has(:checked) {
+      @apply font-medium;
+    }
+  }
+
+  /* Each swatch is a page in its theme, with its own ink. */
+  .reader-swatch {
+    @apply flex size-14 items-center justify-center rounded-full font-serif text-lg;
+    color: var(--swatch-ink);
+    background-color: var(--swatch-paper);
+    box-shadow: inset 0 0 0 1px
+      color-mix(in oklab, var(--swatch-ink) 14%, transparent);
+    transition:
+      scale 160ms var(--ease-out),
+      box-shadow 200ms ease-out;
+
+    .reader-option:active & {
+      scale: 0.94;
+    }
+    .reader-option:has(:checked) & {
+      box-shadow:
+        0 0 0 2px var(--reader-raised),
+        0 0 0 4px var(--color-primary-400);
+    }
+    .reader-option:has(:focus-visible) & {
+      outline: 2px solid var(--color-primary-500);
+      outline-offset: 6px;
+    }
+  }
+
+  [data-theme="default"] {
+    --swatch-paper: #ffffff;
+    --swatch-ink: var(--color-dark);
+  }
+  [data-theme="paper"] {
+    --swatch-paper: var(--paper);
+    --swatch-ink: var(--paper-ink);
+  }
+  [data-theme="night"] {
+    --swatch-paper: var(--night);
+    --swatch-ink: var(--night-ink);
+  }
+
+  @media print {
+    .reader-toggle {
+      display: none;
+    }
+  }
+</style>
+
+<style is:global>
+  @reference "../styles/global.css";
+
+  /*
+   * The themes' colours, Paper's from the Bridal Heath browns. The page's
+   * chrome reads the --reader-* tokens, and the post (blog-post.astro) maps
+   * the site's palette onto them.
+   */
+  html {
+    --paper: #f5eedf;
+    --paper-ink: #3a2c21;
+    --night: #1a1613;
+    --night-ink: #e3d9c8;
+
+    --reader-paper: #ffffff;
+    --reader-ink: var(--color-dark);
+    --reader-muted: var(--color-mountain-mist-700);
+    --reader-raised: #ffffff;
+  }
+
+  html[data-reader="paper"] {
+    --background: var(--paper);
+    --reader-paper: var(--paper);
+    --reader-ink: var(--paper-ink);
+    --reader-muted: #7a6552;
+    --reader-rule: #e2d5bd;
+    --reader-tint: #ebe1cc;
+    --reader-raised: #fbf7ee;
+    --reader-accent: var(--color-bridal-700);
+  }
+
+  html[data-reader="night"] {
+    color-scheme: dark;
+    --background: var(--night);
+    --foreground: var(--night-ink);
+    --reader-paper: var(--night);
+    --reader-ink: var(--night-ink);
+    --reader-muted: #a69885;
+    --reader-rule: #3a332b;
+    --reader-tint: #29231d;
+    --reader-raised: #27221d;
+    --reader-accent: #f2c94c;
+
+    /* The header's dark ink, logo included, turns light. */
+    & body > header {
+      --color-dark: var(--reader-ink);
+      --color-mountain-mist-50: var(--reader-tint);
+
+      & [fill="#090506"] {
+        fill: var(--reader-ink);
+      }
+    }
+
+    /* The yellow footer would glare after a dark page, so it dims to match. */
+    & body > footer {
+      --color-primary-400: #221d18;
+      --color-dark: var(--reader-ink);
+      --color-white: var(--reader-raised);
+      border-top: 1px solid var(--reader-rule);
+    }
+  }
+
+  html[data-reader] ::selection {
+    background-color: color-mix(in oklab, var(--color-primary-400) 40%, transparent);
+  }
+
+  /* The switch is a circle the toggle animates, not the default cross-fade. */
+  html[data-reader-switch]::view-transition-old(root),
+  html[data-reader-switch]::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  html[data-reader-switch="close"]::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  /* Paper prints as it is, but Night's light ink would vanish on paper. */
+  @media print {
+    html[data-reader="night"] {
+      color-scheme: light;
+      --background: #ffffff;
+      --foreground: var(--color-dark);
+      --reader-paper: #ffffff;
+      --reader-ink: var(--color-dark);
+      --reader-muted: var(--color-mountain-mist-700);
+    }
+  }
+</style>
