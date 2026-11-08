@@ -5,6 +5,7 @@ import type { LocalizedPaths } from "@freemadeira/i18n";
 import { ArrowLeft } from "lucide-react";
 
 import Container from "@/components/container.astro";
+import ReaderToggle from "@/components/reader-toggle.astro";
 import Layout from "@/layouts/base-layout.astro";
 import { names, postDate } from "@/lib/blog";
 import type { PostPage } from "@/lib/blog";
@@ -52,6 +53,20 @@ const back = blogPath(locale);
       paths={paths}
       title={post.title}
     >
+      <Fragment slot="head">
+        {/* Before the first paint, so a reading theme never flashes the default. */}
+        <script is:inline>
+          try {
+            const theme = localStorage.getItem("fm-reader");
+            if (theme === "paper" || theme === "night") {
+              document.documentElement.dataset.reader = theme;
+            }
+          } catch {
+            // Storage blocked: the default theme.
+          }
+        </script>
+      </Fragment>
+      <ReaderToggle />
       <article class="mt-10 mb-24 flex flex-col gap-12 sm:mt-16">
         <Container class="gap-8" size="tighter">
           <a
@@ -76,7 +91,7 @@ const back = blogPath(locale);
                     .map((author) => (
                       <img
                         alt=""
-                        class="size-8 rounded-full border-2 border-white object-cover"
+                        class="size-8 rounded-full border-2 border-white object-cover night:brightness-90"
                         height="32"
                         loading="lazy"
                         referrerpolicy="no-referrer"
@@ -110,7 +125,7 @@ const back = blogPath(locale);
           <Container size="tighter">
             <img
               alt={post.cover.alt}
-              class="aspect-3/2 w-full object-cover"
+              class="aspect-3/2 w-full object-cover night:brightness-90"
               decoding="async"
               fetchpriority="high"
               height={post.cover.height}
@@ -123,11 +138,14 @@ const back = blogPath(locale);
         )}
 
         <Container size="tighter">
-          <div class="article mx-auto w-full max-w-3xl" set:html={post.html} />
+          <div
+            class="article mx-auto w-full max-w-3xl reader:max-w-2xl"
+            set:html={post.html}
+          />
         </Container>
 
         <Container class="gap-8" size="tighter">
-          <div class="mx-auto flex w-full max-w-3xl flex-col gap-6 border-t border-dark pt-8">
+          <div class="mx-auto flex w-full max-w-3xl flex-col gap-6 border-t border-current pt-8 reader:max-w-2xl">
             {post.topics.length > 0 && (
               <ul class="flex flex-wrap gap-2.5">
                 {post.topics.map((topic) => (
@@ -184,12 +202,27 @@ const back = blogPath(locale);
 <style>
   @reference "../styles/global.css";
 
-  /* The post's HTML comes from the indexer, so it's styled by tag. */
+  /* A reading theme recolours the post through the palette it already uses. */
+  :global(html[data-reader]) article {
+    --color-mountain-mist-200: var(--reader-rule);
+    --color-mountain-mist-500: var(--reader-muted);
+    --color-mountain-mist-700: var(--reader-muted);
+    --color-bridal-50: var(--reader-tint);
+    --color-bridal-700: var(--reader-accent);
+    --color-white: var(--reader-paper);
+    color: var(--reader-ink);
+  }
+
+  /* The post's HTML comes from the indexer, so it's styled by tag. Reading
+     themes set it in Literata, a little looser and narrower, like a book. */
   .article {
-    @apply text-lg leading-[1.7];
+    @apply text-lg leading-[1.7] reader:font-serif reader:leading-[1.75] reader:text-pretty reader:hyphens-auto sm:reader:text-[1.1875rem];
 
     & :global(> * + *) {
       @apply mt-6;
+    }
+    & :global(:is(h2, h3, h4, h5, h6)) {
+      @apply font-sans;
     }
     & :global(h2) {
       @apply mt-14 text-[28px] leading-[36px] font-medium sm:text-[32px] sm:leading-[40px];
@@ -213,19 +246,19 @@ const back = blogPath(locale);
       @apply list-decimal;
     }
     & :global(blockquote) {
-      @apply border-l-4 border-primary-400 pl-5 text-mountain-mist-700;
+      @apply border-l-4 border-primary-400 pl-5 text-mountain-mist-700 reader:italic;
     }
     & :global(:not(pre) > code) {
       @apply bg-bridal-50 px-1.5 py-0.5 text-base;
     }
     & :global(pre) {
-      @apply overflow-x-auto bg-dark p-5 text-base leading-normal text-white;
+      @apply overflow-x-auto bg-dark p-5 text-base leading-normal text-white reader:bg-bridal-50 reader:text-current;
     }
     & :global(figure) {
       @apply my-10 flex flex-col gap-3;
     }
     & :global(img) {
-      @apply h-auto w-full;
+      @apply h-auto w-full night:brightness-90;
     }
     & :global(figcaption) {
       @apply text-sm text-mountain-mist-500;

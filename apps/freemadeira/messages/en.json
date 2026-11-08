@@ -175,5 +175,10 @@
   "blog_all_posts": "All posts",
   "blog_by": "By {names}",
   "blog_read_translation": "Read in Portuguese",
-  "blog_not_found": "This post doesn't exist, or it's no longer published."
+  "blog_not_found": "This post doesn't exist, or it's no longer published.",
+  "blog_reader_open": "Reading mode",
+  "blog_reader_theme": "Reading theme",
+  "blog_reader_default": "Default",
+  "blog_reader_paper": "Paper",
+  "blog_reader_night": "Night"
 }
