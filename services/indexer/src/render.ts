@@ -1,11 +1,16 @@
 import type { PostImage } from "@freemadeira/db";
 import { Lexer, Marked } from "marked";
-import type { Token, TokenizerExtension } from "marked";
+import type {
+  Token,
+  TokenizerAndRendererExtension,
+  TokenizerExtension,
+} from "marked";
 import sanitizeHtml from "sanitize-html";
 
 // freehub's Markdown, so a post reads on the site as it did in the editor:
 // GFM, a single newline breaks the line, and raw HTML stays text, as written.
-// The two extensions are copied from freehub's markdown-editor/content.ts.
+// These two extensions are copied from freehub's markdown-editor/content.ts,
+// and the pull quotes and highlights below from its markdown-editor/article.ts.
 const htmlBlockAsText: TokenizerExtension = {
   level: "block",
   name: "htmlBlockAsText",
@@ -26,6 +31,77 @@ const htmlTagAsText: TokenizerExtension = {
   tokenizer(src) {
     const tag = Lexer.rules.inline.gfm.tag.exec(src)?.[0];
     return tag ? { raw: tag, text: tag, type: "text" } : undefined;
+  },
+};
+
+// "> [!PULLQUOTE]" on a line of its own, then the quote's lines, each after a ">".
+const PULL_QUOTE =
+  /^ {0,3}> ?\[!pullquote\][ \t]*(?:\n|$)(?<lines>(?: {0,3}>[^\n]*(?:\n|$))*)/iu;
+const PULL_QUOTE_START = /^ {0,3}> ?\[!pullquote\][ \t]*$/imu;
+const QUOTE_MARK = /^ {0,3}> ?/u;
+const EDGE_LINES = /^\n+|\n+$/gu;
+
+/**
+ * A sentence of the post set apart and enlarged: a line of text, written as
+ * a quote marked the way GitHub marks its alerts.
+ */
+const pullQuote: TokenizerAndRendererExtension = {
+  level: "block",
+  name: "pullQuote",
+  renderer(token) {
+    const html = this.parser.parseInline(token.tokens ?? []);
+    // An empty one, left in the editor, shows nothing.
+    return html.trim()
+      ? `<blockquote class="pull-quote"><p>${html}</p></blockquote>\n`
+      : "";
+  },
+  start: (src) => src.search(PULL_QUOTE_START),
+  tokenizer(src) {
+    const match = PULL_QUOTE.exec(src);
+    if (!match) {
+      return;
+    }
+    const text = (match.groups?.lines ?? "")
+      .split("\n")
+      .map((line) => line.replace(QUOTE_MARK, ""))
+      .join("\n")
+      .replaceAll(EDGE_LINES, "");
+    return {
+      raw: match[0],
+      text,
+      tokens: this.lexer.inlineTokens(text),
+      type: "pullQuote",
+    };
+  },
+};
+
+// "==" around text that starts and ends with a character other than a space,
+// as "**" and "~~" do, so "a == b" stays as written. An escaped "\=" in it is
+// text, even beside the marks. freehub escapes any "=" in text that could
+// read as a mark.
+const MARKED =
+  /^==(?![\s=])(?<text>(?:\\.|[^\\=]|=(?!=))*?(?:\\.|[^\s\\=]))==(?!=)/u;
+
+/** Text marked as with a highlighter pen, written `==text==`. */
+const highlight: TokenizerAndRendererExtension = {
+  level: "inline",
+  name: "highlight",
+  renderer(token) {
+    return `<mark>${this.parser.parseInline(token.tokens ?? [])}</mark>`;
+  },
+  start: (src) => src.indexOf("=="),
+  tokenizer(src) {
+    const match = MARKED.exec(src);
+    const text = match?.groups?.text;
+    if (!(match && text)) {
+      return;
+    }
+    return {
+      raw: match[0],
+      text,
+      tokens: this.lexer.inlineTokens(text),
+      type: "highlight",
+    };
   },
 };
 
@@ -82,7 +158,7 @@ function onlyImage(tokens: Token[]): Token | undefined {
 function parser(images: Map<string, PostImage>): Marked {
   return new Marked({
     breaks: true,
-    extensions: [htmlBlockAsText, htmlTagAsText],
+    extensions: [htmlBlockAsText, htmlTagAsText, pullQuote, highlight],
     gfm: true,
     renderer: {
       // The post's title is the page's only h1.
@@ -128,6 +204,7 @@ const allowed: sanitizeHtml.IOptions = {
     td: ["align"],
     th: ["align"],
   },
+  allowedClasses: { blockquote: ["pull-quote"] },
   allowedSchemes: ["http", "https", "mailto"],
   allowedTags: [
     "a",
@@ -146,6 +223,7 @@ const allowed: sanitizeHtml.IOptions = {
     "hr",
     "img",
     "li",
+    "mark",
     "ol",
     "p",
     "pre",
@@ -182,7 +260,8 @@ export function renderArticle(
 export function readingMinutes(markdown: string): number {
   const words = markdown
     .replaceAll(/!\[[^\]]*\]\([^)]*\)/gu, " ")
-    .replaceAll(/[#>*_`~|[\]()-]/gu, " ")
+    .replaceAll(/\[!pullquote\]/giu, " ")
+    .replaceAll(/[#>*_`~|[\]()=-]/gu, " ")
     .split(/\s+/u)
     .filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));

@@ -74,11 +74,83 @@ describe("renderArticle", () => {
     assert.match(html, /<blockquote>/u);
     assert.match(html, /<pre><code class="language-js">/u);
   });
+
+  it("makes a quote marked [!PULLQUOTE] a pull quote", () => {
+    assert.equal(
+      renderArticle(
+        "Before.\n\n> [!PULLQUOTE]\n> The money does **both** jobs.  \n> At once.\n\nAfter.",
+        none
+      ),
+      '<p>Before.</p>\n<blockquote class="pull-quote"><p>The money does <strong>both</strong> jobs.<br />At once.</p></blockquote>\n<p>After.</p>\n'
+    );
+  });
+
+  it("reads the pull quote marker in any case, right after a line", () => {
+    assert.match(
+      renderArticle("Line\n> [!pullquote]\n> Loud.", none),
+      /^<p>Line<\/p>\n<blockquote class="pull-quote"><p>Loud\.<\/p>/u
+    );
+  });
+
+  it("leaves other quotes and alerts as quotes", () => {
+    assert.equal(
+      renderArticle("> [!NOTE]\n> A note.", none),
+      "<blockquote>\n<p>[!NOTE]<br />A note.</p>\n</blockquote>\n"
+    );
+  });
+
+  it("shows nothing for an empty pull quote", () => {
+    assert.equal(
+      renderArticle("> [!PULLQUOTE]\n\nText", none),
+      "<p>Text</p>\n"
+    );
+  });
+
+  it("marks ==text== as highlighted", () => {
+    assert.equal(
+      renderArticle("The sats ==stay **inside**== the loop.", none),
+      "<p>The sats <mark>stay <strong>inside</strong></mark> the loop.</p>\n"
+    );
+  });
+
+  it("needs text right inside the marks, as bold does", () => {
+    for (const markdown of ["a == b == c", "== a ==", "===a===", "a ==b"]) {
+      assert.doesNotMatch(renderArticle(markdown, none), /<mark>/u);
+    }
+    assert.match(renderArticle("==E=mc2==", none), /<mark>E=mc2<\/mark>/u);
+  });
+
+  it("reads an escaped = as text, inside a highlight or out", () => {
+    assert.equal(
+      renderArticle("==a\\===, ==\\=b==, ==c== \\=d, x\\=\\=y\\=\\=z", none),
+      "<p><mark>a=</mark>, <mark>=b</mark>, <mark>c</mark> =d, x==y==z</p>\n"
+    );
+  });
+
+  it("keeps a pull quote's spaces, as freehub does", () => {
+    assert.match(
+      renderArticle("> [!PULLQUOTE]\n>  spaced", none),
+      /<p> spaced<\/p>/u
+    );
+  });
+
+  it("keeps classes off everything else", () => {
+    const html = renderArticle("```pull-quote\nx\n```\n\n> said", none);
+    assert.doesNotMatch(html, /<blockquote class/u);
+  });
 });
 
 describe("readingMinutes", () => {
   it("is at least one", () => {
     assert.equal(readingMinutes("short"), 1);
     assert.equal(readingMinutes("word ".repeat(1000)), 5);
+  });
+
+  it("counts the words of pull quotes and highlights, not their marks", () => {
+    assert.equal(
+      readingMinutes(`> [!PULLQUOTE]\n> ${"==word== ".repeat(200)}`),
+      1
+    );
+    assert.equal(readingMinutes(`> [!PULLQUOTE]\n> ${"word ".repeat(300)}`), 2);
   });
 });

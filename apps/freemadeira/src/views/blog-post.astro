@@ -212,8 +212,28 @@ const back = blogPath(locale);
     & :global(ol) {
       @apply list-decimal;
     }
-    & :global(blockquote) {
+    & :global(blockquote:not(.pull-quote)) {
       @apply border-l-4 border-primary-400 pl-5 text-mountain-mist-700;
+    }
+    /* A line set apart: bold capitals under a corner bracket, which keeps
+       to the column's edge so phones lose little width to it. */
+    & :global(.pull-quote) {
+      @apply relative my-10 pt-4 pl-9 text-lg leading-normal font-bold tracking-[0.02em] text-dark uppercase sm:my-14 sm:pt-5 sm:pl-16;
+    }
+    & :global(.pull-quote::before) {
+      @apply absolute top-0 left-0 size-6 border-t-4 border-l-4 border-primary-400 sm:size-10;
+      content: "";
+    }
+    /* Highlighted words: a highlighter's band over their lower part, carried
+       onto each line they wrap to. */
+    & :global(mark) {
+      @apply bg-transparent px-[0.1em] text-inherit;
+      background-image: linear-gradient(
+        transparent 40%,
+        var(--color-primary-400) 40%
+      );
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
     }
     & :global(:not(pre) > code) {
       @apply bg-bridal-50 px-1.5 py-0.5 text-base;
