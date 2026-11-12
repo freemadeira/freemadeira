@@ -32,7 +32,12 @@ Each language version of a post is a NIP-23 event. freehub's GUIDE.md and `src/l
 
 Only current members' versions count, as in freehub. So if the member who unpublished a post later leaves the project, the version before their unpublish shows again.
 
-Markdown follows freehub's editor: GFM, where a single newline is a line break and raw HTML stays as text. An image on its own line becomes a `<figure>`, with its Markdown title as the caption.
+Markdown follows freehub's editor: GFM, where a single newline is a line break and raw HTML stays as text. An image on its own line becomes a `<figure>`, with its Markdown title as the caption. Two additions make long posts easier to skim:
+
+- **Pull quote.** A quote whose first line is `[!PULLQUOTE]`, the way GitHub marks its alerts, becomes `<blockquote class="pull-quote"><p>…</p></blockquote>`. Other Markdown readers still show it as a quote.
+- **Highlight.** `==text==` becomes `<mark>text</mark>`. As with `**`, the text can't start or end with a space, so `a == b` stays as written. freehub writes a `=` that could read as part of the marks as `\=`, which stays text.
+
+Posts already indexed keep their HTML until they're published again, or until `rebuild`.
 
 ## Commands
 
