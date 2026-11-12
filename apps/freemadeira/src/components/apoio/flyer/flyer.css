@@ -100,8 +100,8 @@
     max-width: 100%;
   }
   /* The stage renders at true paper size (99/198/297mm wide, 210mm tall) so the
-     board-review experience matches the print. On narrow viewports we scale the
-     whole stage down to fit via --brochure-scale set below, preserving the
+     board-review experience matches the print. When the column is narrower we scale
+     the whole stage down to fit via --brochure-scale, preserving the
      trifold's unequal panel widths rather than reflowing them. */
   .brochure-viewport {
     width: 100%;
@@ -124,32 +124,8 @@
     transform-origin: top center;
     flex-shrink: 0;
   }
-  .brochure-stage--panels-1 {
-    width: 99mm;
-  }
-  .brochure-stage--panels-2 {
-    width: 198mm;
-  }
-  .brochure-stage--panels-3 {
-    width: 297mm;
-  }
-  /* Scale the stage so its widest form (297mm fully-open) fits the viewport with
-     a small side gutter. The viewport height collapses to match the scaled stage
-     via aspect-ratio on the viewport wrapper (set per panel count below). */
-  @media (max-width: 1120px) {
-    .brochure-viewport {
-      height: calc(210mm * var(--brochure-scale, 1));
-    }
-    .brochure-stage--panels-1 {
-      --brochure-scale: min(1, calc((100vw - 32px) / 99mm));
-    }
-    .brochure-stage--panels-2 {
-      --brochure-scale: min(1, calc((100vw - 32px) / 198mm));
-    }
-    .brochure-stage--panels-3 {
-      --brochure-scale: min(1, calc((100vw - 32px) / 297mm));
-    }
-  }
+  /* The stage is scaled to the width of its column by unfolding-brochure.tsx, which
+     also sets the viewport's height to the scaled stage's. */
   .brochure-panel {
     background: var(--paper);
     display: flex;
