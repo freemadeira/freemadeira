@@ -190,7 +190,6 @@
   "apoio_nav_flyer": "Folheto",
   "apoio_nav_glossary": "Glossário",
   "apoio_back": "← Início",
-  "apoio_prev_next": "Capítulos",
   "apoio_home_headline": "170+ negócios na Madeira já aceitam Bitcoin.",
   "apoio_home_sub": "Não vai ser o primeiro, mas pode ser o melhor. Aqui, os bitcoiners podem viver em Bitcoin. É um destino Bitcoin reconhecido, o seu negócio é a próxima paragem.",
   "apoio_home_start_button": "Comece em minutos",
@@ -225,5 +224,7 @@
   "apoio_footer_licence_pre": "Licença",
   "apoio_footer_licence_post": ": podes copiar, imprimir, traduzir e adaptar, desde que dês crédito e partilhes nas mesmas condições.",
   "apoio_footer_inspired": "Este guia foi inspirado no Bitcoin Coast — Guía de Bitcoin para Comerciantes, escrito por Evelyn Lemus (Berlín, El Salvador) e colocado no domínio público. Reescrevemo-lo de raiz para a realidade da Madeira.",
-  "apoio_footer_disclaimer": "Material educativo. Não é aconselhamento financeiro, fiscal nem jurídico: para contabilidade e impostos, fala sempre com o teu contabilista."
+  "apoio_footer_disclaimer": "Material educativo. Não é aconselhamento financeiro, fiscal nem jurídico: para contabilidade e impostos, fala sempre com o teu contabilista.",
+  "apoio_prev": "Capítulo anterior",
+  "apoio_next": "Capítulo seguinte"
 }
