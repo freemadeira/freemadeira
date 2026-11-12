@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useContent } from "./locale-context";
 import { BackCoverPanel } from "./panels/back-cover-panel";
@@ -30,10 +30,30 @@ const STEPS = [
   { key: "back", panels: [FastPathPanel, BackCoverPanel, CoverPanel] },
 ] as const;
 
+// The stage is drawn at true paper size: 210mm tall, and 99mm per open panel.
+const PX_PER_MM = 96 / 25.4;
+const STAGE_HEIGHT = 210 * PX_PER_MM;
+const PANEL_WIDTH = 99 * PX_PER_MM;
+
 export function UnfoldingBrochure() {
   const { brochureNextLabel, brochureOpenLabel, brochurePreviousLabel } =
     useContent();
   const [step, setStep] = useState(0);
+  const viewport = useRef<HTMLDivElement>(null);
+  const [available, setAvailable] = useState<number | null>(null);
+
+  // Shrink the stage to the column it sits in, never enlarge it.
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) {
+      return;
+    }
+    const observer = new ResizeObserver(([entry]) => {
+      setAvailable(entry?.contentRect.width ?? null);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
   const isFirst = step === 0;
   const isLast = step === STEPS.length - 1;
 
@@ -49,13 +69,28 @@ export function UnfoldingBrochure() {
   }
 
   const current = STEPS[step] ?? STEPS[0];
+  const stageWidth = PANEL_WIDTH * current.panels.length;
+  // Every step is scaled by the widest one's factor, so the paper keeps a
+  // steady size while it unfolds.
+  const widest = PANEL_WIDTH * 3;
+  const scale = available === null ? 1 : Math.min(1, available / widest);
 
   return (
     <div className="brochure">
-      <div className="brochure-viewport">
+      <div
+        className="brochure-viewport"
+        ref={viewport}
+        style={{ height: STAGE_HEIGHT * scale }}
+      >
         <div
           className={`brochure-stage brochure-stage--panels-${current.panels.length}`}
           key={current.key}
+          style={
+            {
+              "--brochure-scale": scale,
+              width: stageWidth,
+            } as React.CSSProperties
+          }
         >
           {current.panels.map((Panel) => (
             <div className="brochure-panel" key={Panel.name}>
