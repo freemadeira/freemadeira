@@ -1,0 +1,92 @@
+---
+import { Image } from "astro:assets";
+
+import type { Block as BlockData } from "@/data/apoio/types";
+
+import { Chooser, Inflation, Taps, Timeline, Triage } from "./widgets";
+
+interface Props {
+  block: BlockData;
+}
+
+const { block } = Astro.props;
+---
+
+{block.t === "p" && <p class="my-4">{block.x}</p>}
+{block.t === "h" && <h3 class="mt-8 mb-2 text-2xl font-semibold">{block.x}</h3>}
+{
+  block.t === "ul" && (
+    <ul class="my-4 list-disc space-y-2 pl-6">
+      {block.x.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  )
+}
+{
+  block.t === "ol" && (
+    <ol class="my-4 list-decimal space-y-2 pl-6">
+      {block.x.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ol>
+  )
+}
+{
+  block.t === "note" && (
+    <aside class="my-7 border-l-[5px] border-(--tier) bg-bridal-50 px-5 pt-3 pb-4">
+      <strong class="block">{block.title}</strong>
+      {block.x.map((paragraph) => (
+        <p class="mt-2">{paragraph}</p>
+      ))}
+    </aside>
+  )
+}
+{
+  block.t === "img" && (
+    <figure class="my-8">
+      <Image
+        alt={block.alt}
+        class="h-auto w-full"
+        sizes="(max-width: 672px) 100vw, 672px"
+        src={block.src}
+        width={1344}
+        widths={[672, 1344]}
+      />
+      {block.caption && (
+        <figcaption class="mt-2 text-sm text-mountain-mist-500">
+          {block.caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}
+{block.t === "widget" && block.id === "inflation" && <Inflation client:visible />}
+{block.t === "widget" && block.id === "timeline" && <Timeline client:visible />}
+{block.t === "widget" && block.id === "chooser" && <Chooser client:visible />}
+{block.t === "widget" && block.id === "taps" && <Taps client:visible />}
+{block.t === "widget" && block.id === "triage" && <Triage client:visible />}
+{
+  block.t === "table" && (
+    <div class="my-6 overflow-x-auto">
+      <table class="w-full border-collapse text-left text-[0.95rem]">
+        <thead>
+          <tr class="border-b-2 border-dark">
+            {block.head.map((cell) => (
+              <th class="p-2 pr-4">{cell}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {block.rows.map((row) => (
+            <tr class="border-b border-mountain-mist-200">
+              {row.map((cell) => (
+                <td class="p-2 pr-4 align-top">{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

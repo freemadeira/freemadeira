@@ -1,0 +1,58 @@
+---
+import Blocks from "@/components/apoio/blocks.astro";
+import Contact from "@/components/apoio/contact.astro";
+import PageHead from "@/components/apoio/page-head.astro";
+import { tierVars } from "@/components/apoio/tiers";
+import { CHAPTERS } from "@/data/apoio";
+import type { Page } from "@/data/apoio/types";
+import { apoioPagePaths } from "@/i18n/routes";
+import Layout from "@/layouts/apoio-layout.astro";
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+const index = page.num ? CHAPTERS.findIndex((c) => c.slug === page.slug) : -1;
+const prev = index > 0 ? CHAPTERS[index - 1] : undefined;
+const next =
+  index >= 0 && index < CHAPTERS.length - 1 ? CHAPTERS[index + 1] : undefined;
+const paths = apoioPagePaths(page.slug);
+---
+
+<Layout
+  alternates={{ pt: paths.pt }}
+  description={page.lead}
+  paths={paths}
+  title={page.title}
+>
+  <article class={tierVars[page.tier]}>
+    <PageHead lead={page.lead} num={page.num} tier={page.tier} title={page.title} />
+    <div class="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8">
+      <div class="max-w-2xl text-[1.0625rem] leading-[1.7]">
+        <Blocks blocks={page.blocks} collapse={page.collapseSections} />
+        {
+          (prev || next) && (
+            <nav class="my-10 flex flex-wrap justify-between gap-x-6 gap-y-2 font-semibold print:hidden">
+              {prev ? (
+                <a class="underline underline-offset-4" href={`/apoio/${prev.slug}`}>
+                  ← {prev.title}
+                </a>
+              ) : (
+                <span />
+              )}
+              {next ? (
+                <a class="underline underline-offset-4" href={`/apoio/${next.slug}`}>
+                  {next.title} →
+                </a>
+              ) : (
+                <span />
+              )}
+            </nav>
+          )
+        }
+      </div>
+      <Contact />
+    </div>
+  </article>
+</Layout>
