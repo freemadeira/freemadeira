@@ -5,7 +5,13 @@
 @theme inline {
   --font-sans:
     "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Blog posts' reading themes; reader-toggle.astro loads it. */
+  --font-serif: "Literata Variable", ui-serif, Georgia, serif;
 }
+
+/* A blog post's reading themes, which its reader toggle sets on <html>. */
+@custom-variant reader (&:where([data-reader] *));
+@custom-variant night (&:where([data-reader="night"] *));
 
 /* FREE Madeira's palette: Supernova yellow, Bridal Heath and Mountain Mist. */
 @theme {
