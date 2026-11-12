@@ -1,0 +1,56 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+import { Image } from "astro:assets";
+
+import whatsappQr from "@/assets/images/apoio/whatsapp-support-qr.svg";
+import { MERCHANT_EMAIL, WHATSAPP_SUPPORT_URL } from "@/data/apoio/contact";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+import AtlantisCta from "./atlantis-cta.astro";
+
+const t = { locale: toLocale(Astro.currentLocale) };
+---
+
+<AtlantisCta />
+<section
+  aria-labelledby="apoio-contact"
+  class="mt-6 border-t border-mountain-mist-200 pt-8"
+>
+  <h2 class={heading.h5} id="apoio-contact">{m.apoio_contact_title({}, t)}</h2>
+  <p class="my-3 max-w-2xl">{m.apoio_contact_text({}, t)}</p>
+  <div class="flex flex-wrap items-center gap-4">
+    <a
+      href={WHATSAPP_SUPPORT_URL}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <Image
+        alt={m.apoio_contact_qr_alt({}, t)}
+        class="rounded bg-white p-1.5"
+        height={120}
+        src={whatsappQr}
+        width={120}
+      />
+    </a>
+    <div>
+      <p>
+        <a
+          class="underline underline-offset-4"
+          href={WHATSAPP_SUPPORT_URL}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {m.apoio_contact_whatsapp({}, t)}
+        </a>
+        <br />
+        {m.apoio_contact_whatsapp_text({}, t)}
+      </p>
+      <p class="mt-2">
+        <a class="underline underline-offset-4" href={`mailto:${MERCHANT_EMAIL}`}>
+          {MERCHANT_EMAIL}
+        </a>
+      </p>
+    </div>
+  </div>
+</section>

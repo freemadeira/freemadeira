@@ -1,0 +1,50 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { routes } from "@/i18n/routes";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+import { tierVars } from "./tiers";
+import type { Tier } from "./tiers";
+
+interface Props {
+  lead?: string;
+  num?: number;
+  tier: Tier;
+  title: string;
+}
+
+const { lead, num, tier, title } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+---
+
+<div
+  class:list={[
+    tierVars[tier],
+    "bg-(--tier) text-(--tier-ink) print:hidden",
+  ]}
+>
+  <div
+    class="relative mx-auto w-full max-w-5xl overflow-hidden px-4 pt-6 pb-12 sm:px-8 sm:pb-16"
+  >
+    <a
+      class="text-[0.95rem] font-semibold underline underline-offset-4"
+      href={routes.apoio[locale]}
+    >
+      {m.apoio_back({}, { locale })}
+    </a>
+    {
+      num !== undefined && (
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute -top-1 right-3 text-[clamp(5rem,22vw,11rem)] leading-[0.8] font-extrabold opacity-20 select-none"
+        >
+          {num}
+        </span>
+      )
+    }
+    <h1 class:list={[heading.h4, "mt-8 max-w-[20ch] font-medium"]}>{title}</h1>
+    {lead && <p class="mt-4 max-w-xl text-xl opacity-90">{lead}</p>}
+  </div>
+</div>

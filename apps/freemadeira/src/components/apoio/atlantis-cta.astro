@@ -1,0 +1,35 @@
+---
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { toLocale } from "@freemadeira/i18n";
+
+import { MERCHANT_EMAIL } from "@/data/apoio/contact";
+import { routes } from "@/i18n/routes";
+import { heading } from "@/lib/typography";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const subject = encodeURIComponent(m.apoio_atlantis_email_subject({}, t));
+---
+
+<section
+  aria-labelledby="apoio-atlantis"
+  class="my-14 bg-bridal-700 px-6 py-8 text-white sm:px-10 sm:py-10 print:hidden"
+>
+  <h2 class={heading.h5} id="apoio-atlantis">{m.apoio_atlantis_title({}, t)}</h2>
+  <p class="my-4 max-w-xl">{m.apoio_atlantis_text({}, t)}</p>
+  <div class="flex flex-wrap gap-3">
+    <a
+      class={buttonVariants({ variant: "fm" })}
+      href={`mailto:${MERCHANT_EMAIL}?subject=${subject}`}
+    >
+      {m.apoio_atlantis_button({}, t)}
+    </a>
+    <a
+      class={buttonVariants({ variant: "fm-outline-light" })}
+      href={routes.partnerships[locale]}
+    >
+      {m.apoio_atlantis_partnerships({}, t)}
+    </a>
+  </div>
+</section>

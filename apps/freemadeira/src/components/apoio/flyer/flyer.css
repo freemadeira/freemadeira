@@ -1,0 +1,674 @@
+/* Scoped port of the merchant-guide flyer viewer (madfree/merchant-support/merchant-guide/nsite).
+   Everything lives under .apoio-flyer so it cannot touch the rest of the site. */
+.apoio-flyer {
+  --paper: #f7f3ec;
+  --ink: #1a1a18;
+  --ink-soft: #3a3733;
+  --gold: #c7962e;
+  --gold-deep: #9c7220;
+  --terracotta: #7a2e2e;
+  --olive: #3d5245;
+  --rule: #d9d0bc;
+  --page-bg: #eae4d6;
+  --callout-bg: #f1e7ce;
+  /* FREE brandmark sun, and the orange of the on-chain plane/ship diagram */
+  --free-yellow: #ffcb05;
+  --btc-orange: #f7931a;
+  /* the "170+" gold on the cover, reused for the step discs and middle tier */
+  --cover-gold: #e0a419;
+  font-family: var(--font-sans), sans-serif;
+  color: var(--ink);
+
+  * {
+    box-sizing: border-box;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif), serif;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .viewer {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .language-switcher {
+    display: flex;
+    gap: 6px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  .language-switcher-btn {
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--paper);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 6px 16px;
+    cursor: pointer;
+  }
+  .language-switcher-btn:hover {
+    border-color: var(--gold-deep);
+    color: var(--ink);
+  }
+  .language-switcher-btn--active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  @media print {
+    .language-switcher {
+      display: none;
+    }
+  }
+
+  .viewer-note {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 700px;
+    line-height: 1.5;
+  }
+  .viewer-note code {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.72rem;
+  }
+
+  /* ---------- Unfolding brochure (screen-only, board-review experience) ---------- */
+  .brochure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+  }
+  /* The stage renders at true paper size (99/198/297mm wide, 210mm tall) so the
+     board-review experience matches the print. On narrow viewports we scale the
+     whole stage down to fit via --brochure-scale set below, preserving the
+     trifold's unequal panel widths rather than reflowing them. */
+  .brochure-viewport {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .brochure-stage {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 2px;
+    background: var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    height: 210mm;
+    animation: apoio-brochure-reveal 0.4s ease;
+    transform: scale(var(--brochure-scale, 1));
+    transform-origin: top center;
+    flex-shrink: 0;
+  }
+  .brochure-stage--panels-1 {
+    width: 99mm;
+  }
+  .brochure-stage--panels-2 {
+    width: 198mm;
+  }
+  .brochure-stage--panels-3 {
+    width: 297mm;
+  }
+  /* Scale the stage so its widest form (297mm fully-open) fits the viewport with
+     a small side gutter. The viewport height collapses to match the scaled stage
+     via aspect-ratio on the viewport wrapper (set per panel count below). */
+  @media (max-width: 1120px) {
+    .brochure-viewport {
+      height: calc(210mm * var(--brochure-scale, 1));
+    }
+    .brochure-stage--panels-1 {
+      --brochure-scale: min(1, calc((100vw - 32px) / 99mm));
+    }
+    .brochure-stage--panels-2 {
+      --brochure-scale: min(1, calc((100vw - 32px) / 198mm));
+    }
+    .brochure-stage--panels-3 {
+      --brochure-scale: min(1, calc((100vw - 32px) / 297mm));
+    }
+  }
+  .brochure-panel {
+    background: var(--paper);
+    display: flex;
+    min-width: 0;
+  }
+  .brochure-panel .panel {
+    width: 100%;
+  }
+  .brochure-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .brochure-btn {
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 999px;
+    padding: 8px 18px;
+    cursor: pointer;
+  }
+  .brochure-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .brochure-btn:not(:disabled):hover {
+    background: var(--gold-deep);
+  }
+  .brochure-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .brochure-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--rule);
+  }
+  .brochure-dot--active {
+    background: var(--gold-deep);
+  }
+  @media print {
+    .brochure {
+      display: none;
+    }
+  }
+
+  /* ---------- Sheets ---------- */
+  .sheet {
+    /* Screen shows only the unfolding preview; the print sheets render for printing only. */
+    display: none;
+    width: 297mm;
+    height: 210mm;
+    background: var(--paper);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    position: relative;
+  }
+  .sheet--outside {
+    grid-template-columns: 30.6% 34.7% 34.7%;
+    background-image: url("/apoio/flyer/outside-sheet-bg.webp");
+    background-size: cover;
+    background-position: center;
+  }
+  /* Cream wash is one layer across the whole sheet, not per panel: three adjacent
+     semi-transparent panels leave hairline seams at the folds in print.
+     Lighter over the bright sky so the sunset shows, heavier over the dark hills
+     below where body text needs the contrast. */
+  .sheet--inside {
+    grid-template-columns: 34.7% 34.7% 30.6%;
+    background-image:
+      linear-gradient(
+        to bottom,
+        rgba(247, 243, 236, 0.62) 0%,
+        rgba(247, 243, 236, 0.66) 45%,
+        rgba(247, 243, 236, 0.88) 68%,
+        rgba(247, 243, 236, 0.92) 100%
+      ),
+      url("/apoio/flyer/outside-sheet-bg.webp");
+    background-size: cover;
+    background-position: center;
+  }
+  .sheet--inside .panel-inside {
+    background: none;
+  }
+  @media screen and (max-width: 1000px) {
+    .sheet {
+      width: 100%;
+      height: auto;
+      grid-template-columns: 1fr !important;
+    }
+    .panel {
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.22);
+    }
+  }
+
+  /* ---------- Shared panel bits ---------- */
+  .panel {
+    padding: 12mm 10mm;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .panel-inside {
+    background: rgba(247, 243, 236, 0.85);
+  }
+
+  .masthead-org {
+    font-family: var(--font-serif), serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .masthead-org--inverse {
+    color: var(--paper);
+    opacity: 0.85;
+  }
+  .panel-heading {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  h2.panel-heading {
+    font-size: 1.25rem;
+    font-family: var(--font-serif), serif;
+    font-weight: 600;
+    padding-bottom: 10px;
+  }
+
+  .compact {
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0;
+    padding-left: 0;
+  }
+  ul.compact {
+    padding-left: 16px;
+  }
+  ul.compact li {
+    margin-bottom: 5px;
+  }
+
+  /* ---------- Cover panel ---------- */
+  .panel-cover {
+    background-color: var(--ink);
+    background-size: cover;
+    background-position: right;
+    background-repeat: no-repeat;
+    color: var(--paper);
+    justify-content: space-between;
+  }
+  .cover-logo {
+    display: block;
+    width: 140px;
+    height: auto;
+    margin: 8px auto 0;
+  }
+  .cover-main {
+    margin-top: 16px;
+  }
+  .hero-number {
+    font-family: var(--font-serif), serif;
+    font-weight: 600;
+    font-size: 4.4rem;
+    line-height: 0.85;
+    color: #e0a419;
+    margin: -60px 0 6px 0;
+  }
+  .panel-cover h1 {
+    font-size: 1.5rem;
+    line-height: 1.18;
+    max-width: 15ch;
+    margin-top: -4px;
+  }
+  .cover-sub {
+    font-size: 0.8rem;
+    color: #d8d2c2;
+    margin-top: 70px;
+    max-width: 26ch;
+    line-height: 1.5;
+  }
+  .cover-footnote {
+    font-size: 0.72rem;
+    color: #c9c2b2;
+    border-top: 1px solid #3a372f;
+    padding-top: 10px;
+    text-align: right;
+  }
+
+  /* ---------- Back cover panel ---------- */
+  .panel-back {
+    background: var(--paper);
+    justify-content: space-between;
+  }
+  .back-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  /* ~34mm printed: comfortably scannable from arm's length on a counter */
+  .qr-box {
+    display: block;
+    width: 128px;
+    height: 128px;
+    margin-bottom: 12px;
+  }
+  .qr-box img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .back-qr-label {
+    font-family: var(--font-serif), serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin: 0 0 4px 0;
+  }
+  .back-qr-body {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 26ch;
+    margin: 0;
+  }
+  /* Secondary QR to apoio.freemadeira.org: ~18mm printed. Short URL keeps it a
+     version-3 code (29 modules + quiet zone), ~0.55mm/module, still easy to scan. */
+  .more-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .more-info-qr {
+    display: block;
+    width: 68px;
+    height: 68px;
+    flex-shrink: 0;
+  }
+  .more-info-qr img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .more-info p {
+    margin: 0;
+    font-size: 0.74rem;
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+  .more-info-label {
+    display: block;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .more-info-email {
+    display: block;
+    margin-top: 2px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .faq-item {
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+  .faq-item dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq-item dd {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .non-profit-note {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    border-top: 1px solid var(--rule);
+    padding-top: 10px;
+    margin-top: 12px;
+  }
+
+  /* ---------- Flap panel ---------- */
+  .panel-flap {
+    background-color: var(--paper);
+    background-size: cover;
+    background-position: center;
+  }
+  .reason {
+    position: relative;
+    padding-left: 14px;
+    margin-top: 12px;
+  }
+  .reason:first-of-type {
+    margin-top: 0;
+  }
+  .reason h4 {
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+  .reason h4::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.44em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+  .reason p {
+    font-size: 0.78rem;
+    line-height: 1.48;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .reason p + p {
+    margin-top: 4px;
+  }
+  .circular-economy-diagram {
+    display: block;
+    width: 220px;
+    height: auto;
+    margin: 14px auto 0;
+  }
+
+  /* ---------- Inside content panels ---------- */
+  .inside-head {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .inside-sub {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin: 0 0 16px 0;
+    text-align: center;
+  }
+  /* Steps: yellow discs with the same heavy black outline as the diagrams,
+     threaded on one line because it's a real sequence. */
+  .steps {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .steps::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 13px;
+    bottom: 13px;
+    border-left: 2px solid var(--ink);
+  }
+  .step {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .step-n {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--cover-gold);
+    border: 2px solid var(--ink);
+    font-family: var(--font-serif), serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .step p {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .callout p {
+    margin: 0;
+  }
+  .callout p + p {
+    margin-top: 6px;
+  }
+  .callout {
+    padding: 10px 0;
+    font-size: 0.76rem;
+    line-height: 1.48;
+    color: var(--ink-soft);
+  }
+  .amounts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  /* Tiers as a centred ladder: each rung wider and warmer as the amount (and the
+     security it calls for) goes up — brand yellow, cover gold, bitcoin orange. */
+  .amount {
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    line-height: 1.35;
+    color: var(--ink);
+    text-align: center;
+  }
+  .amount:nth-child(1) {
+    width: 78%;
+    background: var(--free-yellow);
+  }
+  .amount:nth-child(2) {
+    width: 89%;
+    background: var(--cover-gold);
+  }
+  .amount:nth-child(3) {
+    width: 100%;
+    background: var(--btc-orange);
+  }
+  .amount b {
+    font-family: var(--font-serif), serif;
+    font-size: 0.8rem;
+    margin-right: 4px;
+  }
+  .section {
+    margin-bottom: 18px;
+  }
+  .bitcoin-is-cash-diagram {
+    width: 100%;
+    max-height: 180px;
+    object-fit: contain;
+    padding: 10px 0;
+    margin-bottom: 16px;
+  }
+  .lightning-vs-onchain-diagram {
+    width: 100%;
+    max-height: 170px;
+    object-fit: contain;
+    padding: 33px 0 29px;
+  }
+
+  /* Sponsor lockup at the foot of the flap panel. margin-top:auto anchors it to
+     the bottom regardless of how much flex-column content sits above. Sits
+     inside the panel's 10mm side padding (not full-bleed). */
+  .sponsor {
+    margin-top: auto;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .sponsor-label {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  .sponsor-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---------- Print ---------- */
+  @media print {
+    * {
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+    .viewer {
+      padding: 0;
+      gap: 0;
+    }
+    .viewer-note {
+      display: none;
+    }
+    .sheet {
+      display: grid;
+      box-shadow: none;
+      page-break-after: always;
+      width: 297mm;
+      height: 210mm;
+    }
+  }
+}
+
+@keyframes apoio-brochure-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Print button, shown under the preview controls; never printed. */
+.apoio-flyer .flyer-print {
+  background: var(--gold-deep);
+  font-weight: 600;
+  padding: 10px 28px;
+}
+@media print {
+  .apoio-flyer .flyer-print {
+    display: none;
+  }
+}

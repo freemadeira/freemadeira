@@ -1,0 +1,15 @@
+---
+import { PAGES, findPage } from "@/data/apoio";
+import ApoioPage from "@/views/apoio-page.astro";
+
+export function getStaticPaths() {
+  return PAGES.map((page) => ({ params: { slug: page.slug } }));
+}
+
+const page = findPage(Astro.params.slug ?? "");
+if (!page) {
+  throw new Error(`No apoio page for ${Astro.params.slug}`);
+}
+---
+
+<ApoioPage page={page} />

@@ -1,0 +1,56 @@
+---
+import type { Block as BlockData } from "@/data/apoio/types";
+
+import Block from "./block.astro";
+
+interface Props {
+  blocks: BlockData[];
+  /** Group every "Caminho …" heading and what follows it into a section. */
+  collapse?: boolean;
+}
+
+const { blocks, collapse = false } = Astro.props;
+
+type Leaf = BlockData;
+interface Section { blocks: Leaf[]; open: boolean; title: string }
+type Item = Leaf | ({ t: "section" } & Section);
+
+// "Caminho …" headings start a collapsible section that runs to the next one.
+function group(list: Leaf[]): Item[] {
+  const out: Item[] = [];
+  let current: ({ t: "section" } & Section) | undefined;
+  for (const block of list) {
+    if (block.t === "h" && block.x.startsWith("Caminho ")) {
+      current = {
+        blocks: [],
+        open: block.x.startsWith("Caminho A"),
+        t: "section",
+        title: block.x,
+      };
+      out.push(current);
+    } else if (current) {
+      current.blocks.push(block);
+    } else {
+      out.push(block);
+    }
+  }
+  return out;
+}
+
+const items: Item[] = collapse ? group(blocks) : blocks;
+---
+
+{
+  items.map((item) =>
+    item.t === "section" ? (
+      <details class="my-3 border-y border-mountain-mist-200 px-1" open={item.open}>
+        <summary class="cursor-pointer py-3 text-lg font-bold">{item.title}</summary>
+        {item.blocks.map((block) => (
+          <Block block={block} />
+        ))}
+      </details>
+    ) : (
+      <Block block={item} />
+    )
+  )
+}
