@@ -5,46 +5,80 @@ import { routes } from "@/i18n/routes";
 import { heading } from "@/lib/typography";
 import { m } from "@/paraglide/messages.js";
 
+import { illustrationFor } from "./illustrations";
 import { tierVars } from "./tiers";
 import type { Tier } from "./tiers";
 
 interface Props {
+  /** Picks the illustration in the door. */
+  slug: string;
   lead?: string;
   num?: number;
   tier: Tier;
   title: string;
 }
 
-const { lead, num, tier, title } = Astro.props;
+const { lead, num, slug, tier, title } = Astro.props;
 const locale = toLocale(Astro.currentLocale);
+const Illustration = illustrationFor(slug);
 ---
 
-<div
+<header
   class:list={[
     tierVars[tier],
-    "bg-(--tier) text-(--tier-ink) print:hidden",
+    "border-b-[6px] border-(--tier) bg-bridal-50 print:hidden",
   ]}
 >
-  <div
-    class="relative mx-auto w-full max-w-5xl overflow-hidden px-4 pt-6 pb-12 sm:px-8 sm:pb-16"
-  >
+  <div class="mx-auto w-full max-w-5xl px-4 pt-6 sm:px-8">
     <a
       class="text-[0.95rem] font-semibold underline underline-offset-4"
       href={routes.apoio[locale]}
     >
       {m.apoio_back({}, { locale })}
     </a>
-    {
-      num !== undefined && (
-        <span
-          aria-hidden="true"
-          class="pointer-events-none absolute -top-1 right-3 text-[clamp(5rem,22vw,11rem)] leading-[0.8] font-extrabold opacity-20 select-none"
+    <div class="mt-6 grid items-end gap-x-10 sm:grid-cols-[1fr_auto]">
+      <div class="pb-8 sm:pb-14">
+        <h1 class:list={[heading.h3, "max-w-[16ch] font-medium"]}>{title}</h1>
+        {lead && <p class="mt-5 max-w-lg text-xl text-mountain-mist-600">{lead}</p>}
+      </div>
+      <div class="apoio-door relative mx-auto w-44 sm:mx-0 sm:w-60">
+        <div
+          class="relative aspect-3/4 overflow-hidden rounded-t-full border-[10px] border-b-0 border-(--tier) bg-white"
         >
-          {num}
-        </span>
-      )
-    }
-    <h1 class:list={[heading.h4, "mt-8 max-w-[20ch] font-medium"]}>{title}</h1>
-    {lead && <p class="mt-4 max-w-xl text-xl opacity-90">{lead}</p>}
+          <Illustration
+            aria-hidden="true"
+            class="absolute inset-x-0 bottom-0 mx-auto h-4/5 w-4/5 object-contain"
+          />
+        </div>
+        {
+          num !== undefined && (
+            <span
+              aria-label={`${num}`}
+              class="absolute top-6 -right-3 grid size-14 place-items-center rounded-full bg-(--tier) text-2xl font-bold text-(--tier-ink) shadow-sm ring-4 ring-bridal-50 sm:-right-5 sm:size-16 sm:text-3xl"
+            >
+              {num}
+            </span>
+          )
+        }
+      </div>
+    </div>
   </div>
-</div>
+</header>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .apoio-door {
+      animation: apoio-door-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+  }
+  @keyframes apoio-door-in {
+    from {
+      transform: translateY(1.75rem);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+</style>

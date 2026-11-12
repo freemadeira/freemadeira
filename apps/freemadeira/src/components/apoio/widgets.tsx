@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-const widget = "my-8 border-t-4 border-(--tier) bg-white p-5";
+const widget =
+  "relative left-1/2 my-12 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border-2 border-(--tier) bg-white p-6 sm:p-8";
 const answer = "my-3 border-l-4 border-(--tier) bg-bridal-50 px-3 py-2";
 const linkBtn = "px-1 py-2 text-bridal-700 underline";
 const choice = (on: boolean) =>
