@@ -1,12 +1,13 @@
 # FREE Madeira websites
 
-Monorepo for the websites of FREE Madeira, a Bitcoin education and adoption organisation in Madeira: [freemadeira.org](https://freemadeira.org) and [bitcoinatlantis.com](https://bitcoinatlantis.com).
+Monorepo for the websites of FREE Madeira, a Bitcoin education and adoption organisation in Madeira: [freemadeira.org](https://freemadeira.org), [bitcoinatlantis.com](https://bitcoinatlantis.com) and [apoio.freemadeira.org](https://apoio.freemadeira.org).
 
 ## Layout
 
 ```
 apps/freemadeira        freemadeira.org: Astro on Vercel
 apps/bitcoinatlantis    bitcoinatlantis.com: Astro on Vercel
+apps/apoio              apoio.freemadeira.org, the merchant guide: Astro on Vercel
 packages/ui             shadcn/ui on Base UI, Tailwind v4 tokens, shared by both sites
 packages/i18n           locales and the localized-path types every site uses
 packages/db             Drizzle schema, migrations and libSQL client for the read model
@@ -40,7 +41,7 @@ pnpm check        # oxlint and oxfmt, through ultracite
 pnpm fix          # the same, fixing what it can
 ```
 
-Dev ports: freemadeira 4321, bitcoinatlantis 4322, indexer 3000.
+Dev ports: freemadeira 4321, bitcoinatlantis 4322, apoio 4323, indexer 3000.
 
 There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm check`.
 
@@ -79,9 +80,15 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 - The site is the 2024 edition's archive until the 2028 lineup and programme come from freehub. Its content is static: speakers, satellite events, FAQs and the rest live in `src/data/`, and the photo gallery and videos stay on S3.
 - `/.well-known/nostr.json` is an on-demand endpoint, like freemadeira.org's.
 
+### apoio.freemadeira.org specifics
+
+- The merchant guide: how a business in Madeira starts taking Bitcoin. Every page is static. The chapters, FAQ and glossary are typed modules in `src/data/`, in Portuguese only, at the root (`/porque-aceitar`); their language link goes to the English home. Only the home and the flyer have English pages.
+- The header and footer are its own, not freemadeira.org's: the logo goes back to freemadeira.org and the guide's name to the guide's home.
+- The flyer (`/folheto`, `/en/flyer`) is the printed tri-fold's copy, in PT, EN, DE and FR, and prints as two A4 landscape sheets. Its stylesheet (`flyer.css`, under `.apoio-flyer`) and its full-resolution images in `src/assets/flyer/` follow the paper, not the site. The QR code on its back opens the site's root, so `/` must stay the Portuguese home.
+
 ## Deploying
 
-- Each app is its own Vercel project in the FREE Madeira team: the projects are named after their domains, `freemadeira.org` and `bitcoinatlantis.com`. Each has its root directory set to `apps/<name>`, the Astro framework preset, Node.js 24.x (`devEngines` refuses anything else) and `main` as its production branch.
+- Each app is its own Vercel project in the FREE Madeira team: the projects are named after their domains, `freemadeira.org`, `bitcoinatlantis.com` and `apoio.freemadeira.org`. Each has its root directory set to `apps/<name>`, the Astro framework preset, Node.js 24.x (`devEngines` refuses anything else) and `main` as its production branch.
 - Turn on "Skip deployments when there are no changes" in each project, and set Function Region to Frankfurt (`fra1`), next to the VPS.
-- Environment variables: freemadeira.org needs `MAILERLITE_TOKEN` and `SESSION_PASSWORD` for the newsletter, and `LIBSQL_URL`, a read-only `LIBSQL_AUTH_TOKEN` and `ISR_BYPASS_TOKEN` (at least 32 characters, the indexer's `REVALIDATE_TOKEN`) for the blog; bitcoinatlantis.com needs none.
+- Environment variables: freemadeira.org needs `MAILERLITE_TOKEN` and `SESSION_PASSWORD` for the newsletter, and `LIBSQL_URL`, a read-only `LIBSQL_AUTH_TOKEN` and `ISR_BYPASS_TOKEN` (at least 32 characters, the indexer's `REVALIDATE_TOKEN`) for the blog; bitcoinatlantis.com and apoio.freemadeira.org need none.
 - sqld and the indexer run on the VPS through Coolify. See `infra/README.md` for both, and `services/indexer/README.md` for the indexer and the post events it reads.
