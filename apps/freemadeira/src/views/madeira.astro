@@ -17,7 +17,7 @@ import Hero from "@/components/hero.astro";
 import SlideCarousel from "@/components/slide-carousel";
 import { recurringEvents } from "@/data/events";
 import { flights } from "@/data/flights";
-import { organisation } from "@/data/organisation";
+import { links, organisation } from "@/data/organisation";
 import { freeMadeiraNpub } from "@/data/socials";
 import { routes } from "@/i18n/routes";
 import Layout from "@/layouts/base-layout.astro";
@@ -94,7 +94,7 @@ const slides = [
 const community = [
   {
     button: m.madeira_telegram_button({}, t),
-    href: "https://t.me/freemadeira",
+    href: links.community,
     illustration: TelegramLady,
     illustrationClass:
       "-me-3 -mb-7 h-[180px] w-auto self-end sm:absolute sm:right-4 sm:bottom-0 sm:m-0 sm:h-[200px] xl:h-5/6",

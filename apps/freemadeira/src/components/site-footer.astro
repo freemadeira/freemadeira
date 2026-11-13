@@ -8,6 +8,8 @@ import Wordmark from "@/components/wordmark.astro";
 import { links, organisation } from "@/data/organisation";
 import { freeMadeiraSocials } from "@/data/socials";
 import { routes } from "@/i18n/routes";
+import { externalLinkProps } from "@/lib/links";
+import type { NavLink } from "@/lib/navigation";
 import { m } from "@/paraglide/messages.js";
 
 const locale = toLocale(Astro.currentLocale);
@@ -16,18 +18,62 @@ const year = new Date().toLocaleString("pt-PT", {
   timeZone: "Atlantic/Madeira",
   year: "numeric",
 });
-// Inline blocks, so each link's tap target is the full 28px line.
-const link = "inline-block decoration-1 underline-offset-7 hover:underline";
+// Padded inline blocks: each link's tap target is a 28px row, and a label that
+// wraps keeps its lines closer together than two links are.
+const row = "inline-block py-1 leading-5";
+const link = `${row} decoration-1 underline-offset-7 hover:underline`;
+
+const columns: { items: NavLink[]; label: string }[] = [
+  {
+    items: [
+      { href: routes.about[locale], label: m.footer_mission({}, t) },
+      { href: routes.team[locale], label: m.nav_team({}, t) },
+      { href: routes.madeira[locale], label: m.nav_madeira({}, t) },
+    ],
+    label: m.nav_about({}, t),
+  },
+  {
+    items: [
+      { href: routes.blog[locale], label: m.nav_blog({}, t) },
+      { href: routes.diplomaBitcoin[locale], label: m.diploma_title({}, t) },
+      { href: links.learn, label: m.footer_education_materials({}, t) },
+      { href: links.whitepaper, label: m.footer_whitepaper({}, t) },
+    ],
+    label: m.nav_learn({}, t),
+  },
+  {
+    items: [
+      { href: links.bitcoinAtlantis, label: m.nav_bitcoin_atlantis({}, t) },
+      { href: links.energySummit, label: m.footer_energy_summit({}, t) },
+      { href: links.meetups, label: m.footer_meetups({}, t) },
+    ],
+    label: m.footer_events({}, t),
+  },
+  {
+    items: [
+      { href: links.donate, label: m.footer_donations({}, t) },
+      { href: routes.partnerships[locale], label: m.nav_partnerships({}, t) },
+      { href: links.shop, label: m.nav_shop({}, t) },
+      { href: `mailto:${organisation.email}`, label: m.footer_contact({}, t) },
+      { href: links.community, label: m.footer_community({}, t) },
+    ],
+    label: m.footer_get_involved({}, t),
+  },
+];
 ---
 
 <footer class="bg-primary-400 fill-dark text-dark">
   <Container class="gap-12 py-16">
-    {/* One row from xl. Between md and xl the links take a row of their own
-        under the newsletter and the socials, or their columns get squashed. */}
+    {/* Phones stack the newsletter, the links and the socials. From md the
+        newsletter and the socials share a row above the links. From xl the
+        links take the left and the newsletter sits over the socials: four
+        columns of links leave no room for the two side by side. */}
     <div
-      class="flex flex-col items-start gap-12 md:flex-row md:flex-wrap md:justify-between md:gap-14 xl:flex-nowrap"
+      class="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_auto] md:gap-x-14 xl:gap-y-8"
     >
-      <div class="flex w-full flex-col gap-4 md:w-auto">
+      <div
+        class="flex flex-col gap-4 md:col-start-1 md:row-start-1 md:justify-self-start xl:col-start-2"
+      >
         <p class="text-lg">{m.footer_newsletter_title({}, t)}</p>
         <NewsletterForm
           client:visible
@@ -42,61 +88,33 @@ const link = "inline-block decoration-1 underline-offset-7 hover:underline";
         />
       </div>
 
-      <div
-        class="grid grow grid-cols-2 gap-8 text-sm leading-[200%] sm:grid-cols-4 md:order-last md:basis-full xl:order-none xl:basis-auto"
+      {/* Columns as wide as their longest link, so a label wraps only when
+          the row runs out of room. */}
+      <nav
+        aria-label={m.footer_label({}, t)}
+        class="grid grid-cols-2 gap-x-8 gap-y-10 text-sm md:col-span-2 md:col-start-1 md:row-start-2 lg:grid-cols-[repeat(4,auto)] lg:justify-start lg:gap-x-12 xl:col-span-1 xl:row-span-2 xl:row-start-1 2xl:gap-x-16"
       >
-        <ul class="flex flex-col">
-          <li>
-            <a class:list={[link, "font-bold"]} href={routes.about[locale]}>
-              {m.nav_about({}, t)}
-            </a>
-          </li>
-          <li>
-            <a class={link} href={routes.team[locale]}>{m.nav_team({}, t)}</a>
-          </li>
-          <li>
-            <a class={link} href={routes.partnerships[locale]}>
-              {m.nav_partnerships({}, t)}
-            </a>
-          </li>
-          <li>
-            <a class={link} href={routes.madeira[locale]}>
-              {m.nav_madeira({}, t)}
-            </a>
-          </li>
-        </ul>
-        <ul class="flex flex-col">
-          <li>
-            <a class:list={[link, "font-bold"]} href={routes.blog[locale]}>
-              {m.nav_blog({}, t)}
-            </a>
-          </li>
-          <li>
-            <a
-              class:list={[link, "font-bold"]}
-              href={links.shop}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {m.nav_shop({}, t)}
-            </a>
-          </li>
-        </ul>
-        <ul class="flex flex-col">
-          <li>
-            <a
-              class={link}
-              href={links.whitepaper}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {m.footer_whitepaper({}, t)}
-            </a>
-          </li>
-        </ul>
-      </div>
+        {
+          columns.map((column) => (
+            <div>
+              <h2 class:list={[row, "font-bold"]}>{column.label}</h2>
+              <ul class="flex flex-col">
+                {column.items.map(({ href, label }) => (
+                  <li>
+                    <a class={link} href={href} {...externalLinkProps(href)}>
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
 
-      <div class="grid shrink-0 grid-cols-4 gap-4">
+      <div
+        class="grid grid-cols-4 gap-4 self-start justify-self-start md:col-start-2 md:row-start-1 xl:row-start-2"
+      >
         {
           freeMadeiraSocials.map(([social, username]) => (
             <SocialLink social={social} username={username} />

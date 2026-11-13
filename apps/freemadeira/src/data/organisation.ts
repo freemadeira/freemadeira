@@ -14,6 +14,8 @@ export const organisation = {
 
 export const links = {
   bitcoinAtlantis: "https://bitcoinatlantis.com",
+  /** The community's Telegram group. */
+  community: "https://t.me/freemadeira",
   donate: "https://pay.zaprite.com/pl_2ma4dHm939",
   energySummit: "https://energysummit.freemadeira.org",
   learn: "https://github.com/freemadeira/education-materials",
