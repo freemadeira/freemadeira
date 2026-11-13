@@ -1,0 +1,121 @@
+---
+import { Image } from "astro:assets";
+
+import type { Block as BlockData } from "@/data/types";
+
+import { Chooser, Inflation, Taps, Timeline, Triage } from "./widgets";
+
+interface Props {
+  block: BlockData;
+}
+
+const { block } = Astro.props;
+
+/**
+ * Most list items open with a short sentence that says the point and go on to
+ * explain it. Splitting there lets the point be bold, so a list can be skimmed.
+ */
+function headline(item: string): [string, string] | null {
+  const end = item.indexOf(". ");
+  return end > 0 && end < 70 ? [item.slice(0, end + 1), item.slice(end + 2)] : null;
+}
+---
+
+{block.t === "p" && <p class="my-5">{block.x}</p>}
+{
+  block.t === "h" && (
+    <h3 class="mt-14 mb-3 border-t-4 border-(--tier) pt-4 text-3xl leading-tight font-semibold text-pretty">
+      {block.x}
+    </h3>
+  )
+}
+{
+  block.t === "ul" && (
+    <ul class="my-5 list-disc space-y-2.5 pl-6 marker:text-(--tier)">
+      {block.x.map((item) => {
+        const split = headline(item);
+        return split ? (
+          <li>
+            <strong>{split[0]}</strong> {split[1]}
+          </li>
+        ) : (
+          <li>{item}</li>
+        );
+      })}
+    </ul>
+  )
+}
+{
+  block.t === "ol" && (
+    <ol class="my-5 list-decimal space-y-2.5 pl-6 marker:font-bold marker:text-(--tier)">
+      {block.x.map((item) => {
+        const split = headline(item);
+        return split ? (
+          <li>
+            <strong>{split[0]}</strong> {split[1]}
+          </li>
+        ) : (
+          <li>{item}</li>
+        );
+      })}
+    </ol>
+  )
+}
+{
+  block.t === "note" && (
+    <aside class="my-10 rounded-2xl rounded-tl-[3rem] bg-[color-mix(in_oklab,var(--tier)_14%,white)] px-6 py-5 sm:px-8 sm:py-6">
+      <strong class="block text-lg">{block.title}</strong>
+      {block.x.map((paragraph) => (
+        <p class="mt-2">{paragraph}</p>
+      ))}
+    </aside>
+  )
+}
+{
+  block.t === "img" && (
+    <figure class="my-12 relative left-1/2 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2">
+      <Image
+        alt={block.alt}
+        class="h-auto w-full rounded-2xl bg-bridal-50"
+        sizes="(max-width: 896px) 100vw, 896px"
+        src={block.src}
+        width={1344}
+        widths={[672, 896, 1344]}
+      />
+      {block.caption && (
+        <figcaption class="mt-2 text-sm text-mountain-mist-500">
+          {block.caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}
+{block.t === "widget" && block.id === "inflation" && <Inflation client:visible />}
+{block.t === "widget" && block.id === "timeline" && <Timeline client:visible />}
+{block.t === "widget" && block.id === "chooser" && <Chooser client:visible />}
+{block.t === "widget" && block.id === "taps" && <Taps client:visible />}
+{block.t === "widget" && block.id === "triage" && <Triage client:visible />}
+{
+  block.t === "table" && (
+    <div class="my-10 overflow-x-auto relative left-1/2 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2">
+      <table class="w-full border-collapse text-left text-[0.95rem]">
+        <thead>
+          <tr class="border-b-2 border-dark">
+            {block.head.map((cell) => (
+              <th class="p-2 pr-4">{cell}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {block.rows.map((row) => (
+            <tr class="border-b border-mountain-mist-200">
+              {row.map((cell) => (
+                <td class="p-2 pr-4 align-top">{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

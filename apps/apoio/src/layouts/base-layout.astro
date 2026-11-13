@@ -1,0 +1,89 @@
+---
+import "@/styles/global.css";
+
+import {
+  defaultLocale,
+  htmlLang,
+  locales,
+  toLocale,
+} from "@freemadeira/i18n";
+import type { LocalizedPaths } from "@freemadeira/i18n";
+
+import SiteFooter from "@/components/site-footer.astro";
+import SiteHeader from "@/components/site-header.astro";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  /**
+   * The locales this page exists in, for hreflang, when not all of them: the
+   * guide's pages are Portuguese only. The language link still uses `paths`.
+   */
+  alternates?: Partial<LocalizedPaths>;
+  description?: string;
+  /** This page's path in each locale. */
+  paths: LocalizedPaths;
+  /** The page's own title; the site name is added after it. */
+  title?: string;
+}
+
+const { alternates, description, paths, title } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const site = Astro.site ?? Astro.url;
+const siteName = `${m.site_title({}, t)} – FREE Madeira`;
+const fullTitle = title ? `${title} · ${siteName}` : siteName;
+const summary = description ?? m.site_description({}, t);
+const canonical = new URL(paths[locale], site);
+const translations = locales.filter((alternate) =>
+  alternates ? alternates[alternate] !== undefined : true
+);
+const translated = (alternate: (typeof locales)[number]) =>
+  alternates?.[alternate] ?? paths[alternate];
+---
+
+<!doctype html>
+<html lang={htmlLang[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={summary} />
+    <link rel="canonical" href={canonical} />
+    {
+      translations.length > 1 &&
+        translations.map((alternate) => (
+          <link
+            rel="alternate"
+            hreflang={alternate}
+            href={new URL(translated(alternate), site)}
+          />
+        ))
+    }
+    {
+      translations.length > 1 && translations.includes(defaultLocale) && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(translated(defaultLocale), site)}
+        />
+      )
+    }
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FREE Madeira" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={summary} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={htmlLang[locale].replace("-", "_")} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@FREEMadeiraOrg" />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <SiteHeader paths={paths} />
+    <main class="grow">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

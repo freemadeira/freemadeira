@@ -54,13 +54,7 @@ const newTab = { rel: "noopener noreferrer", target: "_blank" };
       >
         {nav.blog.label}
       </a>
-      <a
-        aria-current={current.startsWith(nav.apoio.href) ? "page" : undefined}
-        class:list={[menuItemClass, "aria-[current=page]:border-b-dark"]}
-        href={nav.apoio.href}
-      >
-        {nav.apoio.label}
-      </a>
+      <a class={menuItemClass} href={nav.apoio.href}>{nav.apoio.label}</a>
       <a class={menuItemClass} href={nav.bitcoinAtlantis.href} {...newTab}>
         {nav.bitcoinAtlantis.label}
       </a>

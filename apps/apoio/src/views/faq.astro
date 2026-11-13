@@ -1,0 +1,42 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { Faq } from "@/components/faq";
+import Contact from "@/components/contact.astro";
+import PageHead from "@/components/page-head.astro";
+import { guidePaths } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const t = { locale: toLocale(Astro.currentLocale) };
+const paths = guidePaths("perguntas-frequentes");
+const labels = {
+  all: m.faq_all({}, t),
+  many: m.faq_many({}, t),
+  none: m.faq_none({}, t),
+  one: m.faq_one({}, t),
+  readMore: m.faq_read_more({}, t),
+  search: m.faq_search({}, t),
+  searchLabel: m.faq_search_label({}, t),
+};
+---
+
+<Layout
+  alternates={{ pt: paths.pt }}
+  description={m.faq_lead({}, t)}
+  paths={paths}
+  title={m.faq_title({}, t)}
+>
+  <PageHead
+    slug="faq"
+    lead={m.faq_lead({}, t)}
+    tier="extra"
+    title={m.faq_title({}, t)}
+  />
+  <div class="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8">
+    <div class="max-w-2xl">
+      <Faq client:load labels={labels} />
+    </div>
+    <Contact />
+  </div>
+</Layout>

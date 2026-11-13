@@ -13,6 +13,7 @@ export const organisation = {
 } as const;
 
 export const links = {
+  apoio: "https://apoio.freemadeira.org",
   bitcoinAtlantis: "https://bitcoinatlantis.com",
   /** The community's Telegram group. */
   community: "https://t.me/freemadeira",

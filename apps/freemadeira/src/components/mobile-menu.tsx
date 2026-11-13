@@ -161,13 +161,8 @@ export default function MobileMenu(props: Props) {
               </li>
               <li>
                 <a
-                  aria-current={
-                    props.current.startsWith(props.apoio.href)
-                      ? "page"
-                      : undefined
-                  }
                   className={cn(
-                    "text-mountain-mist-700 hover:text-dark aria-[current=page]:text-dark block py-6",
+                    "text-mountain-mist-700 hover:text-dark block py-6",
                     heading.h4
                   )}
                   href={props.apoio.href}

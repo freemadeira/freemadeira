@@ -28,7 +28,7 @@ export function navigation(currentLocale: string | undefined) {
       ],
       label: m.nav_about({}, t),
     },
-    apoio: { href: routes.apoio[locale], label: m.nav_apoio({}, t) },
+    apoio: { href: links.apoio, label: m.nav_apoio({}, t) },
     bitcoinAtlantis: {
       href: links.bitcoinAtlantis,
       label: m.nav_bitcoin_atlantis({}, t),
