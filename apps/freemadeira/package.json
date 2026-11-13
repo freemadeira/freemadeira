@@ -12,7 +12,7 @@
     "@astrojs/react": "catalog:",
     "@astrojs/vercel": "catalog:",
     "@fontsource-variable/literata": "^5.3.0",
-    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "catalog:",
     "@freemadeira/blog": "workspace:*",
     "@freemadeira/db": "workspace:*",
     "@freemadeira/i18n": "workspace:*",

@@ -8,7 +8,7 @@ Monorepo for the websites of FREE Madeira, a Bitcoin education and adoption orga
 apps/freemadeira        freemadeira.org: Astro on Vercel
 apps/bitcoinatlantis    bitcoinatlantis.com: Astro on Vercel
 apps/apoio              apoio.freemadeira.org, the merchant guide: Astro on Vercel
-packages/ui             shadcn/ui on Base UI, Tailwind v4 tokens, shared by both sites
+packages/ui             shadcn/ui on Base UI, Tailwind v4 tokens, shared by every site
 packages/i18n           locales and the localized-path types every site uses
 packages/db             Drizzle schema, migrations and libSQL client for the read model
 packages/blog           the blog's paths, queries and RSS feed, for every site

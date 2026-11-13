@@ -1,10 +1,12 @@
 // Every answer restates something already on the guide pages or settled for the site;
 // `to` links back to the page it comes from. Nothing here is new information.
+import type { GuideSlug } from "./types";
+
 export interface FaqEntry {
   cat: string;
   q: string;
   a: string;
-  to?: string;
+  to?: GuideSlug;
 }
 
 export const FAQ_CATS = [

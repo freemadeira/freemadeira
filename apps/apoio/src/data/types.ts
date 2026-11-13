@@ -13,9 +13,25 @@ export type Block =
       id: "inflation" | "timeline" | "chooser" | "triage" | "taps";
     };
 
+/** Every page of the guide, by its path, so a link to one is checked. */
+export type GuideSlug =
+  | "bem-vindo"
+  | "porque-aceitar"
+  | "lightning-e-on-chain"
+  | "escolher-a-solucao"
+  | "receber-um-pagamento"
+  | "pagamento-nao-chegou"
+  | "quem-guarda-as-chaves"
+  | "o-que-fazer-com-os-bitcoins"
+  | "faturacao-e-impostos"
+  | "dar-a-conhecer-o-negocio"
+  | "praticar-e-glossario"
+  | "wallet-of-satoshi-antiga"
+  | "glossario";
+
 export interface Page {
-  slug: string;
-  tier: "inicio" | "agora" | "balcao" | "depois" | "extra";
+  slug: GuideSlug;
+  tier: "agora" | "balcao" | "depois" | "extra";
   num?: number;
   title: string;
   lead?: string;

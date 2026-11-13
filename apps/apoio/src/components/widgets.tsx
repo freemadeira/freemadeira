@@ -131,17 +131,14 @@ export function Timeline() {
 /* -------------------------------------------------------------- chooser */
 const QUESTIONS = [
   {
-    no: "",
     q: "Preciso de euros na conta para pagar fornecedores e salários?",
     yes: "Caminho A. Não compliques: recebes euros na conta.",
   },
   {
-    no: "",
     q: "Tenho empregados a receber pagamentos por mim?",
     yes: "Escolhe uma solução com modo de caixa: o caminho A, ou a Blink ou a Wallet of Satoshi, que têm ponto de venda próprio.",
   },
   {
-    no: "",
     q: "Quero começar a guardar uma parte a longo prazo?",
     yes: "Aí faz sentido o caminho C — mas só para a poupança, não para o balcão.",
   },
