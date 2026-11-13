@@ -110,7 +110,7 @@ export function UnfoldingBrochure() {
         >
           ←
         </button>
-        <div className="brochure-dots">
+        <div aria-hidden="true" className="brochure-dots">
           {STEPS.map((s, i) => (
             <span
               key={s.key}
@@ -121,12 +121,14 @@ export function UnfoldingBrochure() {
             />
           ))}
         </div>
+        <output className="sr-only">{`${step + 1} / ${STEPS.length}`}</output>
         <button
           type="button"
           className="brochure-btn"
           onClick={next}
           disabled={isLast}
-          aria-label={brochureNextLabel}
+          // The first step's button reads "Open", which names it already.
+          aria-label={isFirst ? undefined : brochureNextLabel}
         >
           {isFirst ? brochureOpenLabel : "→"}
         </button>

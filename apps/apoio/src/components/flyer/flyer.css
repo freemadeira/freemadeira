@@ -58,12 +58,20 @@
     color: var(--ink-soft);
     border: 1px solid var(--rule);
     border-radius: 999px;
-    padding: 6px 16px;
+    padding: 8px 16px;
     cursor: pointer;
+    transition-property: background-color, border-color, color, scale;
+    transition-duration: 150ms;
+    transition-timing-function: var(--ease-out);
   }
-  .language-switcher-btn:hover {
-    border-color: var(--gold-deep);
-    color: var(--ink);
+  .language-switcher-btn:active {
+    scale: 0.96;
+  }
+  @media (hover: hover) {
+    .language-switcher-btn:hover {
+      border-color: var(--gold-deep);
+      color: var(--ink);
+    }
   }
   .language-switcher-btn--active {
     background: var(--ink);
@@ -74,21 +82,6 @@
     .language-switcher {
       display: none;
     }
-  }
-
-  .viewer-note {
-    font-size: 0.78rem;
-    color: var(--ink-soft);
-    text-align: center;
-    max-width: 700px;
-    line-height: 1.5;
-  }
-  .viewer-note code {
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-size: 0.72rem;
   }
 
   /* ---------- Unfolding brochure (screen-only, board-review experience) ---------- */
@@ -120,10 +113,17 @@
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
     height: 210mm;
-    animation: apoio-brochure-reveal 0.4s ease;
-    transform: scale(var(--brochure-scale, 1));
+    /* The fit scale is its own property, so the reveal's translate can't undo
+       it mid-animation. */
+    scale: var(--brochure-scale, 1);
     transform-origin: top center;
     flex-shrink: 0;
+    animation: apoio-brochure-fade 300ms var(--ease-out) both;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .brochure-stage {
+      animation-name: apoio-brochure-reveal;
+    }
   }
   /* The stage is scaled to the width of its column by unfolding-brochure.tsx, which
      also sets the viewport's height to the scaled stage's. */
@@ -149,13 +149,21 @@
     border-radius: 999px;
     padding: 8px 18px;
     cursor: pointer;
+    transition-property: background-color, scale;
+    transition-duration: 150ms;
+    transition-timing-function: var(--ease-out);
   }
   .brochure-btn:disabled {
     opacity: 0.3;
     cursor: default;
   }
-  .brochure-btn:not(:disabled):hover {
-    background: var(--gold-deep);
+  .brochure-btn:not(:disabled):active {
+    scale: 0.96;
+  }
+  @media (hover: hover) {
+    .brochure-btn:not(:disabled):hover {
+      background: var(--gold-deep);
+    }
   }
   .brochure-dots {
     display: flex;
@@ -166,6 +174,7 @@
     height: 7px;
     border-radius: 50%;
     background: var(--rule);
+    transition: background-color 150ms var(--ease-out);
   }
   .brochure-dot--active {
     background: var(--gold-deep);
@@ -627,14 +636,15 @@
   }
 }
 
+@keyframes apoio-brochure-fade {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes apoio-brochure-reveal {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    translate: 0 12px;
   }
 }
 
@@ -643,6 +653,11 @@
   background: var(--gold-deep);
   font-weight: 600;
   padding: 10px 28px;
+}
+@media (hover: hover) {
+  .apoio-flyer .flyer-print:not(:disabled):hover {
+    background: var(--ink);
+  }
 }
 @media print {
   .apoio-flyer .flyer-print {

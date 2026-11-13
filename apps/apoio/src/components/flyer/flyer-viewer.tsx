@@ -12,6 +12,13 @@ import { LocaleProvider, useLocale } from "./locale-context";
 import { OutsideFaceSheet } from "./outside-face-sheet";
 import { UnfoldingBrochure } from "./unfolding-brochure";
 
+const LANGUAGE_LABEL = {
+  de: "Sprache des Flyers",
+  en: "Flyer language",
+  fr: "Langue du flyer",
+  pt: "Língua do folheto",
+} as const;
+
 const PRINT_LABEL = {
   de: "Drucken",
   en: "Print",
@@ -22,7 +29,7 @@ const PRINT_LABEL = {
 function LanguageSwitcher() {
   const { locale, setLocale } = useLocale();
   return (
-    <fieldset className="language-switcher" aria-label="Language">
+    <fieldset className="language-switcher" aria-label={LANGUAGE_LABEL[locale]}>
       {LOCALES.map((l) => (
         <button
           key={l.code}
