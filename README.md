@@ -16,6 +16,7 @@ pnpm dev
 - FREE Madeira: http://localhost:4321
 - Bitcoin Atlantis: http://localhost:4322
 - Merchant guide (apoio): http://localhost:4323
+- FREE Madeira app: Metro on http://localhost:8081; in its terminal, press `w` for the web, `i` for iOS or `a` for Android
 
 How the repository is laid out, how content gets from freehub to the sites, and the conventions are in [AGENTS.md](AGENTS.md).
 
@@ -23,6 +24,7 @@ How the repository is laid out, how content gets from freehub to the sites, and 
 
 - [Astro](https://astro.build/): the sites, prerendered and cached on [Vercel](https://vercel.com/)
 - [React](https://react.dev/): interactive islands
+- [Expo](https://expo.dev/) and [React Native](https://reactnative.dev/): the app, on iOS, Android and the web
 - [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) on [Base UI](https://base-ui.com/): styling and components
 - [Paraglide JS](https://inlang.com/m/gerre34r/library-inlang-paraglideJs): Portuguese and English messages
 - [libSQL](https://github.com/tursodatabase/libsql) and [Drizzle](https://orm.drizzle.team/): the content read model

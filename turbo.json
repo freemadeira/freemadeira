@@ -4,11 +4,16 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["ISR_BYPASS_TOKEN"],
+      "env": ["ISR_BYPASS_TOKEN", "EXPO_PUBLIC_*"],
       "outputs": ["dist/**", ".vercel/output/**"]
     },
     "dev": {
       "cache": false,
+      "persistent": true
+    },
+    "app#dev": {
+      "cache": false,
+      "interactive": true,
       "persistent": true
     },
     "test": {},
