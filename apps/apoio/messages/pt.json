@@ -25,7 +25,7 @@
   "faq_read_more": "Ler mais:",
   "faq_none": "Não encontrámos nada. Pergunta-nos no grupo de apoio a comerciantes no WhatsApp ou por email, em baixo.",
   "flyer_title": "Folheto para comerciantes",
-  "flyer_lead": "O folheto que deixamos nas lojas: abra-o aqui e imprima em A4, frente e verso.",
+  "flyer_lead": "O folheto que deixamos nas lojas: abra-o aqui e imprima em A4, frente e verso, a virar pela margem curta.",
   "contact_title": "Dúvidas? Algum problema?",
   "contact_text": "Somos a FREE Madeira, uma associação sem fins lucrativos, fundada em 2022, a equipa por detrás da Bitcoin Atlantis. Ajudamos a configurar tudo, de graça, e temos todo o gosto em ajudar se algo correr mal.",
   "contact_whatsapp": "Grupo de apoio a comerciantes no WhatsApp",
@@ -43,6 +43,8 @@
   "footer_licence_post": ": podes copiar, imprimir, traduzir e adaptar, desde que dês crédito e partilhes nas mesmas condições.",
   "footer_inspired": "Este guia foi inspirado no Bitcoin Coast — Guía de Bitcoin para Comerciantes, escrito por Evelyn Lemus (Berlín, El Salvador) e colocado no domínio público. Reescrevemo-lo de raiz para a realidade da Madeira.",
   "footer_disclaimer": "Material educativo. Não é aconselhamento financeiro, fiscal nem jurídico: para contabilidade e impostos, fala sempre com o teu contabilista.",
-  "page_prev": "Capítulo anterior",
-  "page_next": "Capítulo seguinte"
+  "page_prev": "Anterior",
+  "page_next": "Seguinte",
+  "faq_search_all": "Procurar em todos os temas",
+  "nav_language_home": "English home page: this page is only in Portuguese"
 }

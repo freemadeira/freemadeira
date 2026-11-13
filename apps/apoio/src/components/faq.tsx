@@ -15,6 +15,7 @@ export interface FaqLabels {
   one: string;
   readMore: string;
   search: string;
+  searchAll: string;
   searchLabel: string;
 }
 
@@ -101,7 +102,19 @@ export function Faq({ categories, items, labels }: Props) {
           ))}
         </div>
       ) : (
-        <p className="my-4">{labels.none}</p>
+        <div className="my-4">
+          {/* A topic can hide the answer: offer to look in all of them. */}
+          {cat && (
+            <button
+              type="button"
+              className="mb-3 underline underline-offset-2"
+              onClick={() => setCat("")}
+            >
+              {labels.searchAll}
+            </button>
+          )}
+          <p>{labels.none}</p>
+        </div>
       )}
     </>
   );

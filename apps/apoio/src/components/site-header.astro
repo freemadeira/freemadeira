@@ -30,6 +30,18 @@ const links = [
     ? [{ href: guidePath("glossario"), label: m.nav_glossary({}, t) }]
     : []),
 ];
+// A chapter has no link of its own, so it marks the guide as its section.
+const inGuide = !links.some((link) => link.href === current);
+const ariaCurrent = (href: string) => {
+  if (href === current) {
+    return "page";
+  }
+  return inGuide && href === routes.home[locale] ? "true" : undefined;
+};
+// The guide's pages are Portuguese only: say where the language link goes.
+const languageFallback =
+  paths[otherLocale] === routes.home[otherLocale] &&
+  current !== routes.home[locale];
 ---
 
 <header class="print:hidden">
@@ -46,11 +58,13 @@ const links = [
       </a>
     </div>
     <a
-      class="py-2 font-medium hover:underline hover:underline-offset-4"
+      class="-mx-3 px-3 py-2.5 font-medium hover:underline hover:underline-offset-4"
       href={paths[otherLocale]}
       hreflang={otherLocale}
       lang={htmlLang[otherLocale]}
-      title={localeNames[otherLocale]}
+      title={languageFallback
+        ? m.nav_language_home({}, t)
+        : localeNames[otherLocale]}
     >
       {otherLocale.toUpperCase()}
     </a>
@@ -63,8 +77,8 @@ const links = [
       {
         links.map((link) => (
           <a
-            aria-current={current === link.href ? "page" : undefined}
-            class="border-b-2 border-transparent py-2.5 text-[0.95rem] hover:border-mountain-mist-300 aria-[current=page]:border-dark aria-[current=page]:font-semibold"
+            aria-current={ariaCurrent(link.href)}
+            class="border-b-2 border-transparent py-2.5 text-[0.95rem] hover:border-mountain-mist-300 aria-[current]:border-dark aria-[current=page]:font-semibold"
             href={link.href}
           >
             {link.label}

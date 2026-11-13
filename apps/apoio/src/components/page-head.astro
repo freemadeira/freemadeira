@@ -26,18 +26,25 @@ const Illustration = illustrationFor(slug);
 <header
   class:list={[
     tierVars[tier],
-    "border-b-[6px] border-(--tier) bg-bridal-50 print:hidden",
+    "border-b-[6px] border-(--tier) bg-bridal-50",
   ]}
 >
   <div class="mx-auto w-full max-w-5xl px-4 pt-6 sm:px-8">
     <a
-      class="text-[0.95rem] font-semibold underline underline-offset-4"
+      class="inline-block py-2 text-[0.95rem] font-semibold underline underline-offset-4 print:hidden"
       href={routes.home[locale]}
     >
       <span aria-hidden="true">← </span>{m.nav_guide({}, { locale })}
     </a>
-    <div class="mt-6 grid items-end gap-x-10 sm:grid-cols-[1fr_auto]">
+    <div class="mt-4 grid items-end gap-x-10 sm:grid-cols-[1fr_auto]">
       <div class="pb-8 sm:pb-14">
+        {
+          num !== undefined && (
+            <p aria-hidden="true" class="mb-2 hidden text-xl print:block">
+              {m.page_chapter({ num }, { locale })}
+            </p>
+          )
+        }
         <h1 class:list={[heading.h3, "max-w-[16ch] font-medium"]}>
           {
             num !== undefined && (
@@ -48,7 +55,7 @@ const Illustration = illustrationFor(slug);
         </h1>
         {lead && <p class="mt-5 max-w-lg text-xl text-mountain-mist-600">{lead}</p>}
       </div>
-      <div class="apoio-door relative mx-auto w-44 sm:mx-0 sm:w-60">
+      <div class="apoio-door relative mx-auto w-36 sm:mx-0 sm:w-60 print:hidden">
         <div
           class="relative aspect-3/4 overflow-hidden rounded-t-full border-[10px] border-b-0 border-(--tier) bg-white"
         >

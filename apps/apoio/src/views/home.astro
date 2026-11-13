@@ -43,9 +43,9 @@ const linkClass = "underline underline-offset-4";
               class:list={[
                 tierVars[tier.id],
                 "rounded-t-[50%_6rem] bg-(--tier) px-7 pt-21 pb-11 text-(--tier-ink)",
-                tier.id === "agora" && "min-h-88",
-                tier.id === "balcao" && "min-h-100",
-                tier.id === "depois" && "min-h-94",
+                tier.id === "agora" && "md:min-h-88",
+                tier.id === "balcao" && "md:min-h-100",
+                tier.id === "depois" && "md:min-h-94",
               ]}
             >
               <h2 class={heading.h6}>{tier.label}</h2>

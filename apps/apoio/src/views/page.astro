@@ -3,7 +3,7 @@ import Blocks from "@/components/blocks.astro";
 import Contact from "@/components/contact.astro";
 import PageHead from "@/components/page-head.astro";
 import { tierVars } from "@/components/tiers";
-import { CHAPTERS } from "@/data";
+import { CHAPTERS, findPage } from "@/data";
 import type { Page } from "@/data/types";
 import { toLocale } from "@freemadeira/i18n";
 
@@ -19,8 +19,9 @@ const { page } = Astro.props;
 const t = { locale: toLocale(Astro.currentLocale) };
 const index = page.num ? CHAPTERS.findIndex((c) => c.slug === page.slug) : -1;
 const prev = index > 0 ? CHAPTERS[index - 1] : undefined;
+// The last chapter hands over to the glossary rather than ending the guide.
 const next =
-  index >= 0 && index < CHAPTERS.length - 1 ? CHAPTERS[index + 1] : undefined;
+  index >= 0 ? (CHAPTERS[index + 1] ?? findPage("glossario")) : undefined;
 const paths = guidePaths(page.slug);
 ---
 

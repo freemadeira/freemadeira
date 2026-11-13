@@ -76,6 +76,13 @@
   --ring: #a46204;
 }
 
+/* Printed, a chapter shows every section, closed or not. */
+@media print {
+  details::details-content {
+    content-visibility: visible;
+  }
+}
+
 @utility no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

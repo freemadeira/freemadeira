@@ -24,9 +24,9 @@ function headline(item: string): [string, string] | null {
 {block.t === "p" && <p class="my-5">{block.x}</p>}
 {
   block.t === "h" && (
-    <h3 class="mt-14 mb-3 border-t-4 border-(--tier) pt-4 text-3xl leading-tight font-semibold text-pretty">
+    <h2 class="mt-14 mb-3 border-t-4 border-(--tier) pt-4 text-3xl leading-tight font-semibold text-pretty">
       {block.x}
-    </h3>
+    </h2>
   )
 }
 {
@@ -97,8 +97,15 @@ function headline(item: string): [string, string] | null {
 {block.t === "widget" && block.id === "triage" && <Triage client:visible />}
 {
   block.t === "table" && (
-    <div class="my-10 overflow-x-auto relative left-1/2 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2">
-      <table class="w-full border-collapse text-left text-[0.95rem]">
+    <div
+      aria-label={block.head.join(" · ")}
+      class="my-10 overflow-x-auto relative left-1/2 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      role="region"
+      tabindex="0"
+    >
+      {/* Wide enough that prose columns scroll on a phone instead of
+          squeezing to a word per line. */}
+      <table class="w-full min-w-xl border-collapse text-left text-[0.95rem]">
         <thead>
           <tr class="border-b-2 border-dark">
             {block.head.map((cell) => (
