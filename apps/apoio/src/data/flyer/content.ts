@@ -26,6 +26,13 @@ export interface FlyerContent {
   fastPathSub: string;
   fastPathSteps: { n: number; text: string }[];
 
+  /** The flyer's three diagrams, described for screen readers. */
+  diagramAlts: {
+    bitcoinIsCash: string;
+    circularEconomy: string;
+    lightningVsOnchain: string;
+  };
+
   easyDefaultHeading: string;
   easyDefaultPoints: string[];
 
@@ -43,8 +50,6 @@ export interface FlyerContent {
   paymentTroubleshooting: string;
 
   orgFullName: string;
-
-  sponsorLabel: string;
 
   openingDoorsHeading: string;
 

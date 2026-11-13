@@ -5,6 +5,7 @@ import { useContent } from "../locale-context";
 export function OptionsPanel() {
   const {
     amountTiers,
+    diagramAlts,
     holdBitcoinCallout,
     holdBitcoinHeading,
     lightningVsOnchainBody,
@@ -27,7 +28,7 @@ export function OptionsPanel() {
         <img
           className="lightning-vs-onchain-diagram"
           src={lightningVsOnchainDiagram.src}
-          alt="Lightning is fast like a plane taking off; on-chain is a sturdier, more secure cargo ship"
+          alt={diagramAlts.lightningVsOnchain}
         />
 
         <div className="amounts">

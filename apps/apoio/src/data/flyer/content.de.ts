@@ -30,6 +30,15 @@ const content: FlyerContent = {
   coverSub:
     "Hier können Bitcoiner ganz mit Bitcoin leben. Es ist ein anerkanntes Bitcoin-Reiseziel, und Ihr Geschäft ist der nächste Halt.",
 
+  diagramAlts: {
+    bitcoinIsCash:
+      "Ein Kunde scannt einen QR-Code und zahlt mit Bitcoin auf dem Handy; die Zahlung kommt als Euro auf der Bank an",
+    circularEconomy:
+      "Mit Bitcoin auf der Insel bezahlen: Café, Lebensmittelladen, Surfschule, Werkstatt, Bäckerei",
+    lightningVsOnchain:
+      "Lightning ist schnell wie ein startendes Flugzeug; On-Chain ist ein robusteres, sichereres Frachtschiff",
+  },
+
   easyDefaultHeading: "Bitcoin zu akzeptieren war noch nie so einfach!",
 
   easyDefaultPoints: [
@@ -127,8 +136,6 @@ const content: FlyerContent = {
       title: "Wir unterstützen unsere eigenen Leute.",
     },
   ],
-
-  sponsorLabel: "Gesponsert von",
 
   walletOptions: [
     {

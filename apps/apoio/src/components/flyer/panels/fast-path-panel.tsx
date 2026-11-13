@@ -2,15 +2,11 @@ import bitcoinIsCashDiagram from "@/assets/flyer/bitcoin-is-cash-diagram.webp";
 import flapPanelBg from "@/assets/flyer/flap-panel-bg.webp";
 
 import { useContent } from "../locale-context";
-// Sponsor logo disabled while printing a first batch without a sponsor. Re-enable
-// by adding the logo to src/assets/flyer/ and uncommenting this import,
-// `sponsorLabel` in the destructure below, and the .sponsor block in the JSX.
-// import wavespaceLogo from "@/assets/flyer/wavespace.webp";
 
-// Sits in the outer flap position, on the flap background. Content swapped with
-// OpeningDoorsPanel 2026-10-06.
+// Sits in the outer flap position, on the flap background.
 export function FastPathPanel() {
   const {
+    diagramAlts,
     easyDefaultHeading,
     easyDefaultPoints,
     fastPathHeading,
@@ -40,7 +36,7 @@ export function FastPathPanel() {
       <img
         className="bitcoin-is-cash-diagram"
         src={bitcoinIsCashDiagram.src}
-        alt="Customer scans a QR code with Bitcoin on their phone, the payment lands as euros at the bank"
+        alt={diagramAlts.bitcoinIsCash}
       />
 
       <div className="section">
@@ -58,11 +54,6 @@ export function FastPathPanel() {
           ))}
         </ul>
       </div>
-
-      {/* <div className="sponsor">
-        <span className="sponsor-label">{sponsorLabel}</span>
-        <img className="sponsor-logo" src={wavespaceLogo} alt="wave space" />
-      </div> */}
     </div>
   );
 }

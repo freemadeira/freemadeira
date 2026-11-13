@@ -1,10 +1,10 @@
-import circularEconomyDiagram from "@/assets/flyer/circular-economy-diagram.webp";
+import circularEconomyDiagram from "@/assets/images/economia-circular.webp";
 
 import { useContent } from "../locale-context";
 
-// Inside-left panel (behind the cover). Content swapped with FastPathPanel 2026-10-06.
+// The inside-left panel, behind the cover.
 export function OpeningDoorsPanel() {
-  const { openingDoorsHeading, reasons } = useContent();
+  const { diagramAlts, openingDoorsHeading, reasons } = useContent();
   return (
     <div className="panel panel-inside">
       <h2 className="panel-heading">{openingDoorsHeading}</h2>
@@ -19,7 +19,7 @@ export function OpeningDoorsPanel() {
       <img
         className="circular-economy-diagram"
         src={circularEconomyDiagram.src}
-        alt="Pagar com bitcoin na ilha: café, mercearia, escola de surf, oficina, padaria"
+        alt={diagramAlts.circularEconomy}
       />
     </div>
   );
