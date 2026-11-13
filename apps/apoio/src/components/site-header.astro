@@ -1,0 +1,90 @@
+---
+import { htmlLang, localeNames, locales, toLocale } from "@freemadeira/i18n";
+import type { LocalizedPaths } from "@freemadeira/i18n";
+
+import Logo from "@/assets/logo-horizontal.svg";
+import { freeMadeira } from "@/data/organisation";
+import { guidePath, routes } from "@/i18n/routes";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  /** This page's path in each locale, for the language link. */
+  paths: LocalizedPaths;
+}
+
+const { paths } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const otherLocale = locales.find((other) => other !== locale) ?? locale;
+const trim = (path: string) => path.replace(/(?<=.)\/$/u, "");
+const current = trim(Astro.url.pathname);
+
+const links = [
+  { href: routes.home[locale], label: m.nav_guide({}, t) },
+  // The FAQ and the glossary are Portuguese only.
+  ...(locale === "pt"
+    ? [{ href: guidePath("perguntas-frequentes"), label: m.nav_faq({}, t) }]
+    : []),
+  { href: routes.flyer[locale], label: m.nav_flyer({}, t) },
+  ...(locale === "pt"
+    ? [{ href: guidePath("glossario"), label: m.nav_glossary({}, t) }]
+    : []),
+];
+// A chapter has no link of its own, so it marks the guide as its section.
+const inGuide = !links.some((link) => link.href === current);
+const ariaCurrent = (href: string) => {
+  if (href === current) {
+    return "page";
+  }
+  return inGuide && href === routes.home[locale] ? "true" : undefined;
+};
+// The guide's pages are Portuguese only: say where the language link goes.
+const languageFallback =
+  paths[otherLocale] === routes.home[otherLocale] &&
+  current !== routes.home[locale];
+---
+
+<header class="print:hidden">
+  <div
+    class="mx-auto flex w-full max-w-5xl items-center justify-between gap-6 px-4 py-4 sm:px-8"
+  >
+    <div class="flex items-center gap-4 sm:gap-5">
+      <a aria-label="FREE Madeira" href={freeMadeira.home[locale]}>
+        <Logo aria-hidden="true" class="h-11 w-auto sm:h-12" />
+      </a>
+      <span aria-hidden="true" class="h-8 w-px bg-mountain-mist-200"></span>
+      <a class="text-lg leading-tight font-semibold" href={routes.home[locale]}>
+        {m.site_title({}, t)}
+      </a>
+    </div>
+    <a
+      class="-mx-3 px-3 py-2.5 font-medium hover:underline hover:underline-offset-4"
+      href={paths[otherLocale]}
+      hreflang={otherLocale}
+      lang={htmlLang[otherLocale]}
+      title={languageFallback
+        ? m.nav_language_home({}, t)
+        : localeNames[otherLocale]}
+    >
+      {otherLocale.toUpperCase()}
+    </a>
+  </div>
+  <div class="border-y border-mountain-mist-200 bg-bridal-50">
+    <nav
+      aria-label={m.nav_label({}, t)}
+      class="mx-auto flex w-full max-w-5xl flex-wrap gap-x-6 px-4 sm:px-8"
+    >
+      {
+        links.map((link) => (
+          <a
+            aria-current={ariaCurrent(link.href)}
+            class="border-b-2 border-transparent py-2.5 text-[0.95rem] hover:border-mountain-mist-300 aria-[current]:border-dark aria-[current=page]:font-semibold"
+            href={link.href}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

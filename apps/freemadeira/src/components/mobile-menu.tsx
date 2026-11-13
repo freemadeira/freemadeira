@@ -20,6 +20,7 @@ interface Link {
 
 interface Props {
   about: { items: Link[]; label: string };
+  apoio: Link;
   backLabel: string;
   bitcoinAtlantis: Link;
   blog: Link;
@@ -156,6 +157,17 @@ export default function MobileMenu(props: Props) {
                   href={props.blog.href}
                 >
                   {props.blog.label}
+                </a>
+              </li>
+              <li>
+                <a
+                  className={cn(
+                    "text-mountain-mist-700 hover:text-dark block py-6",
+                    heading.h4
+                  )}
+                  href={props.apoio.href}
+                >
+                  {props.apoio.label}
                 </a>
               </li>
               <li>

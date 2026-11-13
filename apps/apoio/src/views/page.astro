@@ -1,0 +1,77 @@
+---
+import Blocks from "@/components/blocks.astro";
+import Contact from "@/components/contact.astro";
+import PageHead from "@/components/page-head.astro";
+import { tierVars } from "@/components/tiers";
+import { CHAPTERS, findPage } from "@/data";
+import type { Page } from "@/data/types";
+import { toLocale } from "@freemadeira/i18n";
+
+import { guidePath, guidePaths } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+const t = { locale: toLocale(Astro.currentLocale) };
+const index = page.num ? CHAPTERS.findIndex((c) => c.slug === page.slug) : -1;
+const prev = index > 0 ? CHAPTERS[index - 1] : undefined;
+// The last chapter hands over to the glossary rather than ending the guide.
+const next =
+  index >= 0 ? (CHAPTERS[index + 1] ?? findPage("glossario")) : undefined;
+const paths = guidePaths(page.slug);
+---
+
+<Layout
+  alternates={{ pt: paths.pt }}
+  description={page.lead}
+  paths={paths}
+  title={page.title}
+>
+  <article class={tierVars[page.tier]}>
+    <PageHead
+      lead={page.lead}
+      num={page.num}
+      slug={page.slug}
+      tier={page.tier}
+      title={page.title}
+    />
+    <div class="mx-auto w-full max-w-5xl px-4 pt-12 sm:px-8">
+      <div class="mx-auto max-w-[42rem] text-[1.125rem] leading-[1.75]">
+        <Blocks blocks={page.blocks} collapse={page.collapseSections} />
+      </div>
+      {
+        (prev || next) && (
+          <nav class="mx-auto mt-16 grid max-w-[42rem] gap-4 sm:grid-cols-2 print:hidden">
+            {prev ? (
+              <a
+                class="group flex flex-col gap-1 rounded-2xl border-2 border-dark p-5 transition-colors hover:bg-bridal-50"
+                href={guidePath(prev.slug)}
+              >
+                <span class="text-sm text-mountain-mist-500">← {m.page_prev({}, t)}</span>
+                <span class="text-lg leading-snug font-semibold">{prev.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <a
+                class="group flex flex-col gap-1 rounded-2xl border-2 border-dark p-5 text-right transition-colors hover:bg-bridal-50 sm:col-start-2"
+                href={guidePath(next.slug)}
+              >
+                <span class="text-sm text-mountain-mist-500">{m.page_next({}, t)} →</span>
+                <span class="text-lg leading-snug font-semibold">{next.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+          </nav>
+        )
+      }
+      <Contact />
+    </div>
+  </article>
+</Layout>

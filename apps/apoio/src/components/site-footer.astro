@@ -1,0 +1,47 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { contact, freeMadeira, organisation } from "@/data/organisation";
+import { m } from "@/paraglide/messages.js";
+
+const locale = toLocale(Astro.currentLocale);
+const t = { locale };
+const link = "underline underline-offset-4 hover:text-dark";
+---
+
+<footer class="mt-20 bg-bridal-50 print:hidden">
+  <div
+    class="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-12 text-sm text-mountain-mist-600 sm:px-8"
+  >
+    <div class="flex max-w-3xl flex-col gap-2 text-pretty">
+      <p>
+        <strong class="text-dark">{m.footer_guide({}, t)}</strong> — {
+          m.footer_published({}, t)
+        }
+      </p>
+      <p>
+        {m.footer_licence_pre({}, t)}{" "}
+        <a
+          class={link}
+          href="https://creativecommons.org/licenses/by-sa/4.0/"
+          rel="noopener noreferrer"
+          target="_blank">CC BY-SA 4.0</a
+        >{m.footer_licence_post({}, t)}
+      </p>
+      <p>{m.footer_inspired({}, t)}</p>
+      <p>{m.footer_disclaimer({}, t)}</p>
+    </div>
+    <div
+      class="flex flex-col gap-2 border-t border-mountain-mist-200 pt-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
+    >
+      <p class="text-pretty">
+        {organisation.registeredName} · NIPC {organisation.nipc} ·{" "}
+        {organisation.address} ·{" "}
+        <a class={link} href={`mailto:${contact.email}`}>{contact.email}</a>
+      </p>
+      <a class:list={[link, "shrink-0 font-medium text-dark"]} href={freeMadeira.home[locale]}>
+        freemadeira.org
+      </a>
+    </div>
+  </div>
+</footer>

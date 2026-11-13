@@ -13,6 +13,11 @@ export const organisation = {
 } as const;
 
 export const links = {
+  /** The merchant guide, which has an English home. */
+  apoio: {
+    en: "https://apoio.freemadeira.org/en",
+    pt: "https://apoio.freemadeira.org",
+  } satisfies Record<Locale, string>,
   bitcoinAtlantis: "https://bitcoinatlantis.com",
   /** The community's Telegram group. */
   community: "https://t.me/freemadeira",

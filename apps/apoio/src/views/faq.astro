@@ -1,0 +1,56 @@
+---
+import { toLocale } from "@freemadeira/i18n";
+
+import { Faq } from "@/components/faq";
+import type { FaqItem } from "@/components/faq";
+import Contact from "@/components/contact.astro";
+import PageHead from "@/components/page-head.astro";
+import { findPage } from "@/data";
+import { FAQ, FAQ_CATS } from "@/data/faq";
+import { guidePath, guidePaths } from "@/i18n/routes";
+import Layout from "@/layouts/base-layout.astro";
+import { m } from "@/paraglide/messages.js";
+
+const t = { locale: toLocale(Astro.currentLocale) };
+const paths = guidePaths("perguntas-frequentes");
+// Resolved here, so the island doesn't ship the whole guide to find a title.
+const items: FaqItem[] = FAQ.map((entry) => {
+  const page = entry.to ? findPage(entry.to) : undefined;
+  return {
+    answer: entry.a,
+    category: entry.cat,
+    page: page && { href: guidePath(page.slug), title: page.title },
+    question: entry.q,
+  };
+});
+const labels = {
+  all: m.faq_all({}, t),
+  many: m.faq_many({}, t),
+  none: m.faq_none({}, t),
+  one: m.faq_one({}, t),
+  readMore: m.faq_read_more({}, t),
+  search: m.faq_search({}, t),
+  searchAll: m.faq_search_all({}, t),
+  searchLabel: m.faq_search_label({}, t),
+};
+---
+
+<Layout
+  alternates={{ pt: paths.pt }}
+  description={m.faq_lead({}, t)}
+  paths={paths}
+  title={m.faq_title({}, t)}
+>
+  <PageHead
+    slug="faq"
+    lead={m.faq_lead({}, t)}
+    tier="extra"
+    title={m.faq_title({}, t)}
+  />
+  <div class="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8">
+    <div class="max-w-2xl">
+      <Faq categories={FAQ_CATS} client:idle items={items} labels={labels} />
+    </div>
+    <Contact />
+  </div>
+</Layout>

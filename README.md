@@ -15,6 +15,7 @@ pnpm dev
 
 - FREE Madeira: http://localhost:4321
 - Bitcoin Atlantis: http://localhost:4322
+- Merchant guide (apoio): http://localhost:4323
 
 How the repository is laid out, how content gets from freehub to the sites, and the conventions are in [AGENTS.md](AGENTS.md).
 
