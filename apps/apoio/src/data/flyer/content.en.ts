@@ -1,7 +1,5 @@
-// All flyer copy for one locale lives in a file like this one — see content.ts for the
-// shared shape (FlyerContent) and content/index.ts for how a locale is selected at runtime.
-// Edit this file to change English wording without touching component markup.
-// Keep in sync with ../../flyer.md (source of truth for content decisions).
+// The flyer's English copy, which the other locales were translated from. See
+// content.ts for the shape every locale fills in.
 import type { FlyerContent } from "./content";
 
 const content: FlyerContent = {
@@ -130,9 +128,6 @@ const content: FlyerContent = {
   ],
 
   sponsorLabel: "Sponsored by",
-
-  viewerNote:
-    "FREE Madeira merchant flyer. Click through below to see it the way a merchant would open it. Scroll down for the print-ready tri-fold layout — Print (Ctrl/Cmd+P) for true A4 output. See flyer.md in the parent merchant-guide/ folder for the source content and open items.",
 
   walletOptions: [
     {

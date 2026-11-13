@@ -1,6 +1,5 @@
-// Portuguese flyer copy — the primary real-world audience (99% of merchants).
-// First-pass translation by vibe-dev, close to literal; Zapa reviews/edits wording later.
-// See content.ts for the shared shape and content.en.ts for the English original.
+// The flyer's Portuguese copy, for most of the merchants it reaches. See
+// content.ts for the shape every locale fills in.
 import type { FlyerContent } from "./content";
 
 const content: FlyerContent = {
@@ -129,9 +128,6 @@ const content: FlyerContent = {
   ],
 
   sponsorLabel: "Patrocinado por",
-
-  viewerNote:
-    "Panfleto para comerciantes da FREE Madeira. Percorra abaixo para ver como um comerciante o abriria. Desça para o layout tri-fold pronto para impressão — Imprimir (Ctrl/Cmd+P) para A4 real. Ver flyer.md na pasta merchant-guide/ para o conteúdo de origem e pontos em aberto.",
 
   walletOptions: [
     {

@@ -1,5 +1,6 @@
-/* Scoped port of the merchant-guide flyer viewer (madfree/merchant-support/merchant-guide/nsite).
-   Everything lives under .apoio-flyer so it cannot touch the rest of the site. */
+/* The flyer viewer and its print sheets, drawn to the printed piece's
+   measurements. Everything lives under .apoio-flyer so it cannot touch the rest
+   of the site. */
 .apoio-flyer {
   --paper: #f7f3ec;
   --ink: #1a1a18;

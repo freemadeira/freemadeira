@@ -3,8 +3,8 @@ import flapPanelBg from "@/assets/flyer/flap-panel-bg.webp";
 
 import { useContent } from "../locale-context";
 // Sponsor logo disabled while printing a first batch without a sponsor. Re-enable
-// by uncommenting this import, `sponsorLabel` in the destructure below, and the
-// .sponsor block in the JSX.
+// by adding the logo to src/assets/flyer/ and uncommenting this import,
+// `sponsorLabel` in the destructure below, and the .sponsor block in the JSX.
 // import wavespaceLogo from "@/assets/flyer/wavespace.webp";
 
 // Sits in the outer flap position, on the flap background. Content swapped with

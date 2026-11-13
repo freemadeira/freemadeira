@@ -1,6 +1,6 @@
-// Shared shape for one locale's worth of flyer copy, plus the locale registry.
-// Each content.<locale>.ts file is a full, independent copy of this shape — not a
-// per-string lookup keyed by ID. See ../../spec-language-switcher.md for why.
+// The shape of one locale's flyer copy, and the locales it comes in. Each
+// content.<locale>.ts fills in the whole shape, so a translator edits one file
+// and the panels can't end up mixing languages.
 
 export interface FlyerContent {
   merchantCount: string;
@@ -48,7 +48,6 @@ export interface FlyerContent {
 
   openingDoorsHeading: string;
 
-  viewerNote: string;
   brochureOpenLabel: string;
   brochurePreviousLabel: string;
   brochureNextLabel: string;

@@ -1,6 +1,5 @@
-// German flyer copy — for expat business owners. First-pass translation by vibe-dev,
-// close to literal; Zapa reviews/edits wording later. See content.ts for the shared
-// shape and content.en.ts for the English original.
+// The flyer's German copy, for expat business owners. See content.ts for the
+// shape every locale fills in.
 import type { FlyerContent } from "./content";
 
 const content: FlyerContent = {
@@ -130,9 +129,6 @@ const content: FlyerContent = {
   ],
 
   sponsorLabel: "Gesponsert von",
-
-  viewerNote:
-    "FREE Madeira Händler-Flyer. Klicken Sie sich unten durch, um zu sehen, wie ein Händler ihn öffnen würde. Scrollen Sie nach unten für das druckfertige Trifold-Layout — Drucken (Strg/Cmd+P) für echtes A4-Format. Siehe flyer.md im übergeordneten Ordner merchant-guide/ für den Originalinhalt und offene Punkte.",
 
   walletOptions: [
     {
