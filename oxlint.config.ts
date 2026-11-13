@@ -23,6 +23,17 @@ export default defineConfig({
         "react/set-state-in-effect": "off",
       },
     },
+    {
+      // React Native has no HTML elements: a role is how a view says what it
+      // is, and Text has no aria-level. StatusBar's style is a colour scheme,
+      // not CSS.
+      files: ["apps/app/**"],
+      rules: {
+        "jsx-a11y/prefer-tag-over-role": "off",
+        "jsx-a11y/role-has-required-aria-props": "off",
+        "react/style-prop-object": ["error", { allow: ["StatusBar"] }],
+      },
+    },
   ],
   rules: {
     // Match the function declarations that the shadcn CLI generates.

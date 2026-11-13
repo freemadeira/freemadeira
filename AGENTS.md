@@ -1,6 +1,6 @@
-# FREE Madeira websites
+# FREE Madeira websites and app
 
-Monorepo for the websites of FREE Madeira, a Bitcoin education and adoption organisation in Madeira: [freemadeira.org](https://freemadeira.org), [bitcoinatlantis.com](https://bitcoinatlantis.com) and [apoio.freemadeira.org](https://apoio.freemadeira.org).
+Monorepo for the websites and the app of FREE Madeira, a Bitcoin education and adoption organisation in Madeira: [freemadeira.org](https://freemadeira.org), [bitcoinatlantis.com](https://bitcoinatlantis.com), [apoio.freemadeira.org](https://apoio.freemadeira.org) and the FREE Madeira app.
 
 ## Layout
 
@@ -8,6 +8,7 @@ Monorepo for the websites of FREE Madeira, a Bitcoin education and adoption orga
 apps/freemadeira        freemadeira.org: Astro on Vercel
 apps/bitcoinatlantis    bitcoinatlantis.com: Astro on Vercel
 apps/apoio              apoio.freemadeira.org, the merchant guide: Astro on Vercel
+apps/app                the FREE Madeira app: Expo on iOS, Android and the web (app.freemadeira.org, on Vercel)
 packages/ui             shadcn/ui on Base UI, Tailwind v4 tokens, shared by every site
 packages/i18n           locales and the localized-path types every site uses
 packages/db             Drizzle schema, migrations and libSQL client for the read model
@@ -35,20 +36,20 @@ Run from the root:
 pnpm install
 pnpm dev          # every app and service; or pnpm --filter freemadeira dev
 pnpm build        # every app
-pnpm typecheck    # tsc for packages, astro check for apps
+pnpm typecheck    # tsc for packages and the app, astro check for the sites
 pnpm test         # node --test for packages and services
 pnpm check        # oxlint and oxfmt, through ultracite
 pnpm fix          # the same, fixing what it can
 ```
 
-Dev ports: freemadeira 4321, bitcoinatlantis 4322, apoio 4323, indexer 3000.
+Dev ports: freemadeira 4321, bitcoinatlantis 4322, apoio 4323, indexer 3000, app 8081 (Metro).
 
 There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm check`.
 
 ## Conventions
 
 - **Dependencies.** Versions used by more than one package live in the `catalog` in `pnpm-workspace.yaml`; reference them as `"catalog:"`. pnpm won't install a release younger than a day (`minimumReleaseAge`): pick the previous version rather than excluding it. New packages with install scripts must be listed under `allowBuilds`.
-- **TypeScript.** Packages and services use TypeScript 7. The Astro apps use 6 (`catalog:astro`), because `astro check` needs the JS API that 7 dropped.
+- **TypeScript.** Packages, services and the app use TypeScript 7. The Astro apps use 6 (`catalog:astro`), because `astro check` needs the JS API that 7 dropped. Expo only checks that `typescript` is installed, so the app excludes it from Expo's version check.
 - **Internal packages** export their TypeScript source; there is no build step. Import with the `.ts` extension inside packages, so Node can run the indexer without a build.
 - **Tests** use Node's test runner: `*.test.ts` next to the code, run by `node --test` with no build.
 - **File names** are kebab-case, `.astro` files too (`base-layout.astro`, `home.astro`).
@@ -86,9 +87,20 @@ There are no git hooks: run `pnpm fix` before committing, and CI runs `pnpm chec
 - The header and footer are its own, not freemadeira.org's: the logo goes back to freemadeira.org and the guide's name to the guide's home.
 - The flyer (`/folheto`, `/en/flyer`) is the printed tri-fold's copy, in PT, EN, DE and FR, and prints as two A4 landscape sheets. Its stylesheet (`flyer.css`, under `.apoio-flyer`) and its full-resolution images in `src/assets/flyer/` follow the paper, not the site. The QR code on its back opens the site's root, so `/` must stay the Portuguese home.
 
+### The app (`apps/app`)
+
+- Expo (SDK 58) with Expo Router: one codebase for iOS, Android and the web. Routes are files in `src/app/`. The bundle identifier is `org.freemadeira.app` on both stores, and the deep-link scheme is `freemadeira`.
+- Styling is React Native's `StyleSheet`; `packages/ui` renders DOM and doesn't apply. The brand lives in `src/theme/`: the palette from freemadeira.org's `global.css` (in hex, as React Native has no `oklch()`), light mode from the site and dark mode from the blog's night theme. Read colours with `useTheme()`, which follows the device.
+- The typeface is Schibsted Grotesk, weights 400 to 700, loaded as one family by `useFonts` while the splash screen stays up. Pick a weight with `fontWeight`, as in CSS, or use `src/components/text.tsx`.
+- Copy is Paraglide messages in `messages/{pt,en}.json`, as on the sites, but there's no locale in the URL: `useLocale()` picks the first of the device's languages the app speaks, and every message gets it, `m.app_name({}, { locale })`. On iOS and Android 13+ the system settings can set the app's language.
+- The web build is static, one HTML file per route, and installs as a PWA (`public/manifest.webmanifest`, `public/sw.js`; bump `CACHE` in the service worker when its caching changes). `src/app/+html.tsx` must render the nodes from `useServerDocumentContext()`, or the pages ship no JavaScript. A route's `<head>` comes from its `generateMetadata` export, run at build time in Portuguese. The static HTML can't know the visitor's colour scheme or language, so until the page hydrates it renders light and in Portuguese (`useHydrated()`).
+- Native work runs in development builds (`expo-dev-client`), not Expo Go: `pnpm --filter app ios` or `android` builds one locally (Xcode or Android Studio). `ios/` and `android/` are generated by prebuild and never committed; native settings go in `app.json`.
+- The icons and splash image in `assets/images/` and `public/icons/` are placeholders, cut from the logo's sun and mountain.
+
 ## Deploying
 
 - Each app is its own Vercel project in the FREE Madeira team: the projects are named after their domains, `freemadeira.org`, `bitcoinatlantis.com` and `apoio.freemadeira.org`. Each has its root directory set to `apps/<name>`, the Astro framework preset, Node.js 24.x (`devEngines` refuses anything else) and `main` as its production branch.
+- The app's web build is a Vercel project too, `app.freemadeira.org`, with its root directory set to `apps/app` and the framework preset "Other": `vercel.json` sets the build command, the `dist` output and the cache headers. It serves static files only and needs no environment variables. The iOS and Android builds aren't automated yet.
 - Turn on "Skip deployments when there are no changes" in each project, and set Function Region to Frankfurt (`fra1`), next to the VPS.
 - Environment variables: freemadeira.org needs `MAILERLITE_TOKEN` and `SESSION_PASSWORD` for the newsletter, and `LIBSQL_URL`, a read-only `LIBSQL_AUTH_TOKEN` and `ISR_BYPASS_TOKEN` (at least 32 characters, the indexer's `REVALIDATE_TOKEN`) for the blog; bitcoinatlantis.com and apoio.freemadeira.org need none.
 - sqld and the indexer run on the VPS through Coolify. See `infra/README.md` for both, and `services/indexer/README.md` for the indexer and the post events it reads.

@@ -1,0 +1,50 @@
+{
+  "name": "app",
+  "private": true,
+  "type": "module",
+  "main": "expo-router/entry",
+  "scripts": {
+    "android": "expo run:android",
+    "build": "pnpm paraglide && expo export --platform web && node -e \"require('node:fs').copyFileSync('dist/+not-found.html', 'dist/404.html')\"",
+    "dev": "pnpm paraglide && expo start",
+    "ios": "expo run:ios",
+    "paraglide": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy baseLocale",
+    "typecheck": "pnpm paraglide && tsc"
+  },
+  "dependencies": {
+    "@expo-google-fonts/schibsted-grotesk": "^0.4.2",
+    "@freemadeira/i18n": "workspace:*",
+    "@inlang/paraglide-js": "catalog:",
+    "expo": "~58.0.24",
+    "expo-constants": "~58.0.16",
+    "expo-dev-client": "~58.0.19",
+    "expo-font": "~58.0.12",
+    "expo-linking": "~58.0.17",
+    "expo-localization": "~58.0.5",
+    "expo-router": "~58.0.31",
+    "expo-splash-screen": "~58.0.14",
+    "expo-status-bar": "~58.0.5",
+    "expo-system-ui": "~58.0.7",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-safe-area-context": "~5.11.1",
+    "react-native-screens": "~4.30.1",
+    "react-native-svg": "15.16.0",
+    "react-native-web": "~0.21.4"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "typescript"
+      ]
+    }
+  }
+}

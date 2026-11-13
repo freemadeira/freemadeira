@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "FREE Madeira",
+    "slug": "freemadeira",
+    "scheme": "freemadeira",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#ffffff",
+    "ios": {
+      "bundleIdentifier": "org.freemadeira.app"
+    },
+    "android": {
+      "package": "org.freemadeira.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      ["expo-router", { "sitemap": false }],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 160,
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#1a1613"
+          }
+        }
+      ],
+      [
+        "expo-localization",
+        {
+          "supportedLocales": ["pt", "en"],
+          "supportsRTL": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
