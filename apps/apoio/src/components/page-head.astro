@@ -34,11 +34,18 @@ const Illustration = illustrationFor(slug);
       class="text-[0.95rem] font-semibold underline underline-offset-4"
       href={routes.home[locale]}
     >
-      {m.page_back({}, { locale })}
+      <span aria-hidden="true">← </span>{m.nav_guide({}, { locale })}
     </a>
     <div class="mt-6 grid items-end gap-x-10 sm:grid-cols-[1fr_auto]">
       <div class="pb-8 sm:pb-14">
-        <h1 class:list={[heading.h3, "max-w-[16ch] font-medium"]}>{title}</h1>
+        <h1 class:list={[heading.h3, "max-w-[16ch] font-medium"]}>
+          {
+            num !== undefined && (
+              <span class="sr-only">{m.page_chapter({ num }, { locale })}: </span>
+            )
+          }
+          {title}
+        </h1>
         {lead && <p class="mt-5 max-w-lg text-xl text-mountain-mist-600">{lead}</p>}
       </div>
       <div class="apoio-door relative mx-auto w-44 sm:mx-0 sm:w-60">
@@ -53,7 +60,7 @@ const Illustration = illustrationFor(slug);
         {
           num !== undefined && (
             <span
-              aria-label={`${num}`}
+              aria-hidden="true"
               class="absolute top-6 -right-3 grid size-14 place-items-center rounded-full bg-(--tier) text-2xl font-bold text-(--tier-ink) shadow-sm ring-4 ring-bridal-50 sm:-right-5 sm:size-16 sm:text-3xl"
             >
               {num}
@@ -66,19 +73,26 @@ const Illustration = illustrationFor(slug);
 </header>
 
 <style>
+  /* The door rises into place once, as the page opens. Under reduced motion it
+     only fades in. */
+  .apoio-door {
+    animation: apoio-door-fade 300ms var(--ease-out) both;
+  }
   @media (prefers-reduced-motion: no-preference) {
     .apoio-door {
-      animation: apoio-door-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      animation-name: apoio-door-in;
+    }
+  }
+  @keyframes apoio-door-fade {
+    from {
+      opacity: 0;
     }
   }
   @keyframes apoio-door-in {
     from {
-      transform: translateY(1.75rem);
+      filter: blur(4px);
       opacity: 0;
-    }
-    to {
-      transform: none;
-      opacity: 1;
+      translate: 0 12px;
     }
   }
 </style>

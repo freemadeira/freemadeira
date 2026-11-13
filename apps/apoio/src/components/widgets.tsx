@@ -2,10 +2,18 @@ import { useState } from "react";
 
 const widget =
   "relative left-1/2 my-12 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border-2 border-(--tier) bg-white p-6 sm:p-8";
-const answer = "my-3 border-l-4 border-(--tier) bg-bridal-50 px-3 py-2";
-const linkBtn = "px-1 py-2 text-bridal-700 underline";
+// An answer fades and rises in as it appears; under reduced motion it only fades.
+const answer =
+  "my-3 border-l-4 border-(--tier) bg-bridal-50 px-3 py-2 transition-[opacity,translate,filter] duration-300 ease-out starting:opacity-0 motion-safe:starting:translate-y-3 motion-safe:starting:blur-xs";
+const linkBtn =
+  "px-1 py-2 text-bridal-700 underline underline-offset-2 transition-colors duration-150 hover:text-dark";
+const press =
+  "transition-[background-color,border-color,color,scale] duration-150 ease-out enabled:active:scale-[0.96]";
 const choice = (on: boolean) =>
-  `rounded-md border px-4 py-2 disabled:opacity-40 ${on ? "border-dark bg-dark text-white" : "border-mountain-mist-200 bg-white"}`;
+  `rounded-md border px-4 py-2 disabled:opacity-40 ${press} ${on ? "border-dark bg-dark text-white" : "border-mountain-mist-200 bg-white enabled:hover:border-mountain-mist-300 enabled:hover:bg-mountain-mist-50"}`;
+// A full-width choice: too wide to shrink on press, so it only changes colour.
+const option =
+  "rounded-md border border-mountain-mist-200 bg-white px-4 py-2 text-left transition-colors duration-150 hover:border-mountain-mist-300 hover:bg-mountain-mist-50";
 
 /* ------------------------------------------------------------ inflation */
 export function Inflation() {
@@ -34,8 +42,8 @@ export function Inflation() {
         aria-hidden="true"
       >
         <div
-          className="bg-primary-400 block h-full rounded-full transition-[width] duration-300 motion-reduce:transition-none"
-          style={{ width: `${value}%` }}
+          className="bg-primary-400 block h-full origin-left rounded-full transition-transform duration-150 ease-out motion-reduce:transition-none"
+          style={{ transform: `scaleX(${value / 100})` }}
         />
       </div>
       <p className="my-3 text-lg font-semibold">
@@ -88,7 +96,7 @@ export function Timeline() {
         <button
           key={r.id}
           type="button"
-          className={`my-2 grid w-full gap-1 rounded-md border px-3 py-2 text-left ${open === r.id ? "border-dark bg-bridal-50" : "border-mountain-mist-200"}`}
+          className={`my-2 grid w-full gap-1 rounded-md border px-3 py-2 text-left transition-colors duration-150 ${open === r.id ? "border-dark bg-bridal-50" : "border-mountain-mist-200 hover:border-mountain-mist-300"}`}
           onClick={() => setOpen(r.id)}
           aria-pressed={open === r.id}
         >
@@ -341,7 +349,7 @@ export function Triage() {
             <button
               key={o.to}
               type="button"
-              className={choice(false)}
+              className={option}
               onClick={() => setPath((p) => [...p, o.to])}
             >
               {o.label}
@@ -349,7 +357,11 @@ export function Triage() {
           ))}
         </div>
       )}
-      {node.end && <p className={answer}>{node.end}</p>}
+      {node.end && (
+        <p className={answer} key={path.at(-1)}>
+          {node.end}
+        </p>
+      )}
       <div className="my-2 flex flex-wrap gap-2">
         {path.length > 1 && (
           <button

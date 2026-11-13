@@ -43,7 +43,10 @@ const items: Item[] = collapse ? group(blocks) : blocks;
 {
   items.map((item) =>
     item.t === "section" ? (
-      <details class="my-3 border-y border-mountain-mist-200 px-1" open={item.open}>
+      <details
+        class="border-b border-mountain-mist-200 px-1 first:border-t [:not(details)+&]:mt-6 [:not(details)+&]:border-t"
+        open={item.open}
+      >
         <summary class="cursor-pointer py-3 text-lg font-bold">{item.title}</summary>
         {item.blocks.map((block) => (
           <Block block={block} />

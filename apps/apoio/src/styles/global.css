@@ -7,6 +7,13 @@
     "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* A stronger ease-out than Tailwind's, for everything that enters or answers
+   a tap: it moves at once and settles slowly. Static, because the flyer and
+   page-head stylesheets read it with var() where Tailwind cannot see it. */
+@theme static {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 /* FREE Madeira's palette, as on freemadeira.org: Supernova yellow, Bridal
    Heath and Mountain Mist. */
 @theme {

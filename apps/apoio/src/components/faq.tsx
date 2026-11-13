@@ -25,7 +25,7 @@ const fold = (s: string) =>
     .toLowerCase();
 
 const chip = (on: boolean) =>
-  `rounded-full border px-3 py-1 text-sm ${on ? "border-dark bg-dark text-white" : "border-mountain-mist-200 bg-white"}`;
+  `rounded-full border px-3.5 py-1.5 text-sm transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.96] ${on ? "border-dark bg-dark text-white" : "border-mountain-mist-200 bg-white hover:border-mountain-mist-300 hover:bg-mountain-mist-50"}`;
 
 interface Props {
   categories: readonly string[];
@@ -56,13 +56,19 @@ export function Faq({ categories, items, labels }: Props) {
         aria-label={labels.searchLabel}
       />
       <div className="my-3 flex flex-wrap gap-2">
-        <button type="button" className={chip(!cat)} onClick={() => setCat("")}>
+        <button
+          type="button"
+          aria-pressed={!cat}
+          className={chip(!cat)}
+          onClick={() => setCat("")}
+        >
           {labels.all}
         </button>
         {categories.map((c) => (
           <button
             key={c}
             type="button"
+            aria-pressed={cat === c}
             className={chip(cat === c)}
             onClick={() => setCat(cat === c ? "" : c)}
           >
@@ -73,25 +79,30 @@ export function Faq({ categories, items, labels }: Props) {
       <p className="text-mountain-mist-500 text-sm" aria-live="polite">
         {shown.length} {shown.length === 1 ? labels.one : labels.many}
       </p>
-      {shown.map((item) => (
-        <details
-          key={item.question}
-          className="border-mountain-mist-200 my-3 border-y px-1"
-        >
-          <summary className="cursor-pointer py-3 text-lg font-bold">
-            {item.question}
-          </summary>
-          <p className="mb-3">{item.answer}</p>
-          {item.page && (
-            <p className="mb-3">
-              <a className="underline" href={item.page.href}>
-                {labels.readMore} {item.page.title}
-              </a>
-            </p>
-          )}
-        </details>
-      ))}
-      {shown.length === 0 && <p className="my-4">{labels.none}</p>}
+      {shown.length > 0 ? (
+        <div className="border-mountain-mist-200 mt-3 border-t">
+          {shown.map((item) => (
+            <details
+              key={item.question}
+              className="border-mountain-mist-200 border-b px-1"
+            >
+              <summary className="cursor-pointer py-3 text-lg font-bold">
+                {item.question}
+              </summary>
+              <p className="mb-3">{item.answer}</p>
+              {item.page && (
+                <p className="mb-3">
+                  <a className="underline" href={item.page.href}>
+                    {labels.readMore} {item.page.title}
+                  </a>
+                </p>
+              )}
+            </details>
+          ))}
+        </div>
+      ) : (
+        <p className="my-4">{labels.none}</p>
+      )}
     </>
   );
 }
