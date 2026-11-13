@@ -32,8 +32,7 @@ export function LocaleProvider({
   );
 }
 
-// Panels call this instead of importing named constants from data/content directly —
-// same shape as before, just resolved for whichever locale is currently active.
+// The copy in the locale the viewer picked.
 export function useContent(): FlyerContent {
   const ctx = useContext(LocaleContext);
   if (!ctx) {

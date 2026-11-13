@@ -34,7 +34,6 @@
   }
 
   .viewer {
-    min-height: 100vh;
     padding: 40px 20px;
     display: flex;
     flex-direction: column;
@@ -84,7 +83,7 @@
     }
   }
 
-  /* ---------- Unfolding brochure (screen-only, board-review experience) ---------- */
+  /* ---------- Unfolding brochure (screen only) ---------- */
   .brochure {
     display: flex;
     flex-direction: column;
@@ -94,11 +93,15 @@
     max-width: 100%;
   }
   /* The stage renders at true paper size (99/198/297mm wide, 210mm tall) so the
-     board-review experience matches the print. When the column is narrower we scale
-     the whole stage down to fit via --brochure-scale, preserving the
-     trifold's unequal panel widths rather than reflowing them. */
+     preview matches the print. When the column is narrower, the whole stage
+     scales down to fit via --brochure-scale, keeping the tri-fold's unequal
+     panel widths rather than reflowing them. */
   .brochure-viewport {
     width: 100%;
+    /* The open spread's proportions, so the server render already reserves
+       the scaled stage's height and nothing below it jumps. */
+    aspect-ratio: 297 / 210;
+    max-height: 210mm;
     display: flex;
     justify-content: center;
     overflow: hidden;
@@ -222,17 +225,6 @@
   .sheet--inside .panel-inside {
     background: none;
   }
-  @media screen and (max-width: 1000px) {
-    .sheet {
-      width: 100%;
-      height: auto;
-      grid-template-columns: 1fr !important;
-    }
-    .panel {
-      border-bottom: 1px dashed rgba(0, 0, 0, 0.22);
-    }
-  }
-
   /* ---------- Shared panel bits ---------- */
   .panel {
     padding: 12mm 10mm;
@@ -590,29 +582,6 @@
     padding: 33px 0 29px;
   }
 
-  /* Sponsor lockup at the foot of the flap panel. margin-top:auto anchors it to
-     the bottom regardless of how much flex-column content sits above. Sits
-     inside the panel's 10mm side padding (not full-bleed). */
-  .sponsor {
-    margin-top: auto;
-    padding-top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-  }
-  .sponsor-label {
-    font-size: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-  }
-  .sponsor-logo {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
   /* ---------- Print ---------- */
   @media print {
     * {
@@ -622,9 +591,6 @@
     .viewer {
       padding: 0;
       gap: 0;
-    }
-    .viewer-note {
-      display: none;
     }
     .sheet {
       display: grid;

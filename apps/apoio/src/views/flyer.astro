@@ -17,18 +17,12 @@ const t = { locale };
   title={m.flyer_title({}, t)}
 >
   <style is:global slot="head">
-    /* Printing: only the flyer sheets, on A4 landscape; the site chrome stays out. */
+    /* Printing: only the flyer's two sheets, on A4 landscape. The header,
+       footer and page head are print:hidden, and the column lets the 297mm
+       sheets through. */
     @page {
       size: A4 landscape;
       margin: 0;
-    }
-    @media print {
-      body > *:not(.apoio-print-root) {
-        display: none !important;
-      }
-      body {
-        margin: 0;
-      }
     }
   </style>
   <PageHead
@@ -37,7 +31,7 @@ const t = { locale };
     tier="extra"
     title={m.flyer_title({}, t)}
   />
-  <div class="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8">
+  <div class="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8 print:max-w-none print:p-0">
     <FlyerViewer client:load initial={locale} />
   </div>
 </Layout>

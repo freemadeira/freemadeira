@@ -1,6 +1,4 @@
 import { cn } from "cn";
-import { useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
 
 import "./flyer.css";
 
@@ -61,21 +59,10 @@ function PrintButton() {
   );
 }
 
-// Screen: the unfolding preview and a print button. The two print sheets are 297mm wide, wider
-// than the site's content column, so they are rendered straight under <body> (a portal) and the
-// print stylesheet in the page hides everything else. They never show on screen (.sheet).
-// The print root is only there in the browser; the server render has none.
-// The body never changes, so there is nothing to subscribe to.
-// eslint-disable-next-line no-empty-function
-const subscribeNothing = () => () => {};
-
+// On screen, the unfolding preview and a print button; on paper, only the two
+// sheets (.sheet), which the page's print styles give the full A4 width. They
+// are in the server render, so the flyer prints before the island loads too.
 export function FlyerViewer({ initial }: { initial?: Locale }) {
-  const printRoot = useSyncExternalStore(
-    subscribeNothing,
-    () => document.body,
-    () => null
-  );
-
   return (
     <LocaleProvider initial={initial}>
       <div className="apoio-flyer">
@@ -83,18 +70,10 @@ export function FlyerViewer({ initial }: { initial?: Locale }) {
           <LanguageSwitcher />
           <UnfoldingBrochure />
           <PrintButton />
+          <OutsideFaceSheet />
+          <InsideFaceSheet />
         </div>
       </div>
-      {printRoot &&
-        createPortal(
-          <div className="apoio-flyer apoio-print-root">
-            <div className="viewer">
-              <OutsideFaceSheet />
-              <InsideFaceSheet />
-            </div>
-          </div>,
-          printRoot
-        )}
     </LocaleProvider>
   );
 }
