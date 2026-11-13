@@ -2,7 +2,7 @@ import { cn } from "cn";
 
 import "./flyer.css";
 
-import { LOCALES } from "@/data/flyer/content";
+import { LANG, LOCALES } from "@/data/flyer/content";
 import type { Locale } from "@/data/flyer/content";
 
 import { InsideFaceSheet } from "./inside-face-sheet";
@@ -25,37 +25,51 @@ const PRINT_LABEL = {
 } as const;
 
 function LanguageSwitcher() {
-  const { locale, setLocale } = useLocale();
+  const { locale, pageLocale, setLocale } = useLocale();
   return (
-    <fieldset className="language-switcher" aria-label={LANGUAGE_LABEL[locale]}>
-      {LOCALES.map((l) => (
-        <button
-          key={l.code}
-          type="button"
-          className={cn(
-            "language-switcher-btn",
-            l.code === locale && "language-switcher-btn--active"
-          )}
-          onClick={() => setLocale(l.code)}
-          aria-pressed={l.code === locale}
-        >
-          {l.label}
-        </button>
-      ))}
+    <fieldset className="language-switcher">
+      <legend>{LANGUAGE_LABEL[pageLocale]}</legend>
+      <div className="language-switcher-options">
+        {LOCALES.map((l) => (
+          <button
+            key={l.code}
+            type="button"
+            className={cn(
+              "language-switcher-btn",
+              l.code === locale && "language-switcher-btn--active"
+            )}
+            onClick={() => setLocale(l.code)}
+            aria-pressed={l.code === locale}
+            lang={LANG[l.code]}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
     </fieldset>
   );
 }
 
 function PrintButton() {
-  const { locale } = useLocale();
+  const { pageLocale } = useLocale();
   return (
     <button
       type="button"
       className="brochure-btn flyer-print"
       onClick={() => window.print()}
     >
-      {PRINT_LABEL[locale]}
+      {PRINT_LABEL[pageLocale]}
     </button>
+  );
+}
+
+function Sheets() {
+  const { locale } = useLocale();
+  return (
+    <div className="contents" lang={LANG[locale]}>
+      <OutsideFaceSheet />
+      <InsideFaceSheet />
+    </div>
   );
 }
 
@@ -70,8 +84,7 @@ export function FlyerViewer({ initial }: { initial?: Locale }) {
           <LanguageSwitcher />
           <UnfoldingBrochure />
           <PrintButton />
-          <OutsideFaceSheet />
-          <InsideFaceSheet />
+          <Sheets />
         </div>
       </div>
     </LocaleProvider>

@@ -17,20 +17,22 @@ const t = { locale };
   title={m.flyer_title({}, t)}
 >
   <style is:global slot="head">
-    /* Printing: only the flyer's two sheets, on A4 landscape. The header,
-       footer and page head are print:hidden, and the column lets the 297mm
-       sheets through. */
+    /* Printing: only the flyer's two sheets, on A4 landscape. Everything else
+       is print:hidden, and the column lets the 297mm sheets through. */
     @page {
       size: A4 landscape;
       margin: 0;
     }
   </style>
-  <PageHead
-    slug="folheto"
-    lead={m.flyer_lead({}, t)}
-    tier="extra"
-    title={m.flyer_title({}, t)}
-  />
+  {/* On paper the flyer is the whole page: its sheets carry their own title. */}
+  <div class="print:hidden">
+    <PageHead
+      slug="folheto"
+      lead={m.flyer_lead({}, t)}
+      tier="extra"
+      title={m.flyer_title({}, t)}
+    />
+  </div>
   <div class="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8 print:max-w-none print:p-0">
     <FlyerViewer client:load initial={locale} />
   </div>

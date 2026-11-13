@@ -68,3 +68,11 @@ export const LOCALES: { code: Locale; label: string }[] = [
 ];
 
 export const DEFAULT_LOCALE: Locale = "pt";
+
+/** Each locale's tag for the lang attribute. */
+export const LANG: Record<Locale, string> = {
+  de: "de",
+  en: "en",
+  fr: "fr",
+  pt: "pt-PT",
+};

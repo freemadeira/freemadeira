@@ -1,7 +1,9 @@
 import { cn } from "cn";
 import { useEffect, useRef, useState } from "react";
 
-import { useContent } from "./locale-context";
+import { LANG } from "@/data/flyer/content";
+
+import { useLocale } from "./locale-context";
 import { BackCoverPanel } from "./panels/back-cover-panel";
 import { CoverPanel } from "./panels/cover-panel";
 import { FastPathPanel } from "./panels/fast-path-panel";
@@ -29,8 +31,9 @@ const PX_PER_MM = 96 / 25.4;
 const PANEL_WIDTH = 99 * PX_PER_MM;
 
 export function UnfoldingBrochure() {
-  const { brochureNextLabel, brochureOpenLabel, brochurePreviousLabel } =
-    useContent();
+  const { locale, page } = useLocale();
+  // The controls speak the page's language; the paper, the flyer's.
+  const { brochureNextLabel, brochureOpenLabel, brochurePreviousLabel } = page;
   const [step, setStep] = useState(0);
   const viewport = useRef<HTMLDivElement>(null);
   const [available, setAvailable] = useState<number | null>(null);
@@ -70,7 +73,7 @@ export function UnfoldingBrochure() {
 
   return (
     <div className="brochure">
-      <div className="brochure-viewport" ref={viewport}>
+      <div className="brochure-viewport" lang={LANG[locale]} ref={viewport}>
         {/* Drawn once the column is measured, so it never shows at the wrong size. */}
         {scale !== null && (
           <div
@@ -97,7 +100,7 @@ export function UnfoldingBrochure() {
           type="button"
           className="brochure-btn"
           onClick={back}
-          disabled={isFirst}
+          aria-disabled={isFirst}
           aria-label={brochurePreviousLabel}
         >
           ←
@@ -118,7 +121,7 @@ export function UnfoldingBrochure() {
           type="button"
           className="brochure-btn"
           onClick={next}
-          disabled={isLast}
+          aria-disabled={isLast}
           // The first step's button reads "Open", which names it already.
           aria-label={isFirst ? undefined : brochureNextLabel}
         >
