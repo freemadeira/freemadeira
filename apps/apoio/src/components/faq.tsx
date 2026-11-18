@@ -1,3 +1,4 @@
+import { ChevronDown, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 /** A question, with a link to the guide page its answer comes from. */
@@ -26,7 +27,7 @@ const fold = (s: string) =>
     .toLowerCase();
 
 const chip = (on: boolean) =>
-  `rounded-full border px-3.5 py-1.5 text-sm transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.96] ${on ? "border-dark bg-dark text-white" : "border-mountain-mist-200 bg-white hover:border-mountain-mist-300 hover:bg-mountain-mist-50"}`;
+  `shrink-0 rounded-full border px-3.5 py-1.5 text-sm whitespace-nowrap transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.96] ${on ? "border-dark bg-dark text-white" : "border-mountain-mist-200 bg-white hover:border-mountain-mist-300 hover:bg-mountain-mist-50"}`;
 
 interface Props {
   categories: readonly string[];
@@ -48,15 +49,25 @@ export function Faq({ categories, items, labels }: Props) {
 
   return (
     <>
-      <input
-        className="border-mountain-mist-200 my-3 w-full rounded-md border bg-white px-4 py-3"
-        type="search"
-        placeholder={labels.search}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        aria-label={labels.searchLabel}
-      />
-      <div className="my-3 flex flex-wrap gap-2">
+      <div className="relative my-3">
+        <Search
+          aria-hidden="true"
+          className="text-mountain-mist-500 pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2"
+          strokeWidth={1.75}
+        />
+        {/* The border is the field's only edge: mountain-mist-400 keeps it
+            at 3:1 against white. */}
+        <input
+          className="border-mountain-mist-400 w-full rounded-xl border bg-white py-3 pr-4 pl-12"
+          type="search"
+          placeholder={labels.search}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label={labels.searchLabel}
+        />
+      </div>
+      {/* On a phone the topics scroll sideways rather than wrapping. */}
+      <div className="no-scrollbar -mx-4 my-3 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         <button
           type="button"
           aria-pressed={!cat}
@@ -81,19 +92,27 @@ export function Faq({ categories, items, labels }: Props) {
         {shown.length} {shown.length === 1 ? labels.one : labels.many}
       </p>
       {shown.length > 0 ? (
-        <div className="border-mountain-mist-200 mt-3 border-t">
+        <div className="mt-3 border-t border-black/8">
           {shown.map((item) => (
             <details
               key={item.question}
-              className="border-mountain-mist-200 border-b px-1"
+              className="group border-b border-black/8"
             >
-              <summary className="cursor-pointer py-3 text-lg font-bold">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-lg leading-snug font-semibold [&::-webkit-details-marker]:hidden">
                 {item.question}
+                <ChevronDown
+                  aria-hidden="true"
+                  className="text-mountain-mist-500 size-5 shrink-0 group-open:rotate-180 motion-safe:transition-[rotate] motion-safe:duration-200 motion-safe:ease-out"
+                  strokeWidth={2}
+                />
               </summary>
-              <p className="mb-3">{item.answer}</p>
+              <p className="mb-3 pr-9 text-pretty">{item.answer}</p>
               {item.page && (
-                <p className="mb-3">
-                  <a className="underline" href={item.page.href}>
+                <p className="mb-4 pr-9">
+                  <a
+                    className="font-medium underline underline-offset-4"
+                    href={item.page.href}
+                  >
                     {labels.readMore} {item.page.title}
                   </a>
                 </p>

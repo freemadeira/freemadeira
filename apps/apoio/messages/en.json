@@ -11,7 +11,7 @@
   "home_headline": "170+ businesses in Madeira already accept Bitcoin.",
   "home_sub": "You won't be the first, but you can be the best. Here, bitcoiners can live on Bitcoin. It's a recognised Bitcoin destination, and your business is the next stop.",
   "home_start_button": "Get started in minutes",
-  "home_doors_label": "The guide, in order of usefulness",
+  "home_guide_title": "The guide, in order of usefulness",
   "home_faq": "Frequently asked questions",
   "home_flyer": "Flyer to view and print",
   "home_glossary": "Glossary",
@@ -28,10 +28,9 @@
   "flyer_lead": "The flyer we leave in shops: open it here and print it on A4, both sides, flipping on the short edge.",
   "contact_title": "Questions? Something wrong?",
   "contact_text": "We are FREE Madeira, a non-profit association founded in 2022, the team behind Bitcoin Atlantis. We help you set everything up, free of charge, and we're glad to help if something goes wrong.",
-  "contact_whatsapp": "Merchant support group on WhatsApp",
   "contact_whatsapp_text": "Live questions with FREE and other merchants.",
   "contact_qr_alt": "Merchant support on WhatsApp",
-  "atlantis_title": "Be a merchant at Bitcoin Atlantis",
+  "atlantis_title": "Bring your business to Bitcoin Atlantis",
   "atlantis_text": "Want to be at Bitcoin Atlantis as a merchant? Write to us and we'll tell you the next steps. And if you'd like to support FREE Madeira and Atlantis as a sponsor, see how.",
   "atlantis_email_subject": "Merchant at Bitcoin Atlantis",
   "atlantis_button": "I want to be a merchant at Atlantis",
@@ -46,5 +45,11 @@
   "page_prev": "Previous",
   "page_next": "Next",
   "faq_search_all": "Search every topic",
-  "nav_language_home": "Página inicial em português"
+  "nav_language_home": "Página inicial em português",
+  "contact_whatsapp_button": "Open the WhatsApp group",
+  "contact_qr_caption": "Or scan the code with your phone.",
+  "atlantis_line": "Want your business at Bitcoin Atlantis?",
+  "atlantis_line_link": "Write to us",
+  "toc_title": "On this page",
+  "start_stores_label": "Download Swiss Bitcoin Pay"
 }

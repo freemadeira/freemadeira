@@ -1,5 +1,7 @@
 ---
 import { toLocale } from "@freemadeira/i18n";
+import { buttonVariants } from "@freemadeira/ui/components/button";
+import { Mail, MessageCircle } from "lucide-react";
 import { Image } from "astro:assets";
 
 import whatsappQr from "@/assets/flyer/whatsapp-support-qr.svg";
@@ -9,48 +11,83 @@ import { m } from "@/paraglide/messages.js";
 
 import AtlantisCta from "./atlantis-cta.astro";
 
+interface Props {
+  /**
+   * Show the Bitcoin Atlantis call to action in full. Elsewhere it is one line
+   * under the contacts, so a chapter doesn't end on two calls to action.
+   */
+  atlantis?: boolean;
+}
+
+const { atlantis = false } = Astro.props;
 const t = { locale: toLocale(Astro.currentLocale) };
+const subject = encodeURIComponent(m.atlantis_email_subject({}, t));
 ---
 
-<AtlantisCta />
+{atlantis && <AtlantisCta />}
 <section
   aria-labelledby="apoio-contact"
-  class="mt-6 border-t border-mountain-mist-200 pt-8"
+  class:list={[
+    "grid items-center gap-8 rounded-3xl bg-bridal-50 p-6 sm:p-10 md:grid-cols-[minmax(0,1fr)_auto]",
+    atlantis ? "mt-4" : "mt-20",
+  ]}
 >
-  <h2 class={heading.h5} id="apoio-contact">{m.contact_title({}, t)}</h2>
-  <p class="my-3 max-w-2xl">{m.contact_text({}, t)}</p>
-  <div class="flex flex-wrap items-center gap-4">
+  <div>
+    <h2 class={heading.h5} id="apoio-contact">{m.contact_title({}, t)}</h2>
+    <p class="mt-3 max-w-2xl text-pretty">{m.contact_text({}, t)}</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a
+        class={buttonVariants({ variant: "fm" })}
+        href={contact.whatsapp}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <MessageCircle aria-hidden="true" className="size-5" strokeWidth={1.75} />
+        {m.contact_whatsapp_button({}, t)}
+      </a>
+      <a
+        class={buttonVariants({ variant: "fm-outline" })}
+        href={`mailto:${contact.email}`}
+      >
+        <Mail aria-hidden="true" className="size-5" strokeWidth={1.75} />
+        {contact.email}
+      </a>
+    </div>
+    <p class="mt-3 text-sm text-mountain-mist-600">
+      {m.contact_whatsapp_text({}, t)}
+    </p>
+    {
+      !atlantis && (
+        <p class="mt-6 border-t border-black/8 pt-5 text-[0.95rem]">
+          {m.atlantis_line({}, t)}{" "}
+          <a
+            class="font-semibold underline underline-offset-4"
+            href={`mailto:${contact.email}?subject=${subject}`}
+          >
+            {m.atlantis_line_link({}, t)}
+          </a>
+        </p>
+      )
+    }
+  </div>
+  {/* A QR code helps on a computer; on a phone, the button opens the group. */}
+  <figure class="hidden flex-col items-center gap-2 md:flex">
     <a
+      class="rounded-2xl bg-white p-3 shadow-border"
       href={contact.whatsapp}
       rel="noopener noreferrer"
+      tabindex="-1"
       target="_blank"
     >
       <Image
         alt={m.contact_qr_alt({}, t)}
-        class="rounded bg-white p-1.5"
-        height={120}
+        height={132}
         src={whatsappQr}
-        width={120}
+        width={132}
       />
     </a>
-    <div>
-      <p>
-        <a
-          class="underline underline-offset-4"
-          href={contact.whatsapp}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {m.contact_whatsapp({}, t)}
-        </a>
-        <br />
-        {m.contact_whatsapp_text({}, t)}
-      </p>
-      <p class="mt-2">
-        <a class="underline underline-offset-4" href={`mailto:${contact.email}`}>
-          {contact.email}
-        </a>
-      </p>
-    </div>
-  </div>
+    <figcaption class="max-w-[10rem] text-center text-sm text-mountain-mist-600">
+      {m.contact_qr_caption({}, t)}
+    </figcaption>
+  </figure>
 </section>

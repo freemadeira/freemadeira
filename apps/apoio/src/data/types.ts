@@ -6,7 +6,13 @@ export type Block =
   | { t: "ul"; x: string[] }
   | { t: "ol"; x: string[] }
   | { t: "note"; title: string; x: string[] }
+  /**
+   * A table with one row shows as cards side by side, one per column. When
+   * the first heading is empty, each row's first cell heads that row.
+   */
   | { t: "table"; head: string[]; rows: string[][] }
+  /** Figures to show large, each with a line under it. */
+  | { t: "stats"; x: { value: string; label: string }[] }
   | { t: "img"; src: ImageMetadata; alt: string; caption?: string }
   | {
       t: "widget";

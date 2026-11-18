@@ -18,6 +18,7 @@
     "@tailwindcss/vite": "catalog:",
     "astro": "catalog:",
     "cn": "catalog:",
+    "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:"

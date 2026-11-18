@@ -76,10 +76,60 @@
   --ring: #a46204;
 }
 
+/* Cards and widgets lift off the page with a hairline ring and a little
+   shadow, not a border. Forced-colors mode drops shadows, so they keep a
+   transparent border that it paints instead. */
+@theme {
+  --shadow-border:
+    0px 0px 0px 1px oklch(0 0 0 / 0.06), 0px 1px 2px -1px oklch(0 0 0 / 0.06),
+    0px 2px 4px 0px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px oklch(0 0 0 / 0.08), 0px 1px 2px -1px oklch(0 0 0 / 0.08),
+    0px 2px 4px 0px oklch(0 0 0 / 0.06);
+}
+
+/* The header sticks from md up: anchors land below it. */
+@media (width >= 48rem) {
+  html {
+    scroll-padding-top: 6rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+    scroll-behavior: smooth;
+  }
+}
+
+/* A section opens by fading in; with motion allowed it also grows to its
+   height. Where ::details-content isn't supported it opens at once. */
+details::details-content {
+  opacity: 0;
+  transition:
+    opacity 200ms var(--ease-out),
+    content-visibility 200ms allow-discrete;
+}
+details[open]::details-content {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition-property: block-size, opacity, content-visibility;
+  }
+  details[open]::details-content {
+    block-size: auto;
+  }
+}
+
 /* Printed, a chapter shows every section, closed or not. */
 @media print {
   details::details-content {
+    block-size: auto;
     content-visibility: visible;
+    opacity: 1;
   }
 }
 

@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
+// Wider than the text until the table of contents takes the right-hand
+// column, from lg up. A ring and a soft shadow lift it off the page.
 const widget =
-  "relative left-1/2 my-12 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border-2 border-(--tier) bg-white p-6 sm:p-8 print:hidden";
+  "relative left-1/2 my-12 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 rounded-3xl border border-transparent bg-white p-6 shadow-border sm:p-8 lg:left-0 lg:w-full lg:translate-x-0 print:hidden";
 // An answer fades and rises in as it appears; under reduced motion it only fades.
 const answer =
-  "my-3 border-l-4 border-(--tier) bg-bridal-50 px-3 py-2 transition-[opacity,translate,filter] duration-300 ease-out starting:opacity-0 motion-safe:starting:translate-y-3 motion-safe:starting:blur-xs";
+  "my-3 rounded-xl bg-[color-mix(in_oklab,var(--tier)_12%,white)] px-4 py-3 transition-[opacity,translate,filter] duration-300 ease-out starting:opacity-0 motion-safe:starting:translate-y-3 motion-safe:starting:blur-xs";
 const linkBtn =
-  "px-1 py-2 text-bridal-700 underline underline-offset-2 transition-colors duration-150 hover:text-dark";
+  "px-1 py-2 text-(--tier-text) underline underline-offset-2 transition-colors duration-150 hover:text-dark";
 // Buttons at the end of a sequence stay focusable and say they're unavailable
 // (aria-disabled), so keyboard focus never drops back to the page.
 const press =
@@ -23,7 +25,7 @@ export function Inflation() {
   const value = 100 / 1.02 ** years;
   return (
     <figure className={widget}>
-      <figcaption className="mb-3 font-semibold">
+      <figcaption className="mb-4 text-lg leading-snug font-semibold">
         O que valem 100&nbsp;€ de hoje, daqui a quanto tempo?
       </figcaption>
       <label className="block">
@@ -107,14 +109,14 @@ export function Timeline() {
   const [open, setOpen] = useState<string>("ln");
   return (
     <figure className={widget}>
-      <figcaption className="mb-3 font-semibold">
+      <figcaption className="mb-4 text-lg leading-snug font-semibold">
         Quando chega o dinheiro? Toca numa linha.
       </figcaption>
       {ROWS.map((r) => (
         <button
           key={r.id}
           type="button"
-          className={`my-2 grid w-full gap-1 rounded-md border px-3 py-2 text-left transition-colors duration-150 ${open === r.id ? "border-dark bg-bridal-50" : "border-mountain-mist-200 hover:border-mountain-mist-300"}`}
+          className={`my-2 grid w-full gap-1 rounded-2xl border px-4 py-3 text-left transition-colors duration-150 ${open === r.id ? "border-dark bg-bridal-50" : "border-mountain-mist-200 hover:border-mountain-mist-300"}`}
           onClick={() => setOpen(r.id)}
           aria-pressed={open === r.id}
         >
@@ -131,7 +133,7 @@ export function Timeline() {
       {/* Inset like the bars inside the rows (border and padding), with each
           label where its time falls on them. */}
       <div
-        className="text-mountain-mist-500 relative mx-[13px] mt-2 h-4 text-xs"
+        className="text-mountain-mist-500 relative mx-[17px] mt-2 h-4 text-xs"
         aria-hidden="true"
       >
         {AXIS.map((tick) => (
@@ -184,7 +186,7 @@ export function Chooser() {
   const anyYes = answers.some((a) => a === true);
   return (
     <figure className={widget}>
-      <figcaption className="mb-3 font-semibold">
+      <figcaption className="mb-4 text-lg leading-snug font-semibold">
         Três perguntas que te ajudam a decidir
       </figcaption>
       {QUESTIONS.map((item, i) => (
@@ -270,7 +272,7 @@ export function Taps() {
   const current = TAPS[step];
   return (
     <figure className={widget}>
-      <figcaption className="mb-3 font-semibold">
+      <figcaption className="mb-4 text-lg leading-snug font-semibold">
         Quatro toques no ecrã. Experimenta, passo a passo.
       </figcaption>
       <ol className="my-3 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-4">
@@ -278,7 +280,7 @@ export function Taps() {
           <li
             key={s.t}
             aria-current={i === step ? "step" : undefined}
-            className={`flex flex-col gap-1 rounded-md p-3 text-sm ${i === last && step === last ? "bg-primary-400" : "bg-bridal-50"} ${stepStyle(i, step)}`}
+            className={`flex flex-col gap-1 rounded-xl p-3 text-sm ${i === last && step === last ? "bg-primary-400" : "bg-bridal-50"} ${stepStyle(i, step)}`}
           >
             <span className="bg-dark text-primary-400 inline-grid size-6 place-items-center rounded-full text-xs font-bold">
               {i + 1}
@@ -406,7 +408,7 @@ export function Triage() {
   };
   return (
     <figure className={widget}>
-      <figcaption className="mb-3 font-semibold">
+      <figcaption className="mb-4 text-lg leading-snug font-semibold">
         O cliente diz «já paguei» e não vês nada? Segue as perguntas.
       </figcaption>
       <div className="outline-none" ref={step} tabIndex={-1}>

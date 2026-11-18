@@ -44,15 +44,18 @@ export const ch1to4: Page[] = [
         x: "Não é uma sugestão para investires nem uma opinião sobre o preço. Não te vamos dizer que compres nada, nem quando.",
       },
       {
-        head: ["170+", "Mensal", "Gratuito"],
-        rows: [
-          [
-            "negócios na Madeira já aceitam Bitcoin",
-            "encontro aberto, última quarta-feira do mês, 18:30",
-            "toda a formação que damos, em português",
-          ],
+        t: "stats",
+        x: [
+          { label: "negócios na Madeira já aceitam Bitcoin", value: "170+" },
+          {
+            label: "encontro aberto, última quarta-feira do mês, 18:30",
+            value: "Mensal",
+          },
+          {
+            label: "toda a formação que damos, em português",
+            value: "Gratuito",
+          },
         ],
-        t: "table",
       },
       { t: "h", x: "Bitcoin é dinheiro. Só que digital." },
       {

@@ -44,21 +44,43 @@ const languageFallback =
   current !== routes.home[locale];
 ---
 
-<header class="print:hidden">
+{
+  /* One row from md up, sticky; on a phone the links wrap to a row of their
+     own and the header scrolls away with the page. */
+}
+<header
+  class="z-40 border-b border-black/8 bg-white/85 backdrop-blur-md md:sticky md:top-0 print:hidden"
+>
   <div
-    class="mx-auto flex w-full max-w-5xl items-center justify-between gap-6 px-4 py-4 sm:px-8"
+    class="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-6 px-4 sm:px-8"
   >
-    <div class="flex items-center gap-4 sm:gap-5">
+    <div class="flex min-w-0 flex-1 items-center gap-4 py-3 sm:gap-5 md:flex-none">
       <a aria-label="FREE Madeira" href={freeMadeira.home[locale]}>
-        <Logo aria-hidden="true" class="h-11 w-auto sm:h-12" />
+        <Logo aria-hidden="true" class="h-10 w-auto sm:h-11" />
       </a>
-      <span aria-hidden="true" class="h-8 w-px bg-mountain-mist-200"></span>
+      <span aria-hidden="true" class="h-7 w-px bg-mountain-mist-200"></span>
       <a class="text-lg leading-tight font-semibold" href={routes.home[locale]}>
         {m.site_title({}, t)}
       </a>
     </div>
+    <nav
+      aria-label={m.nav_label({}, t)}
+      class="no-scrollbar order-last flex w-full gap-1 overflow-x-auto border-t border-black/6 py-2 md:order-none md:ml-auto md:w-auto md:border-0 md:py-0"
+    >
+      {
+        links.map((link) => (
+          <a
+            aria-current={ariaCurrent(link.href)}
+            class="shrink-0 rounded-full px-3 py-1.5 text-[0.95rem] font-medium whitespace-nowrap text-mountain-mist-600 transition-colors duration-150 hover:bg-black/5 hover:text-dark aria-[current]:bg-black/6 aria-[current]:text-dark"
+            href={link.href}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
     <a
-      class="-mx-3 px-3 py-2.5 font-medium hover:underline hover:underline-offset-4"
+      class="ml-auto rounded-full border border-mountain-mist-200 px-3 py-1.5 text-sm font-semibold transition-colors duration-150 hover:bg-black/5 md:ml-0"
       href={paths[otherLocale]}
       hreflang={otherLocale}
       lang={htmlLang[otherLocale]}
@@ -68,23 +90,5 @@ const languageFallback =
     >
       {otherLocale.toUpperCase()}
     </a>
-  </div>
-  <div class="border-y border-mountain-mist-200 bg-bridal-50">
-    <nav
-      aria-label={m.nav_label({}, t)}
-      class="mx-auto flex w-full max-w-5xl flex-wrap gap-x-6 px-4 sm:px-8"
-    >
-      {
-        links.map((link) => (
-          <a
-            aria-current={ariaCurrent(link.href)}
-            class="border-b-2 border-transparent py-2.5 text-[0.95rem] hover:border-mountain-mist-300 aria-[current]:border-dark aria-[current=page]:font-semibold"
-            href={link.href}
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </nav>
   </div>
 </header>
